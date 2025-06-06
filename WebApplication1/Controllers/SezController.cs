@@ -101,5 +101,69 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+        [HttpPost("AddEditHTCharges")]
+        public async Task<IActionResult> AddEditHTCharges(HTChargesRequest request)
+        {
+            if (request == null)
+                return BadRequest("Request data is required.");
+
+            try
+            {
+                var result = await _services.AddEditHTCharges(request);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetAllHTEntries")]
+        public async Task<ActionResult<List<HTCharges>>> GetAllHTEntries()
+        {
+
+            var response = await _services.GetAllHTEntries();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+        [HttpPost("AddEditFSCTHCCharges")]
+        public async Task<IActionResult> AddEditFSCTHCCharges(RequestFscThcChargeRequest request)
+        {
+            if (request == null)
+                return BadRequest("Request data is required.");
+
+            try
+            {
+                var result = await _services.AddEditFSCTHCCharges(request);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetAllFSCTHCCharges")]
+        public async Task<ActionResult<List<FSCTHCcharges>>> GetAllFSCTHCCharges()
+        {
+
+            var response = await _services.GetAllFSCTHCCharges();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
     }
 }

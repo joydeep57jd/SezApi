@@ -18,6 +18,9 @@ namespace SezApi.Data
         public DbSet<mststoragecharge> mststoragecharge { get; set; }
         public DbSet<AddEditResponse> AddEditResponse { get; set; }
         public DbSet<GetEntry> GetEntryList { get; set; }
+        public DbSet<HTCharges> HTChargesList { get; set; }
+       public DbSet<FSCTHCcharges> FSCTHCchargesList { get; set; }
+
 
     }
 }
