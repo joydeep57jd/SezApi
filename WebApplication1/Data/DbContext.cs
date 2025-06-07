@@ -19,5 +19,11 @@ namespace SezApi.Data
         public DbSet<AddEditResponse> AddEditResponse { get; set; }
         public DbSet<GetEntry> GetEntryList { get; set; }
 
+        public DbSet<MstOperation> GetMstOperation { get; set; }
+
+        public DbSet<MstSac> GetMstSac { get; set; }
+
+        public DbSet<MstEntryFee> GetMstEntryFee { get; set; }
+
     }
 }

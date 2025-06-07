@@ -19,10 +19,10 @@ namespace SezApi.Controllers
             _services = services;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
 
         [HttpPost("add-test")]
         public async Task<IActionResult> AddTest(test product)
@@ -93,6 +93,102 @@ namespace SezApi.Controllers
         {
 
             var response = await _services.GetAllEntries();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("AddEditMstOperation")]
+        public async Task<IActionResult> AddEditMstOperation(RequestMstOperation request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditMstOperation(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetMstOperation")]
+        public async Task<ActionResult<List<GetEntry>>> GetMstOperation()
+        {
+
+            var response = await _services.GetMstOperation();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("AddEditMstSac")]
+        public async Task<IActionResult> AddEditMstSac(RequestMstSac request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditMstSac(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetMstSac")]
+        public async Task<ActionResult<List<MstSac>>> GetMstSac()
+        {
+
+            var response = await _services.GetMstSac();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("AddEditMstEntryFee")]
+        public async Task<IActionResult> AddEditMstEntryFee(RequestMstEntryFee request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditMstEntryFee(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetMstEntryFee")]
+        public async Task<ActionResult<List<MstSac>>> GetMstEntryFee()
+        {
+
+            var response = await _services.GetMstEntryFee();
 
             if (response.Data == null || !response.Data.Any())
             {

@@ -1,4 +1,5 @@
 ﻿
+using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 using SezApi.Data;
 using SezApi.Model.DBModels;
@@ -28,7 +29,7 @@ namespace SezApi.Services
             }
         }
 
-        public async Task<AddEditResponse> AddMststorageCharge(RequestMststorageCharge mststorageCharge)
+        public async Task<AddEditResponse> AddMststorageCharge(RequestMststorageCharge request)
         {
             var response = new AddEditResponse();
             try
@@ -36,26 +37,24 @@ namespace SezApi.Services
                 var result = await _db.AddEditResponse
                     .FromSqlInterpolated($@"
                 EXEC SP_AddMstStorageCharge
-                    {mststorageCharge.StorageChargeId},
-                    {mststorageCharge.BranchId},
-                    {mststorageCharge.WarehouseType},
-                    {mststorageCharge.ChargeType},
-                    {mststorageCharge.RateSqMPerWeek},
-                    {mststorageCharge.RateSqMeterPerMonth},
-                    {mststorageCharge.RateMeterPerDay},
-                    {mststorageCharge.RateCubMeterPerDay},
-                    {mststorageCharge.RateCubMeterPerWeek},
-                    {mststorageCharge.RateCubMeterPerMonth},
-                    {mststorageCharge.EffectiveDate},
-                    {mststorageCharge.DaysRangeFrom},
-                    {mststorageCharge.DaysRangeTo},
-                    {mststorageCharge.SacCode},
-                    {mststorageCharge.CommodityType},
-                    {mststorageCharge.CreatedBy},
-                    {mststorageCharge.CreatedOn},
-                    {mststorageCharge.UpdatedBy},
-                    {mststorageCharge.UpdatedOn},
-                    {mststorageCharge.SurCharge}
+                    {request.StorageChargeId},
+                    {request.BranchId},
+                    {request.WarehouseType},
+                    {request.ChargeType},
+                    {request.RateSqMPerWeek},
+                    {request.RateSqMeterPerMonth},
+                    {request.RateMeterPerDay},
+                    {request.RateCubMeterPerDay},
+                    {request.RateCubMeterPerWeek},
+                    {request.RateCubMeterPerMonth},
+                    {request.EffectiveDate},
+                    {request.DaysRangeFrom},
+                    {request.DaysRangeTo},
+                    {request.SacCode},
+                    {request.CommodityType},
+                    {request.CreatedBy},
+                    {request.UpdatedBy},
+                    {request.SurCharge}
             ").ToListAsync();
 
                 response.Response = result.FirstOrDefault()?.Response ?? "No response";
@@ -165,6 +164,159 @@ namespace SezApi.Services
             catch (Exception ex)
             {
                 response.Data = new List<GetEntry>();
+                response.Status = false;
+            }
+
+            return response;
+        }
+
+        public async Task<AddEditResponse> AddEditMstOperation(RequestMstOperation request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                       .FromSqlInterpolated($@"
+                          EXEC SP_AddMstOperation 
+                          @OperationId = {request.OperationId},
+                          @BranchId = {request.BranchId},
+                          @OperationType = {request.OperationType},
+                          @OperationCode = {request.OperationCode},
+                          @SacId = {request.SacId},
+                          @OperationSDesc = {request.OperationSDesc},
+                          @OperationDesc = {request.OperationDesc},
+                          @ClauseOrder = {request.ClauseOrder},
+                          @PkgCount = {request.PkgCount},
+                          @CreatedBy = {request.CreatedBy},
+                          @UpdatedBy = {request.UpdatedBy}
+                      ")
+                  .AsNoTracking()
+                  .ToListAsync();
+
+
+                var response = result.FirstOrDefault();
+
+                return response ?? new AddEditResponse { Response = "No response" };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEditMstOperation", ex);
+            }
+        }
+
+        public async Task<Response<List<MstOperation>>> GetMstOperation()
+        {
+            var response = new Response<List<MstOperation>>();
+
+            try
+            {
+                var result = await _db.GetMstOperation.ToListAsync();
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<MstOperation>();
+                response.Status = false;
+            }
+
+            return response;
+        }
+
+        public async Task<AddEditResponse> AddEditMstSac(RequestMstSac request) 
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                      .FromSqlInterpolated($@"
+                      EXEC SP_AddMstSac 
+                     @SacId = {request.SacId},
+                     @BranchId = {request.BranchId},
+                     @SacCode = {request.SacCode},
+                     @Description = {request.Description},
+                     @Gst = {request.Gst},
+                     @Cess = {request.Cess},
+                     @CreatedBy = {request.CreatedBy},
+                     @UpdatedBy = {request.UpdatedBy}
+                     ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response" };
+
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEditMstOperation", ex);
+            }
+        }
+
+        public async Task<Response<List<MstSac>>> GetMstSac()
+        {
+            var response = new Response<List<MstSac>>();
+
+            try
+            {
+                var result = await _db.GetMstSac.ToListAsync();
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<MstSac>();
+                response.Status = false;
+            }
+
+            return response;
+        }
+
+        public async Task<AddEditResponse> AddEditMstEntryFee(RequestMstEntryFee request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+            EXEC SP_AddEditMstEntryFee 
+                @EntryFeeId = {request.EntryFeeId},
+                @ContainerType = {request.ContainerType},
+                @CommodityType = {request.CommodityType},
+                @OperationType = {request.OperationType},
+                @Reefer = {request.Reefer},
+                @Rate = {request.Rate},
+                @EffectiveDate = {request.EffectiveDate},
+                @ContainerSize = {request.ContainerSize},
+                @SacCode = {request.SacCode},
+                @BranchId = {request.BranchId},
+                @CreatedBy = {request.CreatedBy},
+                @UpdatedBy = {request.UpdatedBy},
+                @WeightSlab = {request.WeightSlab}
+        ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response" };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute SP_AddMstEntryFee", ex);
+            }
+
+        }
+        
+        public async Task<Response<List<MstEntryFee>>> GetMstEntryFee()
+        {
+            var response = new Response<List<MstEntryFee>>();
+
+            try
+            {
+                var result = await _db.GetMstEntryFee.ToListAsync();
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<MstEntryFee>();
                 response.Status = false;
             }
 
