@@ -8,7 +8,7 @@ using SezApi.Model.Response;
 using System.Linq;
 namespace SezApi.Services
 {
-    public class Services  : IServices
+    public class Services : IServices
     {
         private readonly SezApiDbContext _db;
 
@@ -118,9 +118,7 @@ namespace SezApi.Services
             @ContainerLoadType = {request.ContainerLoadType},
             @TransportFrom = {(request.TransportFrom.HasValue ? request.TransportFrom.ToString() : null)},
             @CreatedBy = {request.CreatedBy},
-            @CreatedOn = {request.CreatedOn},
             @UpdatedBy = {request.UpdatedBy},
-            @UpdatedOn = {request.UpdatedOn},
             @ContainerNo1 = {request.ContainerNo1},
             @BranchId = {request.BranchId},
             @FormOneDetailId = {request.FormOneDetailId},
@@ -146,7 +144,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
-                // Log exception here
+
                 throw new ApplicationException("Failed to execute Sp_AddEditGetEntry", ex);
             }
         }
@@ -317,6 +315,119 @@ namespace SezApi.Services
             catch (Exception ex)
             {
                 response.Data = new List<MstEntryFee>();
+                response.Status = false;
+            }
+
+            return response;
+        }
+
+        public async Task<AddEditResponse> AddEditHTCharges(HTChargesRequest request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+                    EXEC dbo.Sp_AddEditHTCharges 
+                        @HTChargesID = {request.HTChargesID},
+                        @OperationId = {request.OperationId},
+                        @ContainerType = {request.ContainerType},
+                        @Type = {request.Type},
+                        @Size = {request.Size},
+                        @MaxDistance = {request.MaxDistance},
+                        @CommodityType = {request.CommodityType},
+                        @ContainerLoadType = {request.ContainerLoadType},
+                        @TransportFrom = {request.TransportFrom},
+                        @EximType = {request.EximType},
+                        @RateCWC = {request.RateCWC},
+                        @ContractorRate = {request.ContractorRate},
+                        @EffectiveDate = {request.EffectiveDate},
+                        @BranchId = {request.BranchId},
+                        @CreatedBy = {request.CreatedBy},
+                        @UpdatedBy = {request.UpdatedBy}
+                ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEntryHTCharges", ex);
+            }
+        }
+
+        public async Task<Response<List<HTCharges>>> GetAllHTEntries()
+        {
+            var response = new Response<List<HTCharges>>();
+
+            try
+            {
+                var result = await _db.HTChargesList.ToListAsync();
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<HTCharges>();
+                response.Status = false;
+            }
+
+            return response;
+        }
+
+        public async Task<AddEditResponse> AddEditFSCTHCCharges(RequestFscThcChargeRequest request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+                    EXEC dbo.Sp_AddEditFscthcCharges 
+                        @FSCChargesID = {request.FSCChargesID},
+                        @OperationId = {request.OperationId},
+                        @ContainerType = {request.ContainerType},
+                        @Type = {request.Type},
+                            @Size = {request.Size},
+                            @MaxDistance = {request.MaxDistance},
+                            @CommodityType = {request.CommodityType},
+                            @ContainerLoadType = {request.ContainerLoadType},
+                            @TransportFrom = {request.TransportFrom},
+                            @EximType = {request.EximType},
+                            @LocationId = {request.LocationId},
+                            @FromMetric = {request.FromMetric},
+                            @ToMetric = {request.ToMetric},
+                            @RateCWC = {request.RateCWC},
+                            @ContractorRate = {request.ContractorRate},
+                            @EffectiveDate = {request.EffectiveDate},
+                            @BranchId = {request.BranchId},
+                            @CreatedBy = {request.CreatedBy},
+                            @UpdatedBy = {request.UpdatedBy}
+                             ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEntryHTCharges", ex);
+            }
+        }
+
+        public async Task<Response<List<FSCTHCcharges>>> GetAllFSCTHCCharges()
+        {
+            var response = new Response<List<FSCTHCcharges>>();
+
+            try
+            {
+                var result = await _db.FSCTHCchargesList.ToListAsync();
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<FSCTHCcharges>();
                 response.Status = false;
             }
 
