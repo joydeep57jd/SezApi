@@ -61,7 +61,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
-                response.Response = "Some error occurred";
+                response.Response = $"Error Occured {ex}";
             }
 
             return response;
@@ -80,6 +80,7 @@ namespace SezApi.Services
             {
                 response.Data = new List<mststoragecharge>();
                 response.Status = false;
+                response.Message = $"Error Occured {ex}";
             }
 
             return response;
