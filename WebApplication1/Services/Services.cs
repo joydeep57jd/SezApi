@@ -481,5 +481,99 @@ namespace SezApi.Services
           return response;
         }
 
+        public async Task<AddEditResponse> AddEditMovementChrg(RequestMovementCharges request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+                    EXEC dbo.Sp_AddEditMovementChrg 
+                        @MovementChargeId = {request.MovementChargeId},
+                        @MovementBy = {request.MovementBy},
+                        @Origin = {request.Origin},
+                        @MovementVia = {request.MovementVia},
+                        @Size = {request.Size},
+                        @CargoType = {request.CargoType},
+                        @MovementRate = {request.MovementRate},
+                        @EffectiveDate = {request.EffectiveDate},
+                        @CreatedBy = {request.CreatedBy},
+                        @ModifiedBy = {request.ModifiedBy}
+                        
+                ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEntryHTCharges", ex);
+            }
+        }
+
+        public async Task<Response<List<MovementCharge>>> GetAllMovementCharges()
+        {
+            var response = new Response<List<MovementCharge>>();
+
+            try
+            {
+                var result = await _db.GetMovementChargesList.ToListAsync();
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<MovementCharge>();
+                response.Status = false;
+            }
+            return response;
+        }
+        public async Task<AddEditResponse> AddEditFumigationChrg(RequestFumigationCharges request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+                    EXEC dbo.Sp_AddEditfumigationChrg 
+                        @FumigationChargeId = {request.FumigationChargeId},
+                        @ChargesFor = {request.ChargesFor},
+                        @ContainerSize = {request.ContainerSize},
+                        @FromWeight = {request.FromWeight},
+                        @ToWeight = {request.ToWeight},
+                        @Rate = {request.Rate}
+                       
+                        
+                ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEntryHTCharges", ex);
+            }
+        }
+        public async Task<Response<List<FumigationCharge>>> GetAllFumigationCharges()
+        {
+            var response = new Response<List<FumigationCharge>>();
+
+            try
+            {
+                var result = await _db.GetFumigationChargesList.ToListAsync();
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<FumigationCharge>();
+                response.Status = false;
+            }
+            return response;
+        }
+
+
     }
 }

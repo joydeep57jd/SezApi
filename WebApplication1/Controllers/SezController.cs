@@ -293,5 +293,72 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+        [HttpPost("AddEditMovementChrg")]
+        public async Task<IActionResult> AddEditMovementChrg(RequestMovementCharges request)
+        {
+            if (request == null)
+                return BadRequest("Request data is required.");
+
+            try
+            {
+                var result = await _services.AddEditMovementChrg(request);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetAllMovementCharges")]
+        public async Task<ActionResult<List<MovementCharge>>> GetAllMovementCharges()
+        {
+
+            var response = await _services.GetAllMovementCharges();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("AddEditFumigationChrg")]
+        public async Task<IActionResult> AddEditFumigationChrg(RequestFumigationCharges request)
+        {
+            if (request == null)
+                return BadRequest("Request data is required.");
+
+            try
+            {
+                var result = await _services.AddEditFumigationChrg(request);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetAllFumigationCharges")]
+        public async Task<ActionResult<List<FumigationCharge>>> GetAllFumigationCharges()
+        {
+
+            var response = await _services.GetAllFumigationCharges();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+
     }
 }
