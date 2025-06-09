@@ -22,5 +22,7 @@ namespace SezApi.Services
         Task<Response<List<HTCharges>>> GetAllHTEntries();
         Task<AddEditResponse> AddEditFSCTHCCharges(RequestFscThcChargeRequest request);
         Task<Response<List<FSCTHCcharges>>> GetAllFSCTHCCharges();
+        Task<AddEditResponse> AddEditReeferCharges(RequestReeferCharges request);
+        Task<Response<List<ReeferCharges>>> GetAllReeferCharges();
     }
 }

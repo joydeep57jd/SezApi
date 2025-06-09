@@ -434,5 +434,52 @@ namespace SezApi.Services
 
             return response;
         }
+
+        public async Task<AddEditResponse> AddEditReeferCharges(RequestReeferCharges request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+                    EXEC dbo.Sp_AddEditReeferChrg 
+                        @ReeferChrgId = {request.ReeferChrgId},
+                        @EffectiveDate = {request.EffectiveDate},
+                        @ElectricityCharge = {request.ElectricityCharge},
+                        @SacCode = {request.SacCode},
+                        @ContainerSize = {request.ContainerSize},
+                        @CreatedBy = {request.CreatedBy},
+                        @UpdatedBy = {request.UpdatedBy}
+                        
+                ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEntryHTCharges", ex);
+            }
+        }
+
+        public async Task<Response<List<ReeferCharges>>> GetAllReeferCharges()
+        {
+            var response = new Response<List<ReeferCharges>>();
+
+            try
+            {
+                var result = await _db.GetReeferChargesList.ToListAsync();
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ReeferCharges>();
+                response.Status = false;
+            }
+          return response;
+        }
+
     }
 }

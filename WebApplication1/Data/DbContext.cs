@@ -20,13 +20,11 @@ namespace SezApi.Data
         public DbSet<GetEntry> GetEntryList { get; set; }
         public DbSet<HTCharges> HTChargesList { get; set; }
        public DbSet<FSCTHCcharges> FSCTHCchargesList { get; set; }
-
-
         public DbSet<MstOperation> GetMstOperation { get; set; }
-
         public DbSet<MstSac> GetMstSac { get; set; }
-
         public DbSet<MstEntryFee> GetMstEntryFee { get; set; }
+        public DbSet<ReeferCharges> GetReeferChargesList { get; set; }
+        
 
     }
 }
