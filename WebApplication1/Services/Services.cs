@@ -574,6 +574,52 @@ namespace SezApi.Services
             return response;
         }
 
+        public async Task<AddEditResponse> AddEditRTChargesDtl(RequestRTChargesDtl request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+                    EXEC dbo.Sp_AddEditRTChargesDtl 
+                        @RTChargesDtlID = {request.RTChargesDtlID},
+                        @RTChargesID = {request.RTChargesID},
+                        @WtSlabId = {request.WtSlabId},
+                        @FromWtSlabCharge = {request.FromWtSlabCharge},
+                        @ToWtSlabCharge = {request.ToWtSlabCharge},
+                        @RateCWC = {request.RateCWC},
+                        @WeightSlab = {request.WeightSlab},
+                        @PortName = {request.PortName},
+                        @PortId = {request.PortId}             
+                ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEntryHTCharges", ex);
+            }
+        }
+        public async Task<Response<List<RTRChargeDetails>>> GetAllRTChargesDtl()
+        {
+            var response = new Response<List<RTRChargeDetails>>();
+
+            try
+            {
+                var result = await _db.GetRTRChargesDetailsList.ToListAsync();
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<RTRChargeDetails>();
+                response.Status = false;
+            }
+            return response;
+        }
+
 
     }
 }

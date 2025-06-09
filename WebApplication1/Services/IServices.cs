@@ -28,5 +28,7 @@ namespace SezApi.Services
         Task<Response<List<MovementCharge>>> GetAllMovementCharges();
         Task<AddEditResponse> AddEditFumigationChrg(RequestFumigationCharges request);
         Task<Response<List<FumigationCharge>>> GetAllFumigationCharges();
+        Task<AddEditResponse> AddEditRTChargesDtl(RequestRTChargesDtl request);
+        Task<Response<List<RTRChargeDetails>>> GetAllRTChargesDtl();
     }
 }

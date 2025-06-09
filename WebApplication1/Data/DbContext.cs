@@ -26,8 +26,9 @@ namespace SezApi.Data
         public DbSet<ReeferCharges> GetReeferChargesList { get; set; }
         public DbSet<MovementCharge> GetMovementChargesList { get; set; }
         public DbSet<FumigationCharge> GetFumigationChargesList { get; set; }
-        
+        public DbSet<RTRChargeDetails> GetRTRChargesDetailsList { get; set; }
 
+        
 
 
     }

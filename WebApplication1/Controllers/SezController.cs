@@ -358,6 +358,38 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+        [HttpPost("AddEditRTChargesDtl")]
+        public async Task<IActionResult> AddEditRTChargesDtl(RequestRTChargesDtl request)
+        {
+            if (request == null)
+                return BadRequest("Request data is required.");
+
+            try
+            {
+                var result = await _services.AddEditRTChargesDtl(request);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        [HttpGet("GetAllRTChargesDtl")]
+        public async Task<ActionResult<List<RTRChargeDetails>>> GetAllRTChargesDtl()
+        {
+
+            var response = await _services.GetAllRTChargesDtl();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
 
 
     }
