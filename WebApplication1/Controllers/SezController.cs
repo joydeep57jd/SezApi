@@ -261,5 +261,134 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost("AddEditMstGroundRent")]
+        public async Task<IActionResult> AddEditMstGroundRent(RequestMstGroundRent request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditMstGroundRent(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetMstGroundRent")]
+        public async Task<ActionResult<List<MstGroundRent>>> GetMstGroundRent()
+        {
+
+            var response = await _services.GetMstGroundRent();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("AddEditMstInsurance")]
+        public async Task<IActionResult> AddEditMstInsurance(RequestMstInsurance request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditMstInsurance(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetMstInsurance")]
+        public async Task<ActionResult<List<MstInsurance>>> GetMstInsurance()
+        {
+
+            var response = await _services.GetMstInsurance();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("AddEditMstMiscellaneouse")]
+        public async Task<IActionResult> AddEditMstMiscellaneouse(RequestMstMiscellaneous request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditMstMiscellaneouse(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetMstMiscellaneouse")]
+        public async Task<ActionResult<List<MstInsurance>>> GetMstMiscellaneouse()
+        {
+
+            var response = await _services.GetMstMiscellaneous();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("AddEditMstRailFreightFees")]
+        public async Task<IActionResult> AddEditMstRailFreightFees(RequestMstRailFreightFees request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditMstRailFreightFees(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetMstRailFreightFees")]
+        public async Task<ActionResult<List<MstInsurance>>> GetMstRailFreightFees()
+        {
+
+            var response = await _services.GetMstRailFreightFees();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
     }
 }

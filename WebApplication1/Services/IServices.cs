@@ -22,5 +22,14 @@ namespace SezApi.Services
         Task<Response<List<HTCharges>>> GetAllHTEntries();
         Task<AddEditResponse> AddEditFSCTHCCharges(RequestFscThcChargeRequest request);
         Task<Response<List<FSCTHCcharges>>> GetAllFSCTHCCharges();
+        Task<AddEditResponse> AddEditMstGroundRent(RequestMstGroundRent request);
+        Task<Response<List<MstGroundRent>>> GetMstGroundRent();
+        Task<AddEditResponse> AddEditMstInsurance(RequestMstInsurance request);
+        Task<Response<List<MstInsurance>>> GetMstInsurance();
+        Task<AddEditResponse> AddEditMstMiscellaneouse(RequestMstMiscellaneous request);
+        Task<Response<List<MstMiscellaneous>>> GetMstMiscellaneous();
+
+        Task<AddEditResponse> AddEditMstRailFreightFees(RequestMstRailFreightFees request);
+        Task<Response<List<MstRailFreightFees>>> GetMstRailFreightFees();
     }
 }

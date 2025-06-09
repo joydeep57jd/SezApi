@@ -434,5 +434,219 @@ namespace SezApi.Services
 
             return response;
         }
+
+        public async Task<AddEditResponse> AddEditMstGroundRent(RequestMstGroundRent request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+            EXEC dbo.Sp_AddEditGroundRent 
+                @GroundRentId = {request.GroundRentId},
+                @ContainerType = {request.ContainerType},
+                @CommodityType = {request.CommodityType},
+                @DaysRangeFrom = {request.DaysRangeFrom},
+                @DaysRangeTo = {request.DaysRangeTo},
+                @RentAmount = {request.RentAmount},
+                @ElectricityCharge = {request.ElectricityCharge},
+                @Size = {request.Size},
+                @OperationType = {request.OperationType},
+                @EffectiveDate = {request.EffectiveDate},
+                @BranchId = {request.BranchId},
+                @SacCode = {request.SacCode},
+                @CreatedBy = {request.CreatedBy},
+                @UpdatedBy = {request.UpdatedBy},
+                @FclLcl = {request.FclLcl}
+                ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEditGroundRent", ex);
+            }
+
+        }
+
+        public async Task<Response<List<MstGroundRent>>> GetMstGroundRent()
+        {
+            var response = new Response<List<MstGroundRent>>();
+
+            try
+            {
+                var result = await _db.GetMstGroundRent.ToListAsync();
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<MstGroundRent>();
+                response.Status = false;
+            }
+
+            return response;
+        }
+
+        public async Task<AddEditResponse> AddEditMstInsurance(RequestMstInsurance request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+            EXEC dbo.Sp_AddEditInsurance 
+                @InsuranceId = {request.InsuranceId},
+                @Charge = {request.Charge},
+                @EffectiveDate = {request.EffectiveDate},
+                @BranchId = {request.BranchId},
+                @SacCode = {request.SacCode},
+                @CreatedBy = {request.CreatedBy},
+                @UpdatedBy = {request.UpdatedBy}
+        ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEditInsurance", ex);
+            }
+
+        }
+
+        public async Task<Response<List<MstInsurance>>> GetMstInsurance()
+        {
+            var response = new Response<List<MstInsurance>>();
+
+            try
+            {
+                var result = await _db.GetMstInsurance.ToListAsync();
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<MstInsurance>();
+                response.Status = false;
+            }
+
+            return response;
+        }
+
+        public async Task<AddEditResponse> AddEditMstMiscellaneouse(RequestMstMiscellaneous request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                        .FromSqlInterpolated($@"
+                        EXEC dbo.Sp_AddEditMiscellaneous 
+                        @MiscellaneousId = {request.MiscellaneousId},
+                        @BranchId = {request.BranchId},
+                        @Fumigation = {request.Fumigation},
+                        @Washing = {request.Washing},
+                        @Reworking = {request.Reworking},
+                        @Bagging = {request.Bagging},
+                        @Palletizing = {request.Palletizing},
+                        @Printing = {request.Printing},
+                        @Banking = {request.Banking},
+                        @PhotoCopy = {request.PhotoCopy},
+                        @ChequeReturn = {request.ChequeReturn},
+                        @Others = {request.Others},
+                        @EffectiveDate = {request.EffectiveDate},
+                        @SacCode = {request.SacCode},
+                        @CreatedBy = {request.CreatedBy},
+                        @UpdatedBy = {request.UpdatedBy},
+                        @FumigationChargeType = {request.FumigationChargeType}
+                      ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEditMiscellaneous", ex);
+            }
+
+        }
+
+        public async Task<Response<List<MstMiscellaneous>>> GetMstMiscellaneous()
+        {
+            var response = new Response<List<MstMiscellaneous>>();
+
+            try
+            {
+                var result = await _db.GetMstMiscellaneous.ToListAsync();
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<MstMiscellaneous>();
+                response.Status = false;
+            }
+
+            return response;
+        }
+
+        public async Task<AddEditResponse> AddEditMstRailFreightFees(RequestMstRailFreightFees request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+                EXEC dbo.Sp_AddEditRailFreightFees 
+                @RailFreightId = {request.RailFreightId},
+                @ContainerType = {request.ContainerType},
+                @CommodityType = {request.CommodityType},
+                @OperationType = {request.OperationType},
+                @Reefer = {request.Reefer},
+                @Rate = {request.Rate},
+                @ContainerSize = {request.ContainerSize},
+                @Port = {request.Port},
+                @LocationId = {request.LocationId},
+                @FromMetric = {request.FromMetric},
+                @ToMetric = {request.ToMetric},
+                @BranchId = {request.BranchId},
+                @CreatedBy = {request.CreatedBy},
+                @UpdatedBy = {request.UpdatedBy}
+              ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEditRailFreightFees", ex);
+            }
+
+        }
+
+        public async Task<Response<List<MstRailFreightFees>>> GetMstRailFreightFees()
+        {
+            var response = new Response<List<MstRailFreightFees>>();
+
+            try
+            {
+                var result = await _db.GetMstRailFreightFees.ToListAsync();
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<MstRailFreightFees>();
+                response.Status = false;
+            }
+
+            return response;
+        }
+
     }
 }
