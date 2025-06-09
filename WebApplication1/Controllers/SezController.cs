@@ -262,6 +262,137 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
+        [HttpPost("AddEditReeferCharges")]
+        public async Task<IActionResult> AddEditReeferCharges(RequestReeferCharges request)
+        {
+            if (request == null)
+                return BadRequest("Request data is required.");
+
+            try
+            {
+                var result = await _services.AddEditReeferCharges(request);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        [HttpGet("GetAllReeferCharges")]
+        public async Task<ActionResult<List<ReeferCharges>>> GetAllReeferCharges()
+        {
+
+            var response = await _services.GetAllReeferCharges();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+        [HttpPost("AddEditMovementChrg")]
+        public async Task<IActionResult> AddEditMovementChrg(RequestMovementCharges request)
+        {
+            if (request == null)
+                return BadRequest("Request data is required.");
+
+            try
+            {
+                var result = await _services.AddEditMovementChrg(request);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetAllMovementCharges")]
+        public async Task<ActionResult<List<MovementCharge>>> GetAllMovementCharges()
+        {
+
+            var response = await _services.GetAllMovementCharges();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("AddEditFumigationChrg")]
+        public async Task<IActionResult> AddEditFumigationChrg(RequestFumigationCharges request)
+        {
+            if (request == null)
+                return BadRequest("Request data is required.");
+
+            try
+            {
+                var result = await _services.AddEditFumigationChrg(request);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetAllFumigationCharges")]
+        public async Task<ActionResult<List<FumigationCharge>>> GetAllFumigationCharges()
+        {
+
+            var response = await _services.GetAllFumigationCharges();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+        [HttpPost("AddEditRTChargesDtl")]
+        public async Task<IActionResult> AddEditRTChargesDtl(RequestRTChargesDtl request)
+        {
+            if (request == null)
+                return BadRequest("Request data is required.");
+
+            try
+            {
+                var result = await _services.AddEditRTChargesDtl(request);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        [HttpGet("GetAllRTChargesDtl")]
+        public async Task<ActionResult<List<RTRChargeDetails>>> GetAllRTChargesDtl()
+        {
+
+            var response = await _services.GetAllRTChargesDtl();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+
+
+
         [HttpPost("AddEditMstGroundRent")]
         public async Task<IActionResult> AddEditMstGroundRent(RequestMstGroundRent request)
         {
