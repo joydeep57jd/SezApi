@@ -94,50 +94,23 @@ namespace SezApi.Services
                 var result = await _db.AddEditResponse
     .FromSqlInterpolated($@"
         EXEC dbo.Sp_AddEditGetEntry 
-            @EntryId = {request.EntryId},
-            @CFSCode = {request.CFSCode},
-            @GateInNo = {request.GateInNo},
-            @EntryDateTime = {request.EntryDateTime},
-            @ReferenceNo = {request.ReferenceNo},
-            @ReferenceDate = {request.ReferenceDate},
-            @ShippingLineId = {request.ShippingLineId},
-            @ShippingLine = {request.ShippingLine},
-            @CHAName = {request.CHAName},
-            @ContainerNo = {request.ContainerNo},
-            @Size = {request.Size},
-            @Reefer = {(request.Reefer.HasValue ? (request.Reefer.Value ? 1 : 0) : (int?)null)},
-            @CustomSealNo = {request.CustomSealNo},
-            @ShippingLineSealNo = {request.ShippingLineSealNo},
-            @VehicleNo = {request.VehicleNo},
-            @ChallanNo = {request.ChallanNo},
-            @CargoDescription = {request.CargoDescription},
-            @CargoType = {request.CargoType},
-            @NoOfPackages = {request.NoOfPackages},
-            @GrossWeight = {request.GrossWeight},
-            @DepositorName = {request.DepositorName},
-            @Remarks = {request.Remarks},
-            @TransportMode = {request.TransportMode},
-            @ContainerLoadType = {request.ContainerLoadType},
-            @TransportFrom = {(request.TransportFrom.HasValue ? request.TransportFrom.ToString() : null)},
-            @CreatedBy = {request.CreatedBy},
-            @UpdatedBy = {request.UpdatedBy},
-            @ContainerNo1 = {request.ContainerNo1},
-            @BranchId = {request.BranchId},
-            @FormOneDetailId = {request.FormOneDetailId},
-            @ContainerType = {request.ContainerType},
-            @OperationType = {request.OperationType},
-            @DisplayCfs = {request.DisplayCfs},
-            @CHAId = {request.CHAId},
-            @CBT = {request.CBT},
-            @TPNo = {request.TPNo},
-            @SystemDateTime = {request.SystemDateTime},
-            @TareWeight = {request.TareWeight},
-            @MsgFlag = {request.MsgFlag},
-            @ActualPackages = {request.ActualPackages},
-            @FileName = {request.FileName},
-            @FileCode = {request.FileCode},
-            @materialType = {request.materialType},
-            @deliveryType = {request.deliveryType}
+          @EntryId = {request.EntryId},
+   @OperationName = {request.OperationName},
+   @ReferenceNo = {request.ReferenceNo},
+   @OperationType = {request.OperationType},
+   @DeliveryType = {request.DeliveryType},
+   @PartyId = {request.PartyId},
+   @ShippingLine = {request.ShippingLine},
+   @ContainerType = {request.ContainerType},
+   @ContainerNo = {request.ContainerNo},
+   @Size = {request.Size},
+   @MaterialType = {request.MaterialType},
+   @VehicleNo = {request.VehicleNo},
+   @DriverName = {request.DriverName},
+   @DriverLicenseNo = {request.DriverLicenseNo},
+   @Remarks = {request.Remarks},
+   @CreatedBy = {request.CreatedBy},
+   @UpdatedBy = {request.UpdatedBy}
             ")
             .AsNoTracking()
             .ToListAsync();
@@ -153,9 +126,9 @@ namespace SezApi.Services
             }
         }
 
-        public async Task<Response<List<GetEntry>>> GetAllEntries(int? page, int? size)
+        public async Task<Response<List<GateEntry>>> GetAllEntries(int? page, int? size)
         {
-            var response = new Response<List<GetEntry>>();
+            var response = new Response<List<GateEntry>>();
 
             try
             {
@@ -177,7 +150,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
-                response.Data = new List<GetEntry>();
+                response.Data = new List<GateEntry>();
                 response.Status = false;
                 response.TotalCount = 0;
                 response.Message = $"Error: {ex.Message}";
