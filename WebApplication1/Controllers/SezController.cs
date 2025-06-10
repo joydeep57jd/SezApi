@@ -521,5 +521,19 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
+        [HttpGet("GetmstParty")]
+        public async Task<ActionResult<List<MstInsurance>>> GetmstParty(int? page, int? size)
+        {
+
+            var response = await _services.GetMstParty(page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
     }
 }
