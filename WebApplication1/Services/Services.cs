@@ -150,20 +150,30 @@ namespace SezApi.Services
             }
         }
 
-        public async Task<Response<List<GetEntry>>> GetAllEntries()
+        public async Task<Response<List<GetEntry>>> GetAllEntries(int page, int size)
         {
             var response = new Response<List<GetEntry>>();
 
             try
             {
-                var result = await _db.GetEntryList.ToListAsync();
-                response.Data = result;
+                var skip = (page - 1) * size;
+
+                var data = await _db.GetEntryList
+                                    .Skip(skip)
+                                    .Take(size)
+                                    .ToListAsync();
+
+                var totalCount = await _db.GetEntryList.CountAsync();
+
+                response.Data = data;
                 response.Status = true;
+                response.TotalCount = totalCount;
             }
             catch (Exception ex)
             {
                 response.Data = new List<GetEntry>();
-                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
             }
 
             return response;
@@ -202,20 +212,30 @@ namespace SezApi.Services
             }
         }
 
-        public async Task<Response<List<MstOperation>>> GetMstOperation()
+        public async Task<Response<List<MstOperation>>> GetMstOperation(int page, int size)
         {
             var response = new Response<List<MstOperation>>();
 
             try
             {
-                var result = await _db.GetMstOperation.ToListAsync();
-                response.Data = result;
+                var skip = (page - 1) * size;
+
+                var data = await _db.GetMstOperation
+                                    .Skip(skip)
+                                    .Take(size)
+                                    .ToListAsync();
+
+                var totalRecords = await _db.GetMstOperation.CountAsync();
+
+                response.Data = data;
                 response.Status = true;
+                response.TotalCount = totalRecords;
             }
             catch (Exception ex)
             {
                 response.Data = new List<MstOperation>();
                 response.Status = false;
+                response.Message = $"Error: {ex.Message}";
             }
 
             return response;
@@ -816,24 +836,35 @@ namespace SezApi.Services
 
         }
 
-        public async Task<Response<List<MstRailFreightFees>>> GetMstRailFreightFees()
+        public async Task<Response<List<MstRailFreightFees>>> GetMstRailFreightFees(int pageNumber, int pageSize)
         {
             var response = new Response<List<MstRailFreightFees>>();
 
             try
             {
-                var result = await _db.GetMstRailFreightFees.ToListAsync();
-                response.Data = result;
+                var skip = (pageNumber - 1) * pageSize;
+
+                var data = await _db.GetMstRailFreightFees
+                                    .Skip(skip)
+                                    .Take(pageSize)
+                                    .ToListAsync();
+
+                var totalRecords = await _db.GetMstRailFreightFees.CountAsync();
+
+                response.Data = data;
                 response.Status = true;
+                response.TotalCount = totalRecords; 
             }
             catch (Exception ex)
             {
                 response.Data = new List<MstRailFreightFees>();
                 response.Status = false;
+                response.Message = $"Error: {ex.Message}";
             }
 
             return response;
         }
+
 
     }
 }

@@ -89,10 +89,10 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetAllEntries")]
-        public async Task<ActionResult<List<GetEntry>>> GetAllEntries()
+        public async Task<ActionResult<List<GetEntry>>> GetAllEntries(int page, int size)
         {
 
-            var response = await _services.GetAllEntries();
+            var response = await _services.GetAllEntries(page, size);
 
             if (response.Data == null || !response.Data.Any())
             {
@@ -185,10 +185,10 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetMstOperation")]
-        public async Task<ActionResult<List<GetEntry>>> GetMstOperation()
+        public async Task<ActionResult<List<GetEntry>>> GetMstOperation(int page, int size)
         {
 
-            var response = await _services.GetMstOperation();
+            var response = await _services.GetMstOperation(page, size);
 
             if (response.Data == null || !response.Data.Any())
             {
@@ -508,10 +508,10 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetMstRailFreightFees")]
-        public async Task<ActionResult<List<MstInsurance>>> GetMstRailFreightFees()
+        public async Task<ActionResult<List<MstInsurance>>> GetMstRailFreightFees(int page, int size)
         {
 
-            var response = await _services.GetMstRailFreightFees();
+            var response = await _services.GetMstRailFreightFees(page, size);
 
             if (response.Data == null || !response.Data.Any())
             {
