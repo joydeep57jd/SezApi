@@ -46,6 +46,8 @@
         public int? ActualPackages { get; set; }
         public string FileName { get; set; }
         public int? FileCode { get; set; }
+        public string materialType { get; set; }
+        public string deliveryType { get; set; }
     }
 
 }

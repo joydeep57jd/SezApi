@@ -135,7 +135,9 @@ namespace SezApi.Services
             @MsgFlag = {request.MsgFlag},
             @ActualPackages = {request.ActualPackages},
             @FileName = {request.FileName},
-            @FileCode = {request.FileCode}
+            @FileCode = {request.FileCode},
+            @materialType = {request.materialType},
+            @deliveryType = {request.deliveryType}
             ")
             .AsNoTracking()
             .ToListAsync();

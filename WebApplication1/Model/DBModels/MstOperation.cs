@@ -10,7 +10,7 @@ namespace SezApi.Model.DBModels
 
         public int? BranchId { get; set; }
 
-        public int OperationType { get; set; }
+        public string OperationType { get; set; }
 
         public string OperationCode { get; set; }
 

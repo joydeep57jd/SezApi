@@ -8,7 +8,7 @@ namespace SezApi.Model.Request
 
             public int? BranchId { get; set; }
 
-            public int OperationType { get; set; }
+            public string OperationType { get; set; }
 
             public string OperationCode { get; set; }
 
