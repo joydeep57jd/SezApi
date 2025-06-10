@@ -89,7 +89,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetAllEntries")]
-        public async Task<ActionResult<List<GetEntry>>> GetAllEntries(int page, int size)
+        public async Task<ActionResult<List<GetEntry>>> GetAllEntries(int? page, int? size)
         {
 
             var response = await _services.GetAllEntries(page, size);
@@ -185,7 +185,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetMstOperation")]
-        public async Task<ActionResult<List<GetEntry>>> GetMstOperation(int page, int size)
+        public async Task<ActionResult<List<GetEntry>>> GetMstOperation(int? page, int? size)
         {
 
             var response = await _services.GetMstOperation(page, size);
@@ -508,7 +508,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetMstRailFreightFees")]
-        public async Task<ActionResult<List<MstInsurance>>> GetMstRailFreightFees(int page, int size)
+        public async Task<ActionResult<List<MstInsurance>>> GetMstRailFreightFees(int? page, int? size)
         {
 
             var response = await _services.GetMstRailFreightFees(page, size);

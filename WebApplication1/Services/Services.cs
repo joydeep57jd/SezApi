@@ -5,6 +5,7 @@ using SezApi.Data;
 using SezApi.Model.DBModels;
 using SezApi.Model.Request;
 using SezApi.Model.Response;
+using System.Drawing;
 using System.Linq;
 namespace SezApi.Services
 {
@@ -150,20 +151,23 @@ namespace SezApi.Services
             }
         }
 
-        public async Task<Response<List<GetEntry>>> GetAllEntries(int page, int size)
+        public async Task<Response<List<GetEntry>>> GetAllEntries(int? page, int? size)
         {
             var response = new Response<List<GetEntry>>();
 
             try
             {
-                var skip = (page - 1) * size;
+                var query = _db.GetEntryList.AsQueryable();
 
-                var data = await _db.GetEntryList
-                                    .Skip(skip)
-                                    .Take(size)
-                                    .ToListAsync();
+                var totalCount = await query.CountAsync();
 
-                var totalCount = await _db.GetEntryList.CountAsync();
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    int skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -172,6 +176,7 @@ namespace SezApi.Services
             catch (Exception ex)
             {
                 response.Data = new List<GetEntry>();
+                response.Status = false;
                 response.TotalCount = 0;
                 response.Message = $"Error: {ex.Message}";
             }
@@ -212,20 +217,23 @@ namespace SezApi.Services
             }
         }
 
-        public async Task<Response<List<MstOperation>>> GetMstOperation(int page, int size)
+        public async Task<Response<List<MstOperation>>> GetMstOperation(int? page, int? size)
         {
             var response = new Response<List<MstOperation>>();
 
             try
             {
-                var skip = (page - 1) * size;
+                var query = _db.GetMstOperation.AsQueryable();
 
-                var data = await _db.GetMstOperation
-                                    .Skip(skip)
-                                    .Take(size)
-                                    .ToListAsync();
+                var totalRecords = await query.CountAsync();
 
-                var totalRecords = await _db.GetMstOperation.CountAsync();
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -235,8 +243,10 @@ namespace SezApi.Services
             {
                 response.Data = new List<MstOperation>();
                 response.Status = false;
+                response.TotalCount = 0;
                 response.Message = $"Error: {ex.Message}";
             }
+
 
             return response;
         }
@@ -836,29 +846,33 @@ namespace SezApi.Services
 
         }
 
-        public async Task<Response<List<MstRailFreightFees>>> GetMstRailFreightFees(int pageNumber, int pageSize)
+        public async Task<Response<List<MstRailFreightFees>>> GetMstRailFreightFees(int? page, int? size)
         {
             var response = new Response<List<MstRailFreightFees>>();
 
             try
             {
-                var skip = (pageNumber - 1) * pageSize;
+                var query = _db.GetMstRailFreightFees.AsQueryable();
 
-                var data = await _db.GetMstRailFreightFees
-                                    .Skip(skip)
-                                    .Take(pageSize)
-                                    .ToListAsync();
+                var totalRecords = await query.CountAsync();
 
-                var totalRecords = await _db.GetMstRailFreightFees.CountAsync();
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
-                response.TotalCount = totalRecords; 
+                response.TotalCount = totalRecords;
             }
             catch (Exception ex)
             {
                 response.Data = new List<MstRailFreightFees>();
                 response.Status = false;
+                response.TotalCount = 0;
                 response.Message = $"Error: {ex.Message}";
             }
 

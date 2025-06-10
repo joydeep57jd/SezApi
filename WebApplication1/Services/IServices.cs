@@ -11,9 +11,9 @@ namespace SezApi.Services
         Task<AddEditResponse> AddMststorageCharge(RequestMststorageCharge mststorageCharge);
         Task<Response<List<mststoragecharge>>> GetMststorageCharge();
         Task<AddEditResponse> AddEditGetEntry(RequestGetEntry request);
-        Task<Response<List<GetEntry>>> GetAllEntries(int page, int size);
+        Task<Response<List<GetEntry>>> GetAllEntries(int? page, int? size);
         Task<AddEditResponse> AddEditMstOperation(RequestMstOperation request);
-        Task<Response<List<MstOperation>>> GetMstOperation(int page, int size);
+        Task<Response<List<MstOperation>>> GetMstOperation(int? page, int? size);
         Task<AddEditResponse> AddEditMstSac(RequestMstSac mststorageCharge);
         Task<Response<List<MstSac>>> GetMstSac();
         Task<AddEditResponse> AddEditMstEntryFee(RequestMstEntryFee request);
@@ -38,6 +38,6 @@ namespace SezApi.Services
         Task<Response<List<MstMiscellaneous>>> GetMstMiscellaneous();
 
         Task<AddEditResponse> AddEditMstRailFreightFees(RequestMstRailFreightFees request);
-        Task<Response<List<MstRailFreightFees>>> GetMstRailFreightFees(int pageNumber, int pageSize);
+        Task<Response<List<MstRailFreightFees>>> GetMstRailFreightFees(int? page, int? size);
     }
 }
