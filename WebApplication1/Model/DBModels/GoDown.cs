@@ -9,6 +9,8 @@ namespace SezApi.Model.DBModels
         public string GodownName { get; set; }
         public string LocationAlias { get; set; }
         public int? CreatedBy { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
         public int? UpdatedBy { get; set; }
     }
 }
