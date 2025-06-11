@@ -40,6 +40,7 @@ namespace SezApi.Data
         public DbSet<MstParty> GetMstParty { get; set; }
 
         public DbSet<MstEximTraderMaster> GetMstEximTraderMaster { get; set; }
+        public DbSet<MstCommodity> GetMstCommodity { get; set; }
 
     }
 }
