@@ -1041,6 +1041,32 @@ namespace SezApi.Services
 
             return response;
         }
+        public async Task<Response<List<State>>> GetState(int? id)
+        {
+            var response = new Response<List<State>>();
+
+            try
+            {
+                var query = _db.GetState.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.CountryId == id.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<State>();
+                response.Status = false;
+            }
+
+            return response;
+        }
         public async Task<AddEditResponse> AddEditGoDown(RequestGoDown request)
         {
             try
