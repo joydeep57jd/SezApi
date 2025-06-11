@@ -48,5 +48,6 @@ namespace SezApi.Services
         Task<Response<List<Port>>> GetPort(int? page, int? size);
         Task<AddEditResponse> AddEditGoDown(RequestGoDown request);
         Task<Response<List<GoDown>>> GetMstGoDown(int? page, int? size);
+        Task<Response<List<Country>>> GetCountry(int? page, int? size);
     }
 }

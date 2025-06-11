@@ -644,5 +644,19 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
+        [HttpGet("GetCountry")]
+        public async Task<ActionResult<List<Country>>> GetCountry(int? page, int? size)
+        {
+
+            var response = await _services.GetCountry(page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
     }
 }
