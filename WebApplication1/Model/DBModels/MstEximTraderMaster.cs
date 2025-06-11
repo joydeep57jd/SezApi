@@ -61,5 +61,8 @@ namespace SezApi.Model.DBModels
 
         [MaxLength(50)]
         public string? SapCustomerNo { get; set; }
+
+        [MaxLength(50)]
+        public string? PartyCode { get; set; }
     }
 }
