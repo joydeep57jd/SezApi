@@ -948,6 +948,98 @@ namespace SezApi.Services
         }
 
 
+        public async Task<Response<List<MstEximTraderMaster>>> GetMstEximTraderMaster(int? page, int? size)
+        {
+            var response = new Response<List<MstEximTraderMaster>>();
 
+            try
+            {
+                var query = _db.GetMstEximTraderMaster.AsQueryable();
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var data = await query.ToListAsync();
+
+                response.Data = data;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<MstEximTraderMaster>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<AddEditResponse> AddEditMstCommodity(RequestMstCommodity request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+            EXEC dbo.SP_AddMstCommodity 
+                @CommodityId = {request.CommodityId},
+                @CommodityName = {request.CommodityName},
+                @CommodityType = {request.CommodityType},
+                @Alias = {request.Alias},
+                @IsTaxExempted = {request.IsTaxExempted},
+                @IsFumigationChemical = {request.IsFumigationChemical},
+                @CreatedBy = {request.CreatedBy},
+                @UpdatedBy = {request.UpdatedBy}
+                 ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute SP_AddMstCommodity", ex);
+            }
+
+        }
+        public async Task<Response<List<MstCommodity>>> GetMstCommodity(int? page, int? size)
+        {
+            var response = new Response<List<MstCommodity>>();
+
+            try
+            {
+                var query = _db.GetMstCommodity.AsQueryable();
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var data = await query.ToListAsync();
+
+                response.Data = data;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<MstCommodity>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
     }
 }

@@ -535,6 +535,52 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
+        [HttpGet("GetMstEximTraderMaster")]
+        public async Task<ActionResult<List<MstEximTraderMaster>>> GetMstEximTraderMaster(int? page, int? size)
+        {
+
+            var response = await _services.GetMstEximTraderMaster(page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("AddEditMstCommodity")]
+        public async Task<IActionResult> AddEditMstCommodity(RequestMstCommodity request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditMstCommodity(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetMstCommodity")]
+        public async Task<ActionResult<List<MstCommodity>>> GetMstCommodity(int? page, int? size)
+        {
+
+            var response = await _services.GetMstCommodity(page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
         [HttpPost("AddEditPort")]
         public async Task<IActionResult> AddEditPort(RequestPort request)
         {
