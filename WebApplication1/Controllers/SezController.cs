@@ -535,5 +535,19 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
+        [HttpGet("GetMstEximTraderMaster")]
+        public async Task<ActionResult<List<MstEximTraderMaster>>> GetMstEximTraderMaster(int? page, int? size)
+        {
+
+            var response = await _services.GetMstEximTraderMaster(page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
     }
 }

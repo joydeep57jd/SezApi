@@ -39,5 +39,7 @@ namespace SezApi.Data
         public DbSet<MstRailFreightFees> GetMstRailFreightFees { get; set; }
         public DbSet<MstParty> GetMstParty { get; set; }
 
+        public DbSet<MstEximTraderMaster> GetMstEximTraderMaster { get; set; }
+
     }
 }
