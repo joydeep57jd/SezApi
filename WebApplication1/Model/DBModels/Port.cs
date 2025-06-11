@@ -13,7 +13,7 @@ namespace SezApi.Model.DBModels
         public bool POD { get; set; }
         public int? Country { get; set; }
         public int? State { get; set; }
-        public int CreatedBy { get; set; }
+        public int? CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
     }
 }
