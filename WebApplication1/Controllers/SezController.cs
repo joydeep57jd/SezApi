@@ -612,5 +612,18 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
+        [HttpGet("GetState")]
+        public async Task<ActionResult<List<State>>> GetState(int? id)
+        {
+
+            var response = await _services.GetState(id);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
     }
 }
