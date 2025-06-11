@@ -599,7 +599,7 @@ namespace SezApi.Controllers
             }
         }
         [HttpGet("GetPort")]
-        public async Task<ActionResult<List<Port>>> GetPort(int? page, int? size)
+        public async Task<ActionResult<List<ResponseAddEditPort>>> GetPort(int? page, int? size)
         {
 
             var response = await _services.GetPort(page, size);

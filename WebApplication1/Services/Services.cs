@@ -914,13 +914,33 @@ namespace SezApi.Services
             }
         }
 
-        public async Task<Response<List<Port>>> GetPort(int? page, int? size)
+        public async Task<Response<List<ResponseAddEditPort>>> GetPort(int? page, int? size)
         {
-            var response = new Response<List<Port>>();
+            var response = new Response<List<ResponseAddEditPort>>();
 
             try
             {
-                var query = _db.GetPort.AsQueryable();
+                var query = from port in _db.GetPort
+                            join state in _db.GetState on port.State equals state.Id into stateGroup
+                            from state in stateGroup.DefaultIfEmpty()
+                            join country in _db.GetCountryList on port.Country equals country.Id into countryGroup
+                            from country in countryGroup.DefaultIfEmpty()
+                            select new ResponseAddEditPort
+                            {
+                                PortId = port.PortId,
+                                PortName = port.PortName,
+                                PortAlias = port.PortAlias,
+                                POD = port.POD,
+                                Country = port.Country,
+                                State = port.State,
+                                CreatedBy = port.CreatedBy,
+                                CreatedOn = port.CreatedOn,
+                                CountryName = country != null ? country.Name : null,
+                                StateName = state != null ? state.Name : null
+                            };
+
+                var result = await query.ToListAsync();
+
 
                 var totalRecords = await query.CountAsync();
 
@@ -938,7 +958,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
-                response.Data = new List<Port>();
+                response.Data = new List<ResponseAddEditPort>();
                 response.Status = false;
                 response.TotalCount = 0;
                 response.Message = $"Error: {ex.Message}";
