@@ -38,6 +38,9 @@ namespace SezApi.Data
         public DbSet<MstMiscellaneous> GetMstMiscellaneous { get; set; }
         public DbSet<MstRailFreightFees> GetMstRailFreightFees { get; set; }
         public DbSet<MstParty> GetMstParty { get; set; }
+        public DbSet<Port> GetPort { get; set; }
+        public DbSet<ResponsePort> ResponsePort { get; set; }
+        
 
     }
 }

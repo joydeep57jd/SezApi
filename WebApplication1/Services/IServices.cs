@@ -40,5 +40,7 @@ namespace SezApi.Services
         Task<AddEditResponse> AddEditMstRailFreightFees(RequestMstRailFreightFees request);
         Task<Response<List<MstRailFreightFees>>> GetMstRailFreightFees(int? page, int? size);
         Task<Response<List<MstParty>>> GetMstParty(int? page, int? size);
+        Task<ResponsePort> AddEditPort(RequestPort request);
+        Task<Response<List<Port>>> GetPort(int? page, int? size);
     }
 }

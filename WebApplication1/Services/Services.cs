@@ -887,6 +887,67 @@ namespace SezApi.Services
             return response;
         }
 
+        public async Task<ResponsePort> AddEditPort(RequestPort request)
+        {
+            try
+            {
+                var result = await _db.ResponsePort
+                    .FromSqlInterpolated($@"
+                    EXEC dbo.AddEditMstPort 
+                        @PortId = {request.PortId},
+                        @PortName = {request.PortName},
+                        @PortAlias = {request.PortAlias},
+                        @POD = {request.POD},
+                        @Country = {request.Country},
+                        @State = {request.State},
+                        @CreatedBy = {request.CreatedBy},
+                        @UpdatedBy = {request.UpdatedBy}          
+                ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                return result.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute AddEditMstPort", ex);
+            }
+        }
+
+        public async Task<Response<List<Port>>> GetPort(int? page, int? size)
+        {
+            var response = new Response<List<Port>>();
+
+            try
+            {
+                var query = _db.GetPort.AsQueryable();
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var data = await query.ToListAsync();
+
+                response.Data = data;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<Port>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+
 
     }
 }

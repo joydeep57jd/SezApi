@@ -535,5 +535,36 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
+        [HttpPost("AddEditPort")]
+        public async Task<IActionResult> AddEditPort(RequestPort request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditPort(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        [HttpGet("GetPort")]
+        public async Task<ActionResult<List<Port>>> GetPort(int? page, int? size)
+        {
+
+            var response = await _services.GetPort(page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
     }
 }
