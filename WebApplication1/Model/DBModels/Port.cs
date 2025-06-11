@@ -11,8 +11,8 @@ namespace SezApi.Model.DBModels
         public string PortName { get; set; }
         public string PortAlias { get; set; }
         public bool POD { get; set; }
-        public string Country { get; set; }
-        public string State { get; set; }
+        public int? Country { get; set; }
+        public int? State { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
     }
