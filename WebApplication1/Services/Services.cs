@@ -1041,5 +1041,63 @@ namespace SezApi.Services
 
             return response;
         }
+        public async Task<AddEditResponse> AddEditGoDown(RequestGoDown request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+                 EXEC dbo.AddOrUpdateGodown 
+                @GodownId = {request.GodownId},
+                @GodownName = {request.GodownName},
+                @LocationAlias = {request.LocationAlias},
+                @CreatedBy = {request.CreatedBy},
+                @UpdatedBy = {request.UpdatedBy}
+                 ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute SP_AddMstCommodity", ex);
+            }
+
+        }
+
+        public async Task<Response<List<GoDown>>> GetMstGoDown(int? page, int? size)
+        {
+            var response = new Response<List<GoDown>>();
+
+            try
+            {
+                var query = _db.GetMstGoDown.AsQueryable();
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var data = await query.ToListAsync();
+
+                response.Data = data;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<GoDown>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
     }
 }

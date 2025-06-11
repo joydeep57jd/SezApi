@@ -612,5 +612,37 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
+        [HttpPost("AddEditGoDown")]
+        public async Task<IActionResult> AddEditGoDown(RequestGoDown request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditGoDown(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetMstGoDown")]
+        public async Task<ActionResult<List<GoDown>>> GetMstGoDown(int? page, int? size)
+        {
+
+            var response = await _services.GetMstGoDown(page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
     }
 }
