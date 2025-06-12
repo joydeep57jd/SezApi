@@ -599,7 +599,7 @@ namespace SezApi.Controllers
             }
         }
         [HttpGet("GetPort")]
-        public async Task<ActionResult<List<Port>>> GetPort(int? page, int? size)
+        public async Task<ActionResult<List<ResponseAddEditPort>>> GetPort(int? page, int? size)
         {
 
             var response = await _services.GetPort(page, size);
@@ -625,6 +625,83 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+        [HttpPost("AddEditGoDown")]
+        public async Task<IActionResult> AddEditGoDown(RequestGoDown request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditGoDown(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetMstGoDown")]
+        public async Task<ActionResult<List<GoDown>>> GetMstGoDown(int? page, int? size)
+        {
+
+            var response = await _services.GetMstGoDown(page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetCountry")]
+        public async Task<ActionResult<List<Country>>> GetCountry(int? page, int? size)
+        {
+
+            var response = await _services.GetCountry(page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+        [HttpPost("AddEditYardInvoice")]
+        public async Task<IActionResult> AddEditYardInvoice(RequestYardInvocie request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditYardInvoice(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        [HttpGet("GetYardInvoice")]
+        public async Task<ActionResult<List<InvoiceYard>>> GetYardInvoice(int? page, int? size)
+        {
+
+            var response = await _services.GetYardInvoice(page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+
 
         [HttpPost("AddOblEntry")]
         public async Task<IActionResult> AddOblEntry(RequestOBLEntry request)

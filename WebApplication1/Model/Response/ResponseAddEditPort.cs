@@ -1,13 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace SezApi.Model.DBModels
+﻿namespace SezApi.Model.Response
 {
-    [Table("mstport")]
-    public class Port
+    public class ResponseAddEditPort
     {
-        [Key]
-        public int PortId { get; set; }  
+        public int PortId { get; set; }
         public string PortName { get; set; }
         public string PortAlias { get; set; }
         public bool POD { get; set; }
@@ -15,5 +10,7 @@ namespace SezApi.Model.DBModels
         public int? State { get; set; }
         public int? CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
+        public string CountryName { get; set; } 
+        public string StateName { get; set; } 
     }
 }

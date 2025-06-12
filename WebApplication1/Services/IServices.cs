@@ -45,8 +45,13 @@ namespace SezApi.Services
         Task<Response<List<MstCommodity>>> GetMstCommodity(int? page, int? size);
         
         Task<ResponsePort> AddEditPort(RequestPort request);
-        Task<Response<List<Port>>> GetPort(int? page, int? size);
+        Task<Response<List<ResponseAddEditPort>>> GetPort(int? page, int? size);
         Task<Response<List<State>>> GetState(int? id);
+        Task<AddEditResponse> AddEditGoDown(RequestGoDown request);
+        Task<Response<List<GoDown>>> GetMstGoDown(int? page, int? size);
+        Task<Response<List<Country>>> GetCountry(int? page, int? size);
+        Task<AddEditResponse> AddEditYardInvoice(RequestYardInvocie request);
+        Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size);
         Task<AddEditResponse> AddEditOBLEntry(RequestOBLEntry request);
         Task<Response<List<OBLEntry>>> GetOblEntry(int? id);
     }

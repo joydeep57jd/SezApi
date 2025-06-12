@@ -27,10 +27,6 @@ namespace SezApi.Data
         public DbSet<MovementCharge> GetMovementChargesList { get; set; }
         public DbSet<FumigationCharge> GetFumigationChargesList { get; set; }
         public DbSet<RTRChargeDetails> GetRTRChargesDetailsList { get; set; }
-
-        
-
-
         public DbSet<MstGroundRent> GetMstGroundRent { get; set; }
 
         public DbSet<MstInsurance> GetMstInsurance { get; set; }
@@ -46,6 +42,10 @@ namespace SezApi.Data
         public DbSet<MstCommodity> GetMstCommodity { get; set; }
         public DbSet<State> GetState { get; set; }
         public DbSet<ResponseOBLEntry> ResponseOBLEntry { get; set; }
+        public DbSet<GoDown> GetMstGoDown { get; set; }
+        public DbSet<Country> GetCountryList { get; set; }
+        public DbSet<InvoiceYard> GetYardInvoiceList { get; set; }
+
 
     }
 }
