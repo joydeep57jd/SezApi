@@ -19,7 +19,7 @@ namespace SezApi.Services
         Task<AddEditResponse> AddEditMstEntryFee(RequestMstEntryFee request);
         Task<Response<List<MstEntryFee>>> GetMstEntryFee();
         Task<AddEditResponse> AddEditHTCharges(HTChargesRequest request);
-        Task<Response<List<HTCharges>>> GetAllHTEntries();
+        Task<Response<List<HTCharges>>> GetAllHTEntries(int? page, int? size);
         Task<AddEditResponse> AddEditFSCTHCCharges(RequestFscThcChargeRequest request);
         Task<Response<List<FSCTHCcharges>>> GetAllFSCTHCCharges();
         Task<AddEditResponse> AddEditReeferCharges(RequestReeferCharges request);

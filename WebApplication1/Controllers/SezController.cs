@@ -121,10 +121,10 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetAllHTEntries")]
-        public async Task<ActionResult<List<HTCharges>>> GetAllHTEntries()
+        public async Task<ActionResult<List<HTCharges>>> GetAllHTEntries(int? page, int? size)
         {
 
-            var response = await _services.GetAllHTEntries();
+            var response = await _services.GetAllHTEntries(page,size);
 
             if (response.Data == null || !response.Data.Any())
             {

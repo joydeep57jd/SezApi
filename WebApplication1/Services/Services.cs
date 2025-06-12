@@ -335,21 +335,16 @@ namespace SezApi.Services
                     .FromSqlInterpolated($@"
                     EXEC dbo.Sp_AddEditHTCharges 
                         @HTChargesID = {request.HTChargesID},
-                        @OperationId = {request.OperationId},
-                        @ContainerType = {request.ContainerType},
-                        @Type = {request.Type},
-                        @Size = {request.Size},
-                        @MaxDistance = {request.MaxDistance},
-                        @CommodityType = {request.CommodityType},
-                        @ContainerLoadType = {request.ContainerLoadType},
-                        @TransportFrom = {request.TransportFrom},
-                        @EximType = {request.EximType},
-                        @RateCWC = {request.RateCWC},
-                        @ContractorRate = {request.ContractorRate},
                         @EffectiveDate = {request.EffectiveDate},
-                        @BranchId = {request.BranchId},
+                        @SacCodeId = {request.SacCodeId},
+                        @OperationType = {request.OperationType},
+                        @RateperPacket = {request.RateperPacket},
+                        @WeightForAdditionalCharges = {request.WeightForAdditionalCharges},
+                        @RateForAdditionalCharges = {request.RateForAdditionalCharges},
+                        @MinimumRate = {request.MinimumRate},
                         @CreatedBy = {request.CreatedBy},
                         @UpdatedBy = {request.UpdatedBy}
+                       
                 ")
                     .AsNoTracking()
                     .ToListAsync();
@@ -363,15 +358,27 @@ namespace SezApi.Services
             }
         }
 
-        public async Task<Response<List<HTCharges>>> GetAllHTEntries()
+        public async Task<Response<List<HTCharges>>> GetAllHTEntries(int? page, int? size)
         {
             var response = new Response<List<HTCharges>>();
 
             try
             {
-                var result = await _db.HTChargesList.ToListAsync();
-                response.Data = result;
+                var query = _db.HTChargesList.AsQueryable();
+
+                var totalRecords = await query.CountAsync();
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var data = await query.ToListAsync();
+
+                response.Data = data;
                 response.Status = true;
+                response.TotalCount = totalRecords;
+
             }
             catch (Exception ex)
             {
