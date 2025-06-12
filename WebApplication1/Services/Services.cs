@@ -1067,5 +1067,84 @@ namespace SezApi.Services
 
             return response;
         }
+        public async Task<AddEditResponse> AddEditOBLEntry(RequestOBLEntry request)
+        {
+            var response = new AddEditResponse();
+
+            try
+            {
+                var mainResult = await _db.Set<ResponseOBLEntry>()
+                    .FromSqlInterpolated($@"
+                EXEC dbo.SP_AddOrUpdateOBLEntry 
+                    @Id = {request.Id},
+                    @ContainerCBTType = {request.ContainerCBTType},
+                    @ContainerCBTNo = {request.ContainerCBTNo},
+                    @ContainerCBTSize = {request.ContainerCBTSize},
+                    @IGMNo = {request.IGMNo},
+                    @IGMDate = {request.IGMDate},
+                    @TPNo = {request.TPNo},
+                    @TPDate = {request.TPDate},
+                    @MovementType = {request.MovementType},
+                    @Port = {request.Port},
+                    @Country = {request.Country},
+                    @ShippingLine = {request.ShippingLine},
+                    @CreatedBy = {request.CreatedBy},
+                    @UpdatedBy = {request.UpdatedBy}
+            ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var spResult = mainResult.FirstOrDefault();
+                if (spResult == null || spResult.Id == 0)
+                {
+                    response.Response = "Main SP failed or returned no ID.";
+                    return response;
+                }
+
+                if (request.requestOblEntryAddDtls?.Any() == true)
+                {
+                    foreach (var detail in request.requestOblEntryAddDtls)
+                    {
+                        await _db.AddEditResponse
+                            .FromSqlInterpolated($@"
+                        EXEC dbo.SP_AddOrUpdateOblEntryAdditionalDetails
+                            @ID = {detail.ID},
+                            @AddID = {detail.AddID},
+                            @IcesContId = {detail.IcesContId},
+                            @OBL_HBL_No = {detail.OBL_HBL_No},
+                            @OBL_HBL_Date = {detail.OBL_HBL_Date},
+                            @SMTP_No = {detail.SMTP_No},
+                            @SMTP_Date = {detail.SMTP_Date},
+                            @Cargo_Desc = {detail.Cargo_Desc},
+                            @Commodity = {detail.Commodity},
+                            @Cargo_Type = {detail.Cargo_Type},
+                            @No_of_PKG = {detail.No_of_PKG},
+                            @PKG_Type = {detail.PKG_Type},
+                            @GR_WT_Kg = {detail.GR_WT_Kg},
+                            @Importer_Name = {detail.Importer_Name},
+                            @IGM_Importer_Name = {detail.IGM_Importer_Name},
+                            @IsProcessed = {detail.IsProcessed},
+                            @OBLEntryId = {spResult.Id},
+                            @CreatedBy = {detail.CreatedBy},
+                            @UpdatedBy = {detail.UpdatedBy}
+                    ")
+                            .AsNoTracking()
+                            .ToListAsync();
+                    }
+                }
+
+                response.Response = "OK";
+            }
+            catch (Exception ex)
+            {
+                response.Response = $"Error: {ex.Message}";
+            }
+            return response;
+        }
+        public async Task<Response<List<OBLEntry>>> GetOblEntry(int? id)
+        {
+            var response = new Response<List<OBLEntry>>();
+            return response;
+        }
     }
 }

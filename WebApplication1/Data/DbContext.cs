@@ -45,6 +45,7 @@ namespace SezApi.Data
         public DbSet<MstEximTraderMaster> GetMstEximTraderMaster { get; set; }
         public DbSet<MstCommodity> GetMstCommodity { get; set; }
         public DbSet<State> GetState { get; set; }
+        public DbSet<ResponseOBLEntry> ResponseOBLEntry { get; set; }
 
     }
 }

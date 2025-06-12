@@ -47,5 +47,7 @@ namespace SezApi.Services
         Task<ResponsePort> AddEditPort(RequestPort request);
         Task<Response<List<Port>>> GetPort(int? page, int? size);
         Task<Response<List<State>>> GetState(int? id);
+        Task<AddEditResponse> AddEditOBLEntry(RequestOBLEntry request);
+        Task<Response<List<OBLEntry>>> GetOblEntry(int? id);
     }
 }

@@ -625,5 +625,37 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost("AddOblEntry")]
+        public async Task<IActionResult> AddOblEntry(RequestOBLEntry request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditOBLEntry(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetOblEntry")]
+        public async Task<ActionResult<List<OBLEntry>>> GetOblEntry(int? id)
+        {
+
+            var response = await _services.GetOblEntry(id);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
     }
 }
