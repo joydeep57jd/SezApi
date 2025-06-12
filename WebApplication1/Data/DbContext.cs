@@ -45,6 +45,8 @@ namespace SezApi.Data
         public DbSet<GoDown> GetMstGoDown { get; set; }
         public DbSet<Country> GetCountryList { get; set; }
         public DbSet<InvoiceYard> GetYardInvoiceList { get; set; }
+        public DbSet<OBLEntry> GetOBLEntry { get; set; }
+        public DbSet<OblEntryAdditionalDetails> GetOblEntryAdditionalDetails { get; set; }
 
 
     }

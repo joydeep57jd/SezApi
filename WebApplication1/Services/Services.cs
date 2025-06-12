@@ -1222,6 +1222,27 @@ namespace SezApi.Services
         public async Task<Response<List<OBLEntry>>> GetOblEntry(int? id)
         {
             var response = new Response<List<OBLEntry>>();
+
+            try
+            {
+                var query = _db.GetOBLEntry.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.Id == id.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<OBLEntry>();
+                response.Status = false;
+            }
+
             return response;
         }
 
@@ -1331,7 +1352,37 @@ namespace SezApi.Services
             return response;
         }
 
+        public async Task<Response<List<OblEntryAdditionalDetails>>> GetOblEntryAdditionalDetails(int? id, int? OBLEntryId)
+        {
+            var response = new Response<List<OblEntryAdditionalDetails>>();
 
+            try
+            {
+                var query = _db.GetOblEntryAdditionalDetails.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.ID == id.Value);
+                }
+                if (OBLEntryId.HasValue)
+                {
+                    query = query.Where(s => s.OBLEntryId == OBLEntryId.Value);
+                }
+
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<OblEntryAdditionalDetails>();
+                response.Status = false;
+            }
+
+            return response;
+        }
 
     }
 }

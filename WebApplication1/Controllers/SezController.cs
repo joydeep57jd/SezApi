@@ -734,5 +734,19 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("GetOblEntryAdditionalDetails")]
+        public async Task<ActionResult<List<OblEntryAdditionalDetails>>> GetOblEntryAdditionalDetails(int? id,int? OBLEntryId)
+        {
+
+            var response = await _services.GetOblEntryAdditionalDetails(id, OBLEntryId);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
     }
 }
