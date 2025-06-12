@@ -1108,7 +1108,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("Failed to execute SP_AddMstCommodity", ex);
+                throw new ApplicationException("Failed to execute AddOrUpdateGodown", ex);
             }
 
         }
@@ -1178,5 +1178,81 @@ namespace SezApi.Services
 
             return response;
         }
+
+        public async Task<AddEditResponse> AddEditYardInvoice(RequestYardInvocie  request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+                 EXEC dbo.AddEditYardInvoice 
+                @YardInvId = {request.YardInvId},
+                @TaxInvoice = {request.TaxInvoice},
+                @BillOfSupply = {request.BillOfSupply},
+                @InvoiceNo = {request.InvoiceNo},
+                @DeliveryDate = {request.DeliveryDate},
+                @ApplicationId = {request.ApplicationId},
+                @InvoiceDate = {request.InvoiceDate},
+                @PartyId = {request.PartyId},
+                @PayeeId = {request.PayeeId},
+                @GSTNo = {request.GSTNo},
+                @PaymentMode = {request.PaymentMode},
+                @FactoryDestuffing = {request.FactoryDestuffing},
+                @DirectDestuffing = {request.DirectDestuffing},
+                @PlaceOfSupply = {request.PlaceOfSupply},
+                @SEZId = {request.SEZId},
+                @OTHours = {request.OTHours},
+                @Container = {request.Container},
+                 @CreatedBy = {request.CreatedBy},
+                 @UpdatedBy = {request.UpdatedBy}
+                                 ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute AddEditYardInvoice", ex);
+            }
+
+        }
+
+        public async Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size)
+        {
+            var response = new Response<List<InvoiceYard>>();
+
+            try
+            {
+                var query = _db.GetYardInvoiceList.AsQueryable();
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var data = await query.ToListAsync();
+
+                response.Data = data;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<InvoiceYard>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+
+
     }
 }
