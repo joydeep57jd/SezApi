@@ -53,7 +53,7 @@ namespace SezApi.Services
         Task<AddEditResponse> AddEditYardInvoice(RequestYardInvocie request);
         Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size);
         Task<AddEditResponse> AddEditOBLEntry(RequestOBLEntry request);
-        Task<Response<List<OBLEntry>>> GetOblEntry(int? id);
+        Task<Response<List<OBLEntry>>> GetOblEntry(int? id, int? page, int? size);
         Task<Response<List<OblEntryAdditionalDetails>>> GetOblEntryAdditionalDetails(int? id, int? OBLEntryId);
     }
 }

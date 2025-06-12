@@ -249,7 +249,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetMstEntryFee")]
-        public async Task<ActionResult<List<MstSac>>> GetMstEntryFee()
+        public async Task<IActionResult> GetMstEntryFee()
         {
 
             var response = await _services.GetMstEntryFee();
@@ -722,10 +722,10 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetOblEntry")]
-        public async Task<ActionResult<List<OBLEntry>>> GetOblEntry(int? id)
+        public async Task<ActionResult<List<OBLEntry>>> GetOblEntry(int? id, int? page, int? size)
         {
 
-            var response = await _services.GetOblEntry(id);
+            var response = await _services.GetOblEntry(id,page,size);
 
             if (response.Data == null || !response.Data.Any())
             {

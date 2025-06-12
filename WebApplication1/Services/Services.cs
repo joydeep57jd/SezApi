@@ -279,23 +279,19 @@ namespace SezApi.Services
             try
             {
                 var result = await _db.AddEditResponse
-                    .FromSqlInterpolated($@"
+            .FromSqlInterpolated($@"
             EXEC SP_AddEditMstEntryFee 
-                @EntryFeeId = {request.EntryFeeId},
-                @ContainerType = {request.ContainerType},
-                @CommodityType = {request.CommodityType},
-                @OperationType = {request.OperationType},
-                @Reefer = {request.Reefer},
-                @Rate = {request.Rate},
-                @EffectiveDate = {request.EffectiveDate},
-                @ContainerSize = {request.ContainerSize},
-                @SacCode = {request.SacCode},
-                @BranchId = {request.BranchId},
-                @CreatedBy = {request.CreatedBy},
-                @UpdatedBy = {request.UpdatedBy},
-                @WeightSlab = {request.WeightSlab}
-        ")
-                    .AsNoTracking()
+            @EntryFeeId = {request.EntryFeeId},
+            @OperationType = {request.OperationType},
+            @EffectiveDate = {request.EffectiveDate},
+            @SacCodeId = {request.SacCodeId},
+            @RatePerPacket = {request.RatePerPacket},
+            @MinimumRate = {request.MinimumRate},
+            @MaximumRate = {request.MaximumRate},
+            @CreatedBy = {request.CreatedBy},
+            @UpdatedBy = {request.UpdatedBy}
+           ")
+                      .AsNoTracking()
                     .ToListAsync();
 
                 var response = result.FirstOrDefault();
@@ -1219,7 +1215,7 @@ namespace SezApi.Services
             }
             return response;
         }
-        public async Task<Response<List<OBLEntry>>> GetOblEntry(int? id)
+        public async Task<Response<List<OBLEntry>>> GetOblEntry(int? id, int? page, int? size)
         {
             var response = new Response<List<OBLEntry>>();
 
@@ -1232,15 +1228,26 @@ namespace SezApi.Services
                     query = query.Where(s => s.Id == id.Value);
                 }
 
+                var totalRecords = await query.CountAsync(); 
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
                 var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
+                response.TotalCount = totalRecords;
             }
             catch (Exception ex)
             {
                 response.Data = new List<OBLEntry>();
                 response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
             }
 
             return response;
