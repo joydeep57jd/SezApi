@@ -749,7 +749,7 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
-        [HttpGet("RemoveOblEntryAdditionalDetails")]
+        [HttpDelete("RemoveOblEntryAdditionalDetails")]
         public async Task<ActionResult> RemoveOblEntryAdditionalDetails(int id)
         {
             var response = await _services.RemoveOblEntryAdditionalDetails(id);
