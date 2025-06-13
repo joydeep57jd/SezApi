@@ -863,7 +863,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetMstParty.AsQueryable();
+                var query = _db.GetMstEximTraderMaster.AsQueryable();
 
                 var totalRecords = await query.CountAsync();
 
@@ -875,7 +875,14 @@ namespace SezApi.Services
 
                 var data = await query.ToListAsync();
 
-                response.Data = data;
+                // Map to MstParty
+                var mappedParties = data.Select(trader => new MstParty
+                {
+                    PartyId = trader.TraderId,
+                    PartyName = trader.EximTraderName ?? "" // Use PartyCode as PartyName
+                }).ToList();
+
+                response.Data = mappedParties;
                 response.Status = true;
                 response.TotalCount = totalRecords;
             }
@@ -888,6 +895,7 @@ namespace SezApi.Services
             }
 
             return response;
+
         }
 
         public async Task<ResponsePort> AddEditPort(RequestPort request)
