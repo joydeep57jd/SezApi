@@ -1318,7 +1318,8 @@ namespace SezApi.Services
                 @OTHours = {request.OTHours},
                 @Container = {request.Container},
                  @CreatedBy = {request.CreatedBy},
-                 @UpdatedBy = {request.UpdatedBy}
+                 @UpdatedBy = {request.UpdatedBy},
+                 @PayeeName = {request.PayeeName}
                                  ")
                     .AsNoTracking()
                     .ToListAsync();

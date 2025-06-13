@@ -28,5 +28,6 @@ namespace SezApi.Model.DBModels
         public int? UpdatedBy { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public string? PayeeName { get; set; }
     }
 }
