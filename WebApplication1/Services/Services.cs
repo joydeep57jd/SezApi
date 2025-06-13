@@ -1429,6 +1429,34 @@ namespace SezApi.Services
             return response;
         }
 
+        public async Task<AddEditResponse> RemoveEntries(int id)
+        {
+            var response = new AddEditResponse();
 
+            try
+            {
+                var recordsToDelete = await _db.GetEntryList
+                    .Where(x => x.EntryId == id)
+                    .ToListAsync();
+
+                if (recordsToDelete.Any())
+                {
+                    _db.GetEntryList.RemoveRange(recordsToDelete);
+                    await _db.SaveChangesAsync();
+
+                    response.Response = "Records deleted successfully.";
+                }
+                else
+                {
+                    response.Response = "No records found for the given OBLEntryId.";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Response = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
     }
 }
