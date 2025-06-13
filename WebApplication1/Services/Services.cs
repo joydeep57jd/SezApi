@@ -1319,7 +1319,8 @@ namespace SezApi.Services
                 @Container = {request.Container},
                  @CreatedBy = {request.CreatedBy},
                  @UpdatedBy = {request.UpdatedBy},
-                 @PayeeName = {request.PayeeName}
+                 @PayeeName = {request.PayeeName},
+                 @ApplicationName ={request.ApplicationName}
                                  ")
                     .AsNoTracking()
                     .ToListAsync();
