@@ -6,6 +6,7 @@ using SezApi.Model.DBModels;
 using SezApi.Model.Request;
 using SezApi.Model.Response;
 using SezApi.Services;
+using System.Diagnostics.Eventing.Reader;
 namespace SezApi.Controllers
 {
     [ApiController]
@@ -522,10 +523,10 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetmstParty")]
-        public async Task<ActionResult<List<MstInsurance>>> GetmstParty(int? page, int? size)
+        public async Task<ActionResult<List<MstInsurance>>> GetmstParty(int? page, int? size, string? partyType)
         {
 
-            var response = await _services.GetMstParty(page, size);
+            var response = await _services.GetMstParty(page, size, partyType);
 
             if (response.Data == null || !response.Data.Any())
             {
