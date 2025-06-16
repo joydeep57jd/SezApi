@@ -33,7 +33,7 @@ namespace SezApi.Services
         Task<AddEditResponse> AddEditMstGroundRent(RequestMstGroundRent request);
         Task<Response<List<MstGroundRent>>> GetMstGroundRent();
         Task<AddEditResponse> AddEditMstInsurance(RequestMstInsurance request);
-        Task<Response<List<MstInsurance>>> GetMstInsurance();
+        Task<Response<List<MstInsurance>>> GetMstInsurance(int? page, int? size);
         Task<AddEditResponse> AddEditMstMiscellaneouse(RequestMstMiscellaneous request);
         Task<Response<List<MstMiscellaneous>>> GetMstMiscellaneous();
 
@@ -60,5 +60,9 @@ namespace SezApi.Services
         Task<AddEditResponse> AddEditHandlingCharges(RequestHandlingCharges request);
          Task<Response<List<HandlingChargescs>>> GetAllHandlingCharges(int? page, int? size);
         Task<Response<List<ResponseOBLContauner>>> GetOBLContainerList(int? page, int? size);
+        Task<AddEditResponse> AddEditOverTimeCharge(RequestOverTimeCharge request);
+        Task<Response<List<OverTimeCharge>>> GetOverTimeCharge(int? id, int? page, int? size);
+        Task<AddEditResponse> AddEditExaminationCharge(RequestExaminationCharge request);
+        Task<Response<List<ExaminationCharge>>> GetExaminationCharge(int? id, int? page, int? size);
     }
 }
