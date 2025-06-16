@@ -762,5 +762,38 @@ namespace SezApi.Controllers
             var response = await _services.RemoveEntries(id);
             return Ok(response);
         }
+
+        [HttpPost("AddEditHandlingCharges")]
+        public async Task<IActionResult> AddEditHandlingCharges(RequestHandlingCharges request)
+        {
+            if (request == null)
+                return BadRequest("Request data is required.");
+
+            try
+            {
+                var result = await _services.AddEditHandlingCharges(request);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetAllHandlingCharges")]
+        public async Task<ActionResult<List<HandlingChargescs>>> GetAllHandlingCharges(int? page, int? size)
+        {
+
+            var response = await _services.GetAllHandlingCharges(page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
     }
 }

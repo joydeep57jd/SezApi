@@ -1466,5 +1466,65 @@ namespace SezApi.Services
 
             return response;
         }
+
+        public async Task<AddEditResponse> AddEditHandlingCharges(RequestHandlingCharges request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+                    EXEC dbo.Sp_AddEditHandlingCharges 
+                    @HandlingChargesID = {request.HandlingChargesID},
+                    @EffectiveDate = {request.EffectiveDate},
+                    @SacCodeId = {request.SacCodeId},
+                    @Rate = {request.Rate},
+                    @MinRateperSBBOE = {request.MinRateperSBBOE},
+                    @CreatedBy = {request.CreatedBy},
+                    @UpdatedBy = {request.UpdatedBy}
+                       
+                ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEntryHTCharges", ex);
+            }
+        }
+
+        public async Task<Response<List<HandlingChargescs>>> GetAllHandlingCharges(int? page, int? size)
+        {
+            var response = new Response<List<HandlingChargescs>>();
+
+            try
+            {
+                var query = _db.GetHandlinghargesList.AsQueryable();
+
+                var totalRecords = await query.CountAsync();
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var data = await query.ToListAsync();
+
+                response.Data = data;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<HandlingChargescs>();
+                response.Status = false;
+            }
+
+            return response;
+        }
+
     }
 }

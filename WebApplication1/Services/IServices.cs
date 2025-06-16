@@ -57,5 +57,7 @@ namespace SezApi.Services
         Task<Response<List<OblEntryAdditionalDetails>>> GetOblEntryAdditionalDetails(int? id, int? OBLEntryId);
         Task<AddEditResponse> RemoveOblEntryAdditionalDetails(int OBLEntryId);
         Task<AddEditResponse> RemoveEntries(int id);
+        Task<AddEditResponse> AddEditHandlingCharges(RequestHandlingCharges request);
+         Task<Response<List<HandlingChargescs>>> GetAllHandlingCharges(int? page, int? size);
     }
 }
