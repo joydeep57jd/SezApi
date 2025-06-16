@@ -51,5 +51,13 @@ namespace SezApi.Data
         public DbSet<OverTimeCharge> GetOverTimeCharge { get; set; }
 
         public DbSet<ExaminationCharge> GetExaminationCharge { get; set; }
+
+        public DbSet<ResponseCustomAppraisementApplicationHeader> ResponseCustomAppraisementApplicationHeader { get; set; }
+
+        public DbSet<CustomAppraisementApplicationHeader> CustomAppraisementApplicationHeaderList { get; set; }
+
+        public DbSet<AppraisementDoDetails> GetAppraisementDoDetails { get; set; }
+
+        public DbSet<AppraisementContainerDetails> GetAppraisementContainerDetails { get; set; }
     }
 }

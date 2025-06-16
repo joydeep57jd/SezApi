@@ -1690,5 +1690,228 @@ namespace SezApi.Services
 
             return response;
         }
+
+        public async Task<AddEditResponse> AddEditCustomAppraisementApplicationHeader(RequestCustomAppraisementApplicationHeader request)
+        {
+            var response = new AddEditResponse();
+            try
+            {
+                var mainResult = await _db.Set<ResponseCustomAppraisementApplicationHeader>()
+               .FromSqlInterpolated($@"
+                     EXEC dbo.SP_AddOrUpdateCustomAppraisementApplicationHeader 
+                     @ID = {request.ID},
+                     @AppraisementNo = {request.AppraisementNo},
+                     @AppraisementDate = {request.AppraisementDate},
+                     @ShippingLineId = {request.ShippingLineId},
+                     @CHAId = {request.CHAId},
+                     @Vessel = {request.Vessel},
+                     @Voyage = {request.Voyage},
+                     @Rotation = {request.Rotation},
+                     @DeliveryType = {request.DeliveryType},
+                     @DOStatus = {request.DOStatus},
+                     @AppraisementStatus = {request.AppraisementStatus},
+                     @CreatedBy = {request.CreatedBy},
+                     @ModifiedBy = {request.ModifiedBy}
+                     ")
+                 .AsNoTracking()
+                .ToListAsync();
+                var spResult = mainResult.FirstOrDefault();
+                if (spResult == null || spResult.Id == 0)
+                {
+                    response.Response = "Main SP failed or returned no ID.";
+                    return response;
+                }
+                if (request.AppraisementDoDetailsList?.Any() == true)
+                {
+                    foreach (var detail in request.AppraisementDoDetailsList)
+                    {
+                        var doResult = await _db.Set<AddEditResponse>()
+                        .FromSqlInterpolated($@"
+                        EXEC dbo.SP_AddOrUpdateAppraisementDoDetails 
+                        @Id = {detail.Id},
+                        @DoIssuedBy = {detail.DoIssuedBy},
+                        @CargosDeliveredTo = {detail.CargosDeliveredTo},
+                        @ValidType = {detail.ValidType},
+                        @DoValidDate = {detail.DoValidDate},
+                        @CustomAppraisementId = {spResult.Id},
+                        @CreatedBy = {detail.CreatedBy},
+                        @ModifiedBy = {detail.ModifiedBy}
+                         ")
+                        .AsNoTracking()
+                        .ToListAsync();
+
+                        var doStatus = doResult.FirstOrDefault();
+
+                    }
+                }
+                if (request.AppraisementContainerDetailsList?.Any() == true)
+                {
+                    foreach (var detail in request.AppraisementContainerDetailsList)
+                    {
+                        var containerResult = await _db.Set<AddEditResponse>()
+                       .FromSqlInterpolated($@"
+                        EXEC dbo.SP_AddOrUpdateAppraisementContainerDetails 
+                        @Id = {detail.Id},
+                        @ContainerCBTNo = {detail.ContainerCBTNo},
+                        @ICDCode = {detail.ICDCode},
+                        @Size = {detail.Size},
+                        @FCL_LCL = {detail.FCL_LCL},
+                        @ContainerCBTType = {detail.ContainerCBTType},
+                        @CargoType = {detail.CargoType},
+                        @RMS = {detail.RMS},
+                        @LineNo = {detail.LineNo},
+                        @OBLNoId = {detail.OBLNoId},
+                        @OBLDate = {detail.OBLDate},
+                        @BOENo = {detail.BOENo},
+                        @BOEDate = {detail.BOEDate},
+                        @CHANameAddress = {detail.CHANameAddress},
+                        @ImporterNameAddress = {detail.ImporterNameAddress},
+                        @CargoDescription = {detail.CargoDescription},
+                        @CIFValue = {detail.CIFValue},
+                        @Duty = {detail.Duty},
+                        @NoOfPackages = {detail.NoOfPackages},
+                        @GrossWeightKg = {detail.GrossWeightKg},
+                        @WithoutDOSealNo = {detail.WithoutDOSealNo},
+                        @CustomAppraisementId = {spResult.Id},
+                        @CreatedBy = {detail.CreatedBy},
+                        @ModifiedBy = {detail.ModifiedBy}
+                       ")
+                      .AsNoTracking()
+                      .ToListAsync();
+
+                        var containerStatus = containerResult.FirstOrDefault();
+
+                    }
+                }
+                response.Response = "OK";
+            }
+            catch (Exception ex)
+            {
+                response.Response = $"Error: {ex.Message}";
+            }
+            return response;
+        }
+
+        public async Task<Response<List<CustomAppraisementApplicationHeader>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size)
+        {
+            var response = new Response<List<CustomAppraisementApplicationHeader>>();
+
+            try
+            {
+                var query = _db.CustomAppraisementApplicationHeaderList.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.ID == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<CustomAppraisementApplicationHeader>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<Response<List<AppraisementDoDetails>>> GetAppraisementDoDetails(int? id, int? page, int? size, int? CustAppId)
+        {
+            var response = new Response<List<AppraisementDoDetails>>();
+
+            try
+            {
+                var query = _db.GetAppraisementDoDetails.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.Id == id.Value);
+                }
+                if (CustAppId.HasValue)
+                {
+                    query = query.Where(s => s.CustomAppraisementId == CustAppId.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<AppraisementDoDetails>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<Response<List<AppraisementContainerDetails>>> GetAppraisementContainerDetails(int? id, int? page, int? size, int? CustAppId)
+        {
+            var response = new Response<List<AppraisementContainerDetails>>();
+
+            try
+            {
+                var query = _db.GetAppraisementContainerDetails.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.Id == id.Value);
+                }
+                if (CustAppId.HasValue)
+                {
+                    query = query.Where(s => s.CustomAppraisementId == CustAppId.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<AppraisementContainerDetails>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
     }
 }
