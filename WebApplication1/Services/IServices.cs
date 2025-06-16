@@ -64,5 +64,6 @@ namespace SezApi.Services
         Task<Response<List<OverTimeCharge>>> GetOverTimeCharge(int? id, int? page, int? size);
         Task<AddEditResponse> AddEditExaminationCharge(RequestExaminationCharge request);
         Task<Response<List<ExaminationCharge>>> GetExaminationCharge(int? id, int? page, int? size);
+        Task<Response<List<ResponseCbcContainerList>>> GetCbtContainerDetailsList(int? page, int? size);
     }
 }

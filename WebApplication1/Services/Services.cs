@@ -1732,5 +1732,49 @@ namespace SezApi.Services
 
             return response;
         }
+
+        public async Task<Response<List<ResponseCbcContainerList>>> GetCbtContainerDetailsList(int? page, int? size)
+        {
+            var response = new Response<List<ResponseCbcContainerList>>();
+
+            try
+            {
+                var query = from obl in _db.GetOBLEntry
+                            join obldetails in _db.GetOblEntryAdditionalDetails
+                                on obl.Id equals obldetails.OBLEntryId
+                            select new ResponseCbcContainerList
+                            {
+                                ContainerCBTNo = obl.ContainerCBTNo,
+                                OBL_HBL_No = obldetails.OBL_HBL_No,
+                                Cargo_Type=obldetails.Cargo_Type,
+                                No_of_PKG=obldetails.No_of_PKG,
+                                GR_WT_Kg=obldetails.GR_WT_Kg
+                            };
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var data = await query.ToListAsync();
+
+                response.Data = data;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ResponseCbcContainerList>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
     }
 }

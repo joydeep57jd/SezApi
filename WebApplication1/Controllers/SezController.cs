@@ -874,5 +874,19 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
+        [HttpGet("GetCbtContainerDetailsList")]
+        public async Task<ActionResult<List<ResponseCbcContainerList>>> GetCbtContainerDetailsList(int? page, int? size)
+        {
+
+            var response = await _services.GetCbtContainerDetailsList(page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
     }
 }
