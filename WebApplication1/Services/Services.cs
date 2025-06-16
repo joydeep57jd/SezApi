@@ -1562,7 +1562,7 @@ namespace SezApi.Services
                 @OverTimeChargeId = {request.OverTimeChargeId},
                 @EffectiveDate = {request.EffectiveDate},
                 @SACCodeId = {request.SACCodeId},
-                @OperationTypeId = {request.OperationTypeId},
+                @OperationType = {request.OperationType},
                 @Holiday = {request.Holiday},
                 @Time = {request.Time},
                 @Rate = {request.Rate},

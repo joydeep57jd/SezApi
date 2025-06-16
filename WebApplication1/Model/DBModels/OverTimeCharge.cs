@@ -13,7 +13,7 @@ namespace SezApi.Model.DBModels
 
         public int? SACCodeId { get; set; }
 
-        public int? OperationTypeId { get; set; }
+        public string? OperationType { get; set; }
 
         public bool? Holiday { get; set; }
 
