@@ -8,7 +8,7 @@
         public string OperationType { get; set; }
         public string DeliveryType { get; set; }
         public int PartyId { get; set; }
-        public string ShippingLine { get; set; }
+        public int ShippingLine { get; set; }
         public string ContainerType { get; set; }
         public string ContainerNo { get; set; }
         public string Size { get; set; }
@@ -20,7 +20,7 @@
         public DateTime CreatedOn { get; set; }
         public int CreatedBy { get; set; }
         public DateTime UpdatedOn { get; set; }
-        public int UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
     }
 
 }

@@ -24,8 +24,7 @@ namespace SezApi.Model.DBModels
 
         public int? PartyId { get; set; }
 
-        [StringLength(255)]
-        public string? ShippingLine { get; set; }
+        public int? ShippingLine { get; set; }
 
         [StringLength(50)]
         public string? ContainerType { get; set; }
