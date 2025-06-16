@@ -888,5 +888,64 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
+        [HttpPost("AddEditCustomAppraisementApplicationHeader")]
+        public async Task<IActionResult> AddEditCustomAppraisementApplicationHeader(RequestCustomAppraisementApplicationHeader request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditCustomAppraisementApplicationHeader(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetCustomAppraisementApplicationHeader")]
+        public async Task<ActionResult<List<ExaminationCharge>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size)
+        {
+
+            var response = await _services.GetCustomAppraisementApplicationHeader(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetAppraisementDoDetails")]
+        public async Task<ActionResult<List<AppraisementDoDetails>>> GetAppraisementDoDetails(int? id, int? page, int? size, int? CustAppId)
+        {
+
+            var response = await _services.GetAppraisementDoDetails(id, page, size, CustAppId);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetAppraisementContainerDetails")]
+        public async Task<ActionResult<List<AppraisementDoDetails>>> GetAppraisementContainerDetails(int? id, int? page, int? size, int? CustAppId)
+        {
+
+            var response = await _services.GetAppraisementContainerDetails(id, page, size, CustAppId);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
     }
 }

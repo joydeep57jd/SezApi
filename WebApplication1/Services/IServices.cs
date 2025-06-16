@@ -65,5 +65,10 @@ namespace SezApi.Services
         Task<AddEditResponse> AddEditExaminationCharge(RequestExaminationCharge request);
         Task<Response<List<ExaminationCharge>>> GetExaminationCharge(int? id, int? page, int? size);
         Task<Response<List<ResponseCbcContainerList>>> GetCbtContainerDetailsList(int? page, int? size);
+        Task<AddEditResponse> AddEditCustomAppraisementApplicationHeader(RequestCustomAppraisementApplicationHeader request);
+
+        Task<Response<List<CustomAppraisementApplicationHeader>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size);
+        Task<Response<List<AppraisementDoDetails>>> GetAppraisementDoDetails(int? id, int? page, int? size, int? CustAppId);
+        Task<Response<List<AppraisementContainerDetails>>> GetAppraisementContainerDetails(int? id, int? page, int? size, int? CustAppId);
     }
 }
