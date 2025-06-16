@@ -47,7 +47,8 @@ namespace SezApi.Data
         public DbSet<InvoiceYard> GetYardInvoiceList { get; set; }
         public DbSet<OBLEntry> GetOBLEntry { get; set; }
         public DbSet<OblEntryAdditionalDetails> GetOblEntryAdditionalDetails { get; set; }
+        public DbSet<OverTimeCharge> GetOverTimeCharge { get; set; }
 
-
+        public DbSet<ExaminationCharge> GetExaminationCharge { get; set; }
     }
 }
