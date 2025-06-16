@@ -7,6 +7,7 @@ using SezApi.Model.Request;
 using SezApi.Model.Response;
 using System.Drawing;
 using System.Linq;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace SezApi.Services
 {
     public class Services : IServices
@@ -857,13 +858,22 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<MstParty>>> GetMstParty(int? page, int? size)
+        public async Task<Response<List<MstParty>>> GetMstParty(int? page, int? size, string? partyType)
         {
             var response = new Response<List<MstParty>>();
 
             try
             {
                 var query = _db.GetMstEximTraderMaster.AsQueryable();
+
+                //operation type wise filter
+                if (partyType is not null)
+                {
+                    query = _db.GetMstEximTraderMaster
+                        .Where(x => x.OperationType.ToLower() == partyType.ToLower())
+                        .AsQueryable();
+                }               
+
 
                 var totalRecords = await query.CountAsync();
 
