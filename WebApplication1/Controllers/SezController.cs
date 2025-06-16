@@ -796,5 +796,18 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+        [HttpGet("GetOBLContainerList")]
+        public async Task<ActionResult<List<ResponseOBLContauner>>> GetOBLContainerList(int? page, int? size)
+        {
+
+            var response = await _services.GetOBLContainerList( page,  size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
     }
 }
