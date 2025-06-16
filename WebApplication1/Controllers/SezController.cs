@@ -445,10 +445,10 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetMstInsurance")]
-        public async Task<ActionResult<List<MstInsurance>>> GetMstInsurance()
+        public async Task<ActionResult<List<MstInsurance>>> GetMstInsurance(int? page, int? size)
         {
 
-            var response = await _services.GetMstInsurance();
+            var response = await _services.GetMstInsurance(page, size);
 
             if (response.Data == null || !response.Data.Any())
             {
@@ -796,5 +796,70 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost("AddEditOverTimeCharge")]
+        public async Task<IActionResult> AddEditOverTimeCharge(RequestOverTimeCharge request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditOverTimeCharge(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetOverTimeCharge")]
+        public async Task<ActionResult<List<OverTimeCharge>>> GetOverTimeCharge(int? id, int? page, int? size)
+        {
+
+            var response = await _services.GetOverTimeCharge(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("AddEditExaminationCharge")]
+        public async Task<IActionResult> AddEditExaminationCharge(RequestExaminationCharge request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditExaminationCharge(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetExaminationCharge")]
+        public async Task<ActionResult<List<ExaminationCharge>>> GetExaminationCharge(int? id, int? page, int? size)
+        {
+
+            var response = await _services.GetExaminationCharge(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
     }
 }

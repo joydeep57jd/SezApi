@@ -694,10 +694,10 @@ namespace SezApi.Services
                     .FromSqlInterpolated($@"
             EXEC dbo.Sp_AddEditInsurance 
                 @InsuranceId = {request.InsuranceId},
-                @Charge = {request.Charge},
+                @Rate = {request.Rate},
                 @EffectiveDate = {request.EffectiveDate},
                 @BranchId = {request.BranchId},
-                @SacCode = {request.SacCode},
+                @SacCodeId = {request.SacCodeId},
                 @CreatedBy = {request.CreatedBy},
                 @UpdatedBy = {request.UpdatedBy}
         ")
@@ -714,23 +714,38 @@ namespace SezApi.Services
 
         }
 
-        public async Task<Response<List<MstInsurance>>> GetMstInsurance()
+        public async Task<Response<List<MstInsurance>>> GetMstInsurance(int? page, int? size)
         {
             var response = new Response<List<MstInsurance>>();
 
             try
             {
-                var result = await _db.GetMstInsurance.ToListAsync();
-                response.Data = result;
+                var query = _db.GetMstInsurance.AsQueryable();
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var data = await query.ToListAsync();
+
+                response.Data = data;
                 response.Status = true;
+                response.TotalCount = totalRecords;
             }
             catch (Exception ex)
             {
                 response.Data = new List<MstInsurance>();
                 response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
             }
 
             return response;
+
         }
 
         public async Task<AddEditResponse> AddEditMstMiscellaneouse(RequestMstMiscellaneous request)
@@ -1536,5 +1551,144 @@ namespace SezApi.Services
             return response;
         }
 
+
+        public async Task<AddEditResponse> AddEditOverTimeCharge(RequestOverTimeCharge request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+            EXEC dbo.Sp_AddEditOverTimeCharge 
+                @OverTimeChargeId = {request.OverTimeChargeId},
+                @EffectiveDate = {request.EffectiveDate},
+                @SACCodeId = {request.SACCodeId},
+                @OperationTypeId = {request.OperationTypeId},
+                @Holiday = {request.Holiday},
+                @Time = {request.Time},
+                @Rate = {request.Rate},
+                @MaxMinHours = {request.MaxMinHours},
+                @CreatedBy = {request.CreatedBy},
+                @ModifiedBy = {request.ModifiedBy}
+        ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEditOverTimeCharge", ex);
+            }
+
+        }
+
+        public async Task<Response<List<OverTimeCharge>>> GetOverTimeCharge(int? id, int? page, int? size)
+        {
+            var response = new Response<List<OverTimeCharge>>();
+
+            try
+            {
+                var query = _db.GetOverTimeCharge.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.OverTimeChargeId == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<OverTimeCharge>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<AddEditResponse> AddEditExaminationCharge(RequestExaminationCharge request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+            EXEC dbo.Sp_AddEditExaminationCharge 
+                @ExaminationChargeId = {request.ExaminationChargeId},
+                @EffectiveDate = {request.EffectiveDate},
+                @SACCodeId = {request.SACCodeId},
+                @ExaminationFor = {request.ExaminationFor},
+                @ExaminationPercent = {request.ExaminationPercent},
+                @RatePerPacket = {request.RatePerPacket},
+                @MinimumCharges = {request.MinimumCharges},
+                @WeightForAdditionalCharges = {request.WeightForAdditionalCharges},
+                @RateForAdditionalCharges = {request.RateForAdditionalCharges},
+                @CreatedBy = {request.CreatedBy},
+                @ModifiedBy = {request.ModifiedBy}
+        ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEditExaminationCharge", ex);
+            }
+
+        }
+
+        public async Task<Response<List<ExaminationCharge>>> GetExaminationCharge(int? id, int? page, int? size)
+        {
+            var response = new Response<List<ExaminationCharge>>();
+
+            try
+            {
+                var query = _db.GetExaminationCharge.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.ExaminationChargeId == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ExaminationCharge>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
     }
 }
