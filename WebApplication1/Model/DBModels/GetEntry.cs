@@ -56,5 +56,8 @@ namespace SezApi.Model.DBModels
         public DateTime? UpdatedOn { get; set; }
 
         public int? UpdatedBy { get; set; }
+        public string? CFSNo { get; set; }
+        public DateTime? GateinDate { get; set; }
+        public bool? Reefer { get; set; }
     }
 }

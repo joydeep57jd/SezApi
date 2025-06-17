@@ -111,7 +111,10 @@ namespace SezApi.Services
    @DriverLicenseNo = {request.DriverLicenseNo},
    @Remarks = {request.Remarks},
    @CreatedBy = {request.CreatedBy},
-   @UpdatedBy = {request.UpdatedBy}
+   @UpdatedBy = {request.UpdatedBy},
+   @CFSNo = {request.CFSNo},
+   @GateinDate = {request.GateinDate},
+   @Reefer = {request.Reefer}
             ")
             .AsNoTracking()
             .ToListAsync();
@@ -1631,10 +1634,22 @@ namespace SezApi.Services
                 var query = from obl in _db.GetOBLEntry
                             join obldetails in _db.GetOblEntryAdditionalDetails
                                 on obl.Id equals obldetails.OBLEntryId
+                            join gateentry in _db.GetEntryList
+                               on obl.ContainerCBTNo.Substring(0, 50) equals gateentry.ContainerNo
+                            join AppContainerDetails in _db.GetAppraisementContainerDetails
+                                on obl.Id equals AppContainerDetails.OBLNoId
+                            join AppDoDetails in _db.GetAppraisementDoDetails
+                                on AppContainerDetails.CustomAppraisementId equals AppDoDetails.CustomAppraisementId
                             select new ResponseOBLContauner
                             {
+                                ICDNo = gateentry.CFSNo,
                                 ContainerCBTNo = obl.ContainerCBTNo,
-                                OBL_HBL_No = obldetails.OBL_HBL_No
+                                Size = gateentry.Size,
+                                Reefer = gateentry.Reefer,
+                                OBL_HBL_No = obldetails.OBL_HBL_No,
+                                CargoType = AppContainerDetails.CargoType,
+                                NoOfPackage = AppContainerDetails.NoOfPackages,
+                                GrWt = AppContainerDetails.GrossWeightKg
                             };
 
                 var totalRecords = await query.CountAsync();
