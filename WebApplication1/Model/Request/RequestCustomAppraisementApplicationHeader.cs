@@ -20,6 +20,7 @@ namespace SezApi.Model.Request
         public DateTime? ModifiedDate { get; set; }
         public string? ModifiedBy { get; set; }
 
+        public string? ExaminationPercentage { get; set; }
         public List<AppraisementDoDetails> AppraisementDoDetailsList { get; set; }
         public List<AppraisementContainerDetails> AppraisementContainerDetailsList { get; set; }    
     }

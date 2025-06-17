@@ -907,7 +907,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetCustomAppraisementApplicationHeader")]
-        public async Task<ActionResult<List<ExaminationCharge>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size)
+        public async Task<ActionResult<List<CustomAppraisementApplicationHeader>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size)
         {
 
             var response = await _services.GetCustomAppraisementApplicationHeader(id, page, size);

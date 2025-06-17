@@ -12,5 +12,7 @@ namespace SezApi.Model.DBModels
         public string Name { get; set; }
 
         public int? CountryId { get; set; }
+
+        public string? stateGSTcode { get; set; }
     }
 }

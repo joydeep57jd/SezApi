@@ -1813,7 +1813,8 @@ namespace SezApi.Services
                      @DOStatus = {request.DOStatus},
                      @AppraisementStatus = {request.AppraisementStatus},
                      @CreatedBy = {request.CreatedBy},
-                     @ModifiedBy = {request.ModifiedBy}
+                     @ModifiedBy = {request.ModifiedBy},
+                     @ExaminationPercentage = {request.ExaminationPercentage}
                      ")
                  .AsNoTracking()
                 .ToListAsync();
