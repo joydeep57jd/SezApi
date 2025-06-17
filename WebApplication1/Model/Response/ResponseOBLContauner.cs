@@ -14,5 +14,7 @@ namespace SezApi.Model.Response
         public string? CargoType { get; set; }
         public int? NoOfPackage { get; set; }
         public decimal? GrWt { get; set; }
+        public DateTime? DoValidateDate { get; set; }
+        public bool? Insured { get; set; }
     }
 }

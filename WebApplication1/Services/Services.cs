@@ -1649,7 +1649,8 @@ namespace SezApi.Services
                                 OBL_HBL_No = obldetails.OBL_HBL_No,
                                 CargoType = AppContainerDetails.CargoType,
                                 NoOfPackage = AppContainerDetails.NoOfPackages,
-                                GrWt = AppContainerDetails.GrossWeightKg
+                                GrWt = AppContainerDetails.GrossWeightKg,
+                                DoValidateDate = AppDoDetails.DoValidDate
                             };
 
                 var totalRecords = await query.CountAsync();
