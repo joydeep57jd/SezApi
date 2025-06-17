@@ -29,7 +29,7 @@ namespace SezApi.Model.DBModels
         [StringLength(50)]
         public string? ContainerType { get; set; }
 
-        [StringLength(50)]
+        [StringLength(100)]
         public string? ContainerNo { get; set; }
 
         [StringLength(20)]

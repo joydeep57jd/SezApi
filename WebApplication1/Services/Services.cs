@@ -1625,7 +1625,7 @@ namespace SezApi.Services
         }
 
 
-        public async Task<Response<List<ResponseOBLContauner>>> GetOBLContainerList(int? page, int? size)
+        public async Task<Response<List<ResponseOBLContauner>>> GetOBLContainerList(int? page, int? size,string? containerNo,string? oblHblNo)
         {
             var response = new Response<List<ResponseOBLContauner>>();
 
@@ -1635,11 +1635,14 @@ namespace SezApi.Services
                             join obldetails in _db.GetOblEntryAdditionalDetails
                                 on obl.Id equals obldetails.OBLEntryId
                             join gateentry in _db.GetEntryList
-                               on obl.ContainerCBTNo.Substring(0, 50) equals gateentry.ContainerNo
+                               on obl.ContainerCBTNo equals gateentry.ContainerNo
                             join AppContainerDetails in _db.GetAppraisementContainerDetails
                                 on obl.Id equals AppContainerDetails.OBLNoId
                             join AppDoDetails in _db.GetAppraisementDoDetails
                                 on AppContainerDetails.CustomAppraisementId equals AppDoDetails.CustomAppraisementId
+                            where
+                          (string.IsNullOrEmpty(containerNo) || gateentry.ContainerNo == containerNo) &&
+                          (string.IsNullOrEmpty(oblHblNo) || obldetails.OBL_HBL_No == oblHblNo)
                             select new ResponseOBLContauner
                             {
                                 ICDNo = gateentry.CFSNo,
