@@ -1,12 +1,14 @@
 ﻿using Azure;
 using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using SezApi.Data;
 using SezApi.Model.DBModels;
 using SezApi.Model.Request;
 using SezApi.Model.Response;
 using SezApi.Services;
 using System.Diagnostics.Eventing.Reader;
+using System.Drawing;
 namespace SezApi.Controllers
 {
     [ApiController]
@@ -939,6 +941,19 @@ namespace SezApi.Controllers
         {
 
             var response = await _services.GetAppraisementContainerDetails(id, page, size, CustAppId);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetOBLEntriesWithDetails")]
+        public async Task<IActionResult> GetOBLEntriesWithDetails(int? id = null, string containerNo = null, int? page = null, int? size = null)
+        {
+            var response = await _services.GetOBLEntriesWithDetails(id, containerNo, page, size);
 
             if (response.Data == null || !response.Data.Any())
             {

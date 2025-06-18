@@ -5,6 +5,7 @@ using SezApi.Data;
 using SezApi.Model.DBModels;
 using SezApi.Model.Request;
 using SezApi.Model.Response;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -2012,6 +2013,80 @@ namespace SezApi.Services
             catch (Exception ex)
             {
                 response.Data = new List<AppraisementContainerDetails>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<Response<List<ResponseOBLEntryWithDetailsDto>>> GetOBLEntriesWithDetails(int? id = null, string containerNo = null, int? page = null, int? size = null)
+        {
+            var response = new Response<List<ResponseOBLEntryWithDetailsDto>>();
+
+            try
+            {
+                var query = from obl in _db.GetOBLEntry
+                            join details in _db.GetOblEntryAdditionalDetails
+                                on obl.Id equals details.OBLEntryId into joined
+                            from detail in joined.DefaultIfEmpty()
+                            select new ResponseOBLEntryWithDetailsDto
+                            {
+                                Id = obl.Id,
+                                ContainerCBTType = obl.ContainerCBTType,
+                                ContainerCBTNo = obl.ContainerCBTNo,
+                                ContainerCBTSize = obl.ContainerCBTSize,
+                                IGMNo = obl.IGMNo,
+                                IGMDate = obl.IGMDate,
+                                TPNo = obl.TPNo,
+                                TPDate = obl.TPDate,
+                                MovementType = obl.MovementType,
+                                Port = obl.Port,
+                                Country = obl.Country,
+                                ShippingLine = obl.ShippingLine,
+
+                                OBL_HBL_No = detail.OBL_HBL_No,
+                                OBL_HBL_Date = detail.OBL_HBL_Date,
+                                SMTP_No = detail.SMTP_No,
+                                SMTP_Date = detail.SMTP_Date,
+                                Cargo_Desc = detail.Cargo_Desc,
+                                Commodity = detail.Commodity,
+                                Cargo_Type = detail.Cargo_Type,
+                                No_of_PKG = detail.No_of_PKG,
+                                PKG_Type = detail.PKG_Type,
+                                GR_WT_Kg = detail.GR_WT_Kg,
+                                Importer_Name = detail.Importer_Name,
+                                IGM_Importer_Name = detail.IGM_Importer_Name
+                            };
+
+                if (id.HasValue)
+                {
+                    query = query.Where(x => x.Id == id.Value);
+                }
+
+                if (!string.IsNullOrEmpty(containerNo))
+                {
+                    query = query.Where(x => x.ContainerCBTNo.Contains(containerNo));
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && size.HasValue && page > 0 && size > 0)
+                {
+                    int skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ResponseOBLEntryWithDetailsDto>();
                 response.Status = false;
                 response.TotalCount = 0;
                 response.Message = $"Error: {ex.Message}";
