@@ -59,5 +59,13 @@ namespace SezApi.Data
         public DbSet<AppraisementDoDetails> GetAppraisementDoDetails { get; set; }
 
         public DbSet<AppraisementContainerDetails> GetAppraisementContainerDetails { get; set; }
+        public DbSet<ResponseImportChargesCalc> ImportChargesCalc { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            
+            modelBuilder.Entity<ResponseImportChargesCalc>().HasNoKey();
+        }
     }
 }
+

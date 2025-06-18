@@ -1,5 +1,6 @@
 ﻿
 using Azure.Core;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SezApi.Data;
@@ -2098,5 +2099,36 @@ namespace SezApi.Services
 
             return response;
         }
+
+
+
+        public async Task<Response<List<ResponseImportChargesCalc>>> GetImportChargesCalcAsync(string containerOBLList, int partyId, int typeOfCharge)
+        {
+            var response = new Response<List<ResponseImportChargesCalc>>();
+
+            try
+            {
+                var results = await _db
+                    .Set<ResponseImportChargesCalc>()
+                    .FromSqlInterpolated($"EXEC [dbo].[ImportChargesCalc] {containerOBLList}, {partyId}, {typeOfCharge}")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                response.Data = results;
+                response.Status = true;
+                response.TotalCount = results.Count;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ResponseImportChargesCalc>();
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.TotalCount = 0;
+            }
+
+            return response;
+        }
+
+
     }
 }
