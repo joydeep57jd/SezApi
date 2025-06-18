@@ -33,5 +33,8 @@ namespace SezApi.Model.DBModels
         public string? CreatedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public string? ModifiedBy { get; set; }
+
+        public int? chaId { get; set; }
+        public int? importerId { get; set; }
     }
 }

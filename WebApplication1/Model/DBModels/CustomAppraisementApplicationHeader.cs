@@ -23,5 +23,6 @@ namespace SezApi.Model.DBModels
         public DateTime? ModifiedDate { get; set; }
         public string? ModifiedBy { get; set; }
         public string? ExaminationPercentage { get; set; }
+
     }
 }

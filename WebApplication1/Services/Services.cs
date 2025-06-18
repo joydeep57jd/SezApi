@@ -1886,7 +1886,9 @@ namespace SezApi.Services
                         @WithoutDOSealNo = {detail.WithoutDOSealNo},
                         @CustomAppraisementId = {spResult.Id},
                         @CreatedBy = {detail.CreatedBy},
-                        @ModifiedBy = {detail.ModifiedBy}
+                        @ModifiedBy = {detail.ModifiedBy},
+                        @chaId = {detail.chaId},
+                        @importerId = {detail.importerId}
                        ")
                       .AsNoTracking()
                       .ToListAsync();
