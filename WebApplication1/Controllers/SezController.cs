@@ -92,10 +92,10 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetAllEntries")]
-        public async Task<ActionResult<List<GateEntry>>> GetAllEntries(int? page, int? size)
+        public async Task<ActionResult<List<GateEntry>>> GetAllEntries(int? page, int? size, string? ContainerNo)
         {
 
-            var response = await _services.GetAllEntries(page, size);
+            var response = await _services.GetAllEntries(page, size, ContainerNo);
 
             if (response.Data == null || !response.Data.Any())
             {

@@ -11,7 +11,7 @@ namespace SezApi.Services
         Task<AddEditResponse> AddMststorageCharge(RequestMststorageCharge mststorageCharge);
         Task<Response<List<mststoragecharge>>> GetMststorageCharge();
         Task<AddEditResponse> AddEditGetEntry(RequestGetEntry request);
-        Task<Response<List<GateEntry>>> GetAllEntries(int? page, int? size);
+        Task<Response<List<GateEntry>>> GetAllEntries(int? page, int? size, string? ContainerNo);
         Task<AddEditResponse> AddEditMstOperation(RequestMstOperation request);
         Task<Response<List<MstOperation>>> GetMstOperation(int? page, int? size);
         Task<AddEditResponse> AddEditMstSac(RequestMstSac mststorageCharge);

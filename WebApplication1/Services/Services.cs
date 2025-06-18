@@ -1,6 +1,7 @@
 ﻿
 using Azure.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SezApi.Data;
 using SezApi.Model.DBModels;
 using SezApi.Model.Request;
@@ -131,14 +132,17 @@ namespace SezApi.Services
             }
         }
 
-        public async Task<Response<List<GateEntry>>> GetAllEntries(int? page, int? size)
+        public async Task<Response<List<GateEntry>>> GetAllEntries(int? page, int? size, string? ContainerNo)
         {
             var response = new Response<List<GateEntry>>();
 
             try
             {
                 var query = _db.GetEntryList.AsQueryable();
-
+                if (!string.IsNullOrEmpty(ContainerNo))
+                {
+                    query = query.Where(s => s.ContainerNo == ContainerNo);
+                }
                 var totalCount = await query.CountAsync();
 
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
