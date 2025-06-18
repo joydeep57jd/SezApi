@@ -948,8 +948,8 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
-        [HttpPost("AddCashReceiptAsync")]
-        public async Task<IActionResult> AddCashReceiptAsync(RequestCashReceiptCreate request)
+        [HttpPost("AddEditPaymentReceipt")]
+        public async Task<IActionResult> AddEditPaymentReceipt(RequestCashReceiptCreate request)
         {
             if (request == null)
             {
