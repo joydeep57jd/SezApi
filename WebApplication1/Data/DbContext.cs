@@ -59,5 +59,6 @@ namespace SezApi.Data
         public DbSet<AppraisementDoDetails> GetAppraisementDoDetails { get; set; }
 
         public DbSet<AppraisementContainerDetails> GetAppraisementContainerDetails { get; set; }
+        public DbSet<ResponseCustom> ResponseCustom { get; set; }
     }
 }

@@ -947,5 +947,23 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost("AddCashReceiptAsync")]
+        public async Task<IActionResult> AddCashReceiptAsync(RequestCashReceiptCreate request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddCashReceiptAsync(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

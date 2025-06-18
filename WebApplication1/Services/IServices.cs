@@ -70,5 +70,6 @@ namespace SezApi.Services
         Task<Response<List<CustomAppraisementApplicationHeader>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size);
         Task<Response<List<AppraisementDoDetails>>> GetAppraisementDoDetails(int? id, int? page, int? size, int? CustAppId);
         Task<Response<List<AppraisementContainerDetails>>> GetAppraisementContainerDetails(int? id, int? page, int? size, int? CustAppId);
+        Task<AddEditResponse> AddCashReceiptAsync(RequestCashReceiptCreate request);
     }
 }

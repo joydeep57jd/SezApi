@@ -2019,5 +2019,132 @@ namespace SezApi.Services
 
             return response;
         }
+
+        public async Task<AddEditResponse> AddCashReceiptAsync(RequestCashReceiptCreate request)
+        {
+            var response = new AddEditResponse();
+            try
+            {
+                var CashReceiptHdrresult = await _db.Set<ResponseCustom>()
+               .FromSqlInterpolated($@"
+                EXEC dbo.SP_AddOrUpdateCashReceiptHdr
+                @CashReceiptId = {request.CashReceiptId},
+                @BranchId = {request.BranchId},
+                @AutoCashRcptNo = {request.AutoCashRcptNo},
+                @ReceiptNo = {request.ReceiptNo},
+                @ReceiptDate = {request.ReceiptDate},
+                @InvoiceId = {request.InvoiceId},
+                @PartyId = {request.PartyId},
+                @PayByPdaId = {request.PayByPdaId},
+                @PdaAdjust = {request.PdaAdjust},
+                @FolioNo = {request.FolioNo},
+                @PdaAdjustedAmount = {request.PdaAdjustedAmount},
+                @PdaOpening = {request.PdaOpening},
+                @PdaClosing = {request.PdaClosing},
+                @TotalPaymentReceipt = {request.TotalPaymentReceipt},
+                @TdsAmount = {request.TdsAmount},
+                @InvoiceValue = {request.InvoiceValue},
+                @CompYear = {request.CompYear},
+                @Remarks = {request.Remarks},
+                @PdaAccountDetailsID = {request.PdaAccountDetailsID},
+                @fromPDA = {request.FromPDA},
+                @CashReceiptHtml = {request.CashReceiptHtml},
+                @IsCancelled = {request.IsCancelled},
+                @CancelledReason = {request.CancelledReason},
+                @CancelledOn = {request.CancelledOn},
+                @CancelledBy = {request.CancelledBy},
+                @InvoiceDebitNote = {request.InvoiceDebitNote},
+                @OnlineFacAmt = {request.OnlineFacAmt},
+                @Area = {request.Area},
+                @TransId = {request.TransId},
+                @IsSAP = {request.IsSAP},
+                @IsSAPRev = {request.IsSAPRev},
+                @SAP_DOC_NUMBER = {request.SAP_DOC_NUMBER},
+                @CreatedBy = {request.CreatedBy},
+                @UpdatedBy = {request.UpdatedBy}
+                 ")
+                .AsNoTracking()
+             .ToListAsync();
+                var spResult = CashReceiptHdrresult.FirstOrDefault();
+                if (spResult == null || spResult.Id == 0)
+                {
+                    response.Response = "CashReceiptHdrresult failed or returned no ID.";
+                    return response;
+                }
+                if (request.PaymentDetails?.Any() == true)
+                {
+                    foreach (var detail in request.PaymentDetails)
+                    {
+                        var result = await _db.Set<ResponseCustom>()
+                         .FromSqlInterpolated($@"
+                         EXEC dbo.SP_AddOrUpdateCashReceiptDtl
+                        @CashReceiptDtlId = {detail.CashReceiptDtlId},
+                        @CashReceipthdrId = {spResult.Id},
+                        @PayMode = {detail.PayMode},
+                        @InstrumentNo = {detail.InstrumentNo},
+                        @DraweeBank = {detail.DraweeBank},
+                        @Date = {detail.Date},
+                        @Amount = {detail.Amount},
+                        @IsChqCancelled = {detail.IsChqCancelled},
+                        @CreatedBy = {detail.CreatedBy},
+                        @UpdatedBy = {detail.UpdatedBy}
+                         ")
+                        .AsNoTracking()
+                        .ToListAsync();
+
+                    }
+                }
+                if (request.InvoiceDetails?.Any() == true)
+                {
+                    foreach (var detail in request.InvoiceDetails)
+                    {
+                        var result = await _db.Set<ResponseCustom>()
+                          .FromSqlInterpolated($@"
+                           EXEC dbo.SP_AddOrUpdateCashReceiptInvDtls
+                           @CashRcptInvDtlsId = {detail.CashRcptInvDtlsId},
+                           @CashReceiptId = {spResult.Id},
+                           @PartyId = {detail.PartyId},
+                           @InvoiceId = {detail.InvoiceId},
+                           @InvoiceNo = {detail.InvoiceNo},
+                           @InvoiceDate = {detail.InvoiceDate},
+                           @InvoiceAmt = {detail.InvoiceAmt},
+                           @DueAmt = {detail.DueAmt},
+                            @AdjustmentAmt = {detail.AdjustmentAmt}
+                           ")
+                          .AsNoTracking()
+                          .ToListAsync();
+                    }
+                }
+
+                if (request.InvoiceStatusList?.Any() == true)
+                {
+                    foreach(var detail in request.InvoiceStatusList)
+                    {
+                        var result = await _db.Set<ResponseCustom>()
+                         .FromSqlInterpolated($@"
+                          EXEC dbo.SP_AddOrUpdateCashReceiptInvStatus
+                         @CashRcptInvStatId = {detail.CashRcptInvStatId},
+                         @CashReceiptId = {spResult.Id},
+                         @ReceiptNo = {detail.ReceiptNo},
+                         @ReceiptDate = {detail.ReceiptDate},
+                         @PartyId = {detail.PartyId},
+                         @InvoiceId = {detail.InvoiceId},
+                         @Amount = {detail.Amount},
+                         @ModeStatus = {detail.ModeStatus}
+                         ")
+                        .AsNoTracking()
+                       .ToListAsync();
+
+                    }
+                }
+
+                response.Response = "OK";
+            }
+            catch (Exception ex)
+            {
+                response.Response = $"Error: {ex.Message}";
+            }
+            return response;
+        }
     }
 }
