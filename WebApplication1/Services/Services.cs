@@ -2156,10 +2156,6 @@ namespace SezApi.Services
         }
 
 
-
-            return response;
-        }
-
         public async Task<AddEditResponse> AddCashReceiptAsync(RequestCashReceiptCreate request)
         {
             var response = new AddEditResponse();
