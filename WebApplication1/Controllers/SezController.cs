@@ -689,10 +689,10 @@ namespace SezApi.Controllers
             }
         }
         [HttpGet("GetYardInvoice")]
-        public async Task<ActionResult<List<InvoiceYard>>> GetYardInvoice(int? page, int? size)
+        public async Task<ActionResult<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName)
         {
 
-            var response = await _services.GetYardInvoice(page, size);
+            var response = await _services.GetYardInvoice(page, size, PayeeName);
 
             if (response.Data == null || !response.Data.Any())
             {
@@ -965,5 +965,47 @@ namespace SezApi.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpGet("GetPaymentReceiptHeader")]
+        public async Task<ActionResult<List<CashReceiptHdr>>> GetPaymentReceiptHeader(int? id, int? page, int? size)
+        {
+
+            var response = await _services.GetPaymentReceiptHeader(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetInvoiceDetails")]
+        public async Task<ActionResult<List<CashReceiptInvDtls>>> GetInvoiceDetails(int? id, int? page, int? size, int? CashReceiptId)
+        {
+
+            var response = await _services.GetInvoiceDetails(id, page, size, CashReceiptId);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetPaymentDetails")]
+        public async Task<ActionResult<List<CashReceiptDtl>>> GetPaymentDetails(int? id, int? page, int? size, int? CashReceiptId)
+        {
+            var response = await _services.GetPaymentDetails(id, page, size, CashReceiptId);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
     }
 }

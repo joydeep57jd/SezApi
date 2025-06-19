@@ -51,7 +51,7 @@ namespace SezApi.Services
         Task<Response<List<GoDown>>> GetMstGoDown(int? page, int? size);
         Task<Response<List<Country>>> GetCountry(int? page, int? size);
         Task<AddEditResponse> AddEditYardInvoice(RequestYardInvocie request);
-        Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size);
+        Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName);
         Task<AddEditResponse> AddEditOBLEntry(RequestOBLEntry request);
         Task<Response<List<OBLEntry>>> GetOblEntry(int? id, int? page, int? size);
         Task<Response<List<OblEntryAdditionalDetails>>> GetOblEntryAdditionalDetails(int? id, int? OBLEntryId);
@@ -71,5 +71,8 @@ namespace SezApi.Services
         Task<Response<List<AppraisementDoDetails>>> GetAppraisementDoDetails(int? id, int? page, int? size, int? CustAppId);
         Task<Response<List<AppraisementContainerDetails>>> GetAppraisementContainerDetails(int? id, int? page, int? size, int? CustAppId);
         Task<AddEditResponse> AddCashReceiptAsync(RequestCashReceiptCreate request);
+        Task<Response<List<CashReceiptInvDtls>>> GetInvoiceDetails(int? id, int? page, int? size, int? CashReceiptId);
+        Task<Response<List<CashReceiptDtl>>> GetPaymentDetails(int? id, int? page, int? size, int? CashReceiptId);
+        Task<Response<List<CashReceiptHdr>>> GetPaymentReceiptHeader(int? id, int? page, int? size);
     }
 }
