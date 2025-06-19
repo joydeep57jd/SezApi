@@ -22,6 +22,8 @@
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
         public string PayeeName { get; set; }
+        public int ExaminationChargeType { get; set; }
+        public string Remarks { get; set; }
         public string jsonData { get; set; }
     }
 }
