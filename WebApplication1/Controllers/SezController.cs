@@ -969,5 +969,19 @@ namespace SezApi.Controllers
             var result = await _services.GetImportChargesCalcAsync(containerOBLList, partyId, typeOfCharge);
             return Ok(result);
         }
+
+        [HttpGet("GetAllChargesTypes")]
+        public async Task<IActionResult> GetAllChargesTypes()
+        {
+            var response = await _services.GetAllChargesTypes();
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
     }
 }

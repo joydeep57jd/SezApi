@@ -2132,5 +2132,26 @@ namespace SezApi.Services
         }
 
 
+        public async Task<Response<List<ChargesTypes>>> GetAllChargesTypes()
+        {
+            var response = new Response<List<ChargesTypes>>();
+
+            try
+            {
+                var result = await _db.ListChargesTypes.ToListAsync();
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ChargesTypes>();
+                response.Status = false;
+            }
+
+            return response;
+        }
+
+
+
     }
 }

@@ -60,6 +60,10 @@ namespace SezApi.Data
 
         public DbSet<AppraisementContainerDetails> GetAppraisementContainerDetails { get; set; }
         public DbSet<ResponseImportChargesCalc> ImportChargesCalc { get; set; }
+        public DbSet<ChargesTypes> ListChargesTypes { get; set; }
+
+        
+    
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
