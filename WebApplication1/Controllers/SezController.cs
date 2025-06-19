@@ -691,10 +691,10 @@ namespace SezApi.Controllers
             }
         }
         [HttpGet("GetYardInvoice")]
-        public async Task<ActionResult<List<InvoiceYard>>> GetYardInvoice(int? page, int? size)
+        public async Task<ActionResult<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName)
         {
 
-            var response = await _services.GetYardInvoice(page, size);
+            var response = await _services.GetYardInvoice(page, size, PayeeName);
 
             if (response.Data == null || !response.Data.Any())
             {
@@ -950,6 +950,65 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
+        [HttpPost("AddEditPaymentReceipt")]
+        public async Task<IActionResult> AddEditPaymentReceipt(RequestCashReceiptCreate request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddCashReceiptAsync(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetPaymentReceiptHeader")]
+        public async Task<ActionResult<List<CashReceiptHdr>>> GetPaymentReceiptHeader(int? id, int? page, int? size)
+        {
+
+            var response = await _services.GetPaymentReceiptHeader(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetInvoiceDetails")]
+        public async Task<ActionResult<List<CashReceiptInvDtls>>> GetInvoiceDetails(int? id, int? page, int? size, int? CashReceiptId)
+        {
+
+            var response = await _services.GetInvoiceDetails(id, page, size, CashReceiptId);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetPaymentDetails")]
+        public async Task<ActionResult<List<CashReceiptDtl>>> GetPaymentDetails(int? id, int? page, int? size, int? CashReceiptId)
+        {
+            var response = await _services.GetPaymentDetails(id, page, size, CashReceiptId);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
         [HttpGet("GetOBLEntriesWithDetails")]
         public async Task<IActionResult> GetOBLEntriesWithDetails(int? id = null, string containerNo = null, int? page = null, int? size = null)
         {
@@ -982,6 +1041,7 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+
 
     }
 }
