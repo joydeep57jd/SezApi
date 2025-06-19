@@ -1335,11 +1335,11 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<AddEditResponse> AddEditYardInvoice(RequestYardInvocie  request)
+        public async Task<ResponseAddEdityard> AddEditYardInvoice(RequestYardInvocie  request)
         {
             try
             {
-                var result = await _db.AddEditResponse
+                var result =  await _db.Set<ResponseAddEdityard>()
                     .FromSqlInterpolated($@"
                  EXEC dbo.AddEditYardInvoice 
                 @YardInvId = {request.YardInvId},
@@ -1365,9 +1365,9 @@ namespace SezApi.Services
                                  ")
                     .AsNoTracking()
                     .ToListAsync();
-
+                
                 var response = result.FirstOrDefault();
-                return response ?? new AddEditResponse { Response = "No response from procedure." };
+                return response;
             }
             catch (Exception ex)
             {

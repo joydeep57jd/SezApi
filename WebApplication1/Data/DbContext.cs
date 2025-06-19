@@ -62,13 +62,11 @@ namespace SezApi.Data
         public DbSet<ResponseImportChargesCalc> ImportChargesCalc { get; set; }
         public DbSet<ChargesTypes> ListChargesTypes { get; set; }
 
-        
-    
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             
             modelBuilder.Entity<ResponseImportChargesCalc>().HasNoKey();
+            modelBuilder.Entity<ResponseAddEdityard>().HasNoKey();
         }
     }
 }

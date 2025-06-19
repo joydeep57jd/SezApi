@@ -50,7 +50,7 @@ namespace SezApi.Services
         Task<AddEditResponse> AddEditGoDown(RequestGoDown request);
         Task<Response<List<GoDown>>> GetMstGoDown(int? page, int? size);
         Task<Response<List<Country>>> GetCountry(int? page, int? size);
-        Task<AddEditResponse> AddEditYardInvoice(RequestYardInvocie request);
+        Task<ResponseAddEdityard> AddEditYardInvoice(RequestYardInvocie request);
         Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size);
         Task<AddEditResponse> AddEditOBLEntry(RequestOBLEntry request);
         Task<Response<List<OBLEntry>>> GetOblEntry(int? id, int? page, int? size);
