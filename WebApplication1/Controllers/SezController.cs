@@ -1022,10 +1022,14 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
-        [HttpGet("GetImportCharges")]
-        public async Task<IActionResult> GetImportCharges(string containerOBLList, int partyId, int typeOfCharge)
+        [HttpPost("GetImportCharges")]
+        public async Task<IActionResult> GetImportCharges([FromBody] ImportChargesRequest request)
         {
-            var result = await _services.GetImportChargesCalcAsync(containerOBLList, partyId, typeOfCharge);
+            var result = await _services.GetImportChargesCalcAsync(
+                request.ContainerOBLList,
+                request.PartyId,
+                request.TypeOfCharge
+            );
             return Ok(result);
         }
 
