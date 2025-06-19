@@ -2,6 +2,7 @@
 using Azure.Core;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.IdentityModel.Tokens;
 using SezApi.Data;
 using SezApi.Model.DBModels;
@@ -1335,46 +1336,69 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<ResponseAddEdityard> AddEditYardInvoice(RequestYardInvocie  request)
+        public async Task<AddEditResponse> AddEditYardInvoice(RequestYardInvocie request)
         {
+            // insert to yard invoice 
             try
             {
-                var result =  await _db.Set<ResponseAddEdityard>()
+                var result = await _db.Set<ResponseAddEdityard>()
                     .FromSqlInterpolated($@"
-                 EXEC dbo.AddEditYardInvoice 
-                @YardInvId = {request.YardInvId},
-                @TaxInvoice = {request.TaxInvoice},
-                @BillOfSupply = {request.BillOfSupply},
-                @InvoiceNo = {request.InvoiceNo},
-                @DeliveryDate = {request.DeliveryDate},
-                @ApplicationId = {request.ApplicationId},
-                @InvoiceDate = {request.InvoiceDate},
-                @PartyId = {request.PartyId},
-                @PayeeId = {request.PayeeId},
-                @GSTNo = {request.GSTNo},
-                @PaymentMode = {request.PaymentMode},
-                @FactoryDestuffing = {request.FactoryDestuffing},
-                @DirectDestuffing = {request.DirectDestuffing},
-                @PlaceOfSupply = {request.PlaceOfSupply},
-                @SEZId = {request.SEZId},
-                @OTHours = {request.OTHours},
-                @Container = {request.Container},
-                 @CreatedBy = {request.CreatedBy},
-                 @UpdatedBy = {request.UpdatedBy},
-                 @PayeeName = {request.PayeeName}
-                                 ")
+                EXEC dbo.AddEditYardInvoice 
+                    @YardInvId = {request.YardInvId},
+                    @TaxInvoice = {request.TaxInvoice},
+                    @BillOfSupply = {request.BillOfSupply},
+                    @InvoiceNo = {request.InvoiceNo},
+                    @DeliveryDate = {request.DeliveryDate},
+                    @ApplicationId = {request.ApplicationId},
+                    @InvoiceDate = {request.InvoiceDate},
+                    @PartyId = {request.PartyId},
+                    @PayeeId = {request.PayeeId},
+                    @GSTNo = {request.GSTNo},
+                    @PaymentMode = {request.PaymentMode},
+                    @FactoryDestuffing = {request.FactoryDestuffing},
+                    @DirectDestuffing = {request.DirectDestuffing},
+                    @PlaceOfSupply = {request.PlaceOfSupply},
+                    @SEZId = {request.SEZId},
+                    @OTHours = {request.OTHours},
+                    @Container = {request.Container},
+                    @CreatedBy = {request.CreatedBy},
+                    @UpdatedBy = {request.UpdatedBy},
+                    @PayeeName = {request.PayeeName}
+            ")
                     .AsNoTracking()
                     .ToListAsync();
-                
+
                 var response = result.FirstOrDefault();
-                return response;
+                AddEditResponse resultres = null;
+                if (response == null || response.YardInvId == 0)
+                {
+                    resultres.Response = "Main SP failed or returned no ID.";
+                    return resultres;
+                }
+                
+                // insert yard charges  
+                if (response != null && response.YardInvId != 0 && request.jsonData != null)
+                {
+                    var result1 = await _db.Set<AddEditResponse>()
+                        .FromSqlInterpolated($@"
+                    EXEC dbo.SP_AddYardInvoiceChargesJson
+                        @YardInvId = {response.YardInvId},
+                        @jsonData = {request.jsonData}
+                ")
+                        .AsNoTracking()
+                        .ToListAsync();
+
+                    resultres = result1.FirstOrDefault();
+                }
+
+                return resultres;
             }
             catch (Exception ex)
             {
                 throw new ApplicationException("Failed to execute AddEditYardInvoice", ex);
             }
-
         }
+
 
         public async Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size)
         {
