@@ -68,6 +68,13 @@ namespace SezApi.Data
             modelBuilder.Entity<ResponseImportChargesCalc>().HasNoKey();
             modelBuilder.Entity<ResponseAddEdityard>().HasNoKey();
         }
+        public DbSet<ResponseCustom> ResponseCustom { get; set; }
+
+        public DbSet<CashReceiptInvDtls> GetCashReceiptInvDtls { get; set; }
+
+        public DbSet<CashReceiptDtl> GetCashReceiptDtl { get; set; }
+
+        public DbSet<CashReceiptHdr> GetCashReceiptHdr { get; set; }
     }
 }
 

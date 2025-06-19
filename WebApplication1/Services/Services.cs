@@ -1400,7 +1400,7 @@ namespace SezApi.Services
         }
 
 
-        public async Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size)
+        public async Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName)
         {
             var response = new Response<List<InvoiceYard>>();
 
@@ -1408,6 +1408,10 @@ namespace SezApi.Services
             {
                 var query = _db.GetYardInvoiceList.AsQueryable();
 
+                if (!string.IsNullOrEmpty(PayeeName))
+                {
+                    query = query.Where(x => x.PayeeName.Contains(PayeeName));
+                }
                 var totalRecords = await query.CountAsync();
 
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
@@ -2176,6 +2180,235 @@ namespace SezApi.Services
         }
 
 
+        public async Task<AddEditResponse> AddCashReceiptAsync(RequestCashReceiptCreate request)
+        {
+            var response = new AddEditResponse();
+            try
+            {
+                var CashReceiptHdrresult = await _db.Set<ResponseCustom>()
+                 .FromSqlInterpolated($@"
+                 EXEC dbo.SP_AddOrUpdateCashReceiptHdr
+                 @CashReceiptId = {request.CashReceiptId},
+                 @BranchId = {request.BranchId},
+                 @AutoCashRcptNo = {request.AutoCashRcptNo},
+                 @ReceiptNo = {request.ReceiptNo},
+                 @ReceiptDate = {request.ReceiptDate},
+                 @InvoiceId = {request.InvoiceId},
+                 @PartyId = {request.PartyId},
+                 @PayByPdaId = {request.PayByPdaId},
+                 @payeeName = {request.PayeeName},
+                 @PdaAdjust = {request.PdaAdjust},
+                 @FolioNo = {request.FolioNo},
+                 @PdaAdjustedAmount = {request.PdaAdjustedAmount},
+                 @PdaOpening = {request.PdaOpening},
+                 @PdaClosing = {request.PdaClosing},
+                 @TotalPaymentReceipt = {request.TotalPaymentReceipt},
+                 @TdsAmount = {request.TdsAmount},
+                 @InvoiceValue = {request.InvoiceValue},
+                 @CompYear = {request.CompYear},
+                 @Remarks = {request.Remarks},
+                 @PdaAccountDetailsID = {request.PdaAccountDetailsID},
+                 @fromPDA = {request.FromPDA},
+                 @CashReceiptHtml = {request.CashReceiptHtml},
+                 @IsCancelled = {request.IsCancelled},
+                 @CancelledReason = {request.CancelledReason},
+                 @CancelledOn = {request.CancelledOn},
+                 @CancelledBy = {request.CancelledBy},
+                 @InvoiceDebitNote = {request.InvoiceDebitNote},
+                 @OnlineFacAmt = {request.OnlineFacAmt},
+                 @Area = {request.Area},
+                 @TransId = {request.TransId},
+                 @IsSAP = {request.IsSAP},
+                 @IsSAPRev = {request.IsSAPRev},
+                 @SAP_DOC_NUMBER = {request.SAP_DOC_NUMBER},
+                 @CreatedBy = {request.CreatedBy},
+                 @UpdatedBy = {request.UpdatedBy}
+                 ")
+                .AsNoTracking()
+                .ToListAsync();
+
+                var spResult = CashReceiptHdrresult.FirstOrDefault();
+                if (spResult == null || spResult.Id == 0)
+                {
+                    response.Response = "CashReceiptHdrresult failed or returned no ID.";
+                    return response;
+                }
+                if (request.PaymentDetails?.Any() == true)
+                {
+                    foreach (var detail in request.PaymentDetails)
+                    {
+                        var result = await _db.Set<ResponseCustom>()
+                         .FromSqlInterpolated($@"
+                         EXEC dbo.SP_AddOrUpdateCashReceiptDtl
+                        @CashReceiptDtlId = {detail.CashReceiptDtlId},
+                        @CashReceipthdrId = {spResult.Id},
+                        @PayMode = {detail.PayMode},
+                        @InstrumentNo = {detail.InstrumentNo},
+                        @DraweeBank = {detail.DraweeBank},
+                        @Date = {detail.Date},
+                        @Amount = {detail.Amount},
+                        @IsChqCancelled = {detail.IsChqCancelled},
+                        @CreatedBy = {detail.CreatedBy},
+                        @UpdatedBy = {detail.UpdatedBy}
+                         ")
+                        .AsNoTracking()
+                        .ToListAsync();
+
+                    }
+                }
+                if (request.InvoiceDetails?.Any() == true)
+                {
+                    foreach (var detail in request.InvoiceDetails)
+                    {
+                        var result = await _db.Set<ResponseCustom>()
+                          .FromSqlInterpolated($@"
+                           EXEC dbo.SP_AddOrUpdateCashReceiptInvDtls
+                           @CashRcptInvDtlsId = {detail.CashRcptInvDtlsId},
+                           @CashReceiptId = {spResult.Id},
+                           @PartyId = {detail.PartyId},
+                           @InvoiceId = {detail.InvoiceId},
+                           @InvoiceNo = {detail.InvoiceNo},
+                           @InvoiceDate = {detail.InvoiceDate},
+                           @InvoiceAmt = {detail.InvoiceAmt},
+                           @DueAmt = {detail.DueAmt},
+                            @AdjustmentAmt = {detail.AdjustmentAmt}
+                           ")
+                          .AsNoTracking()
+                          .ToListAsync();
+                    }
+                }
+
+                response.Response = "OK";
+            }
+            catch (Exception ex)
+            {
+                response.Response = $"Error: {ex.Message}";
+            }
+            return response;
+        }
+
+        public async Task<Response<List<CashReceiptInvDtls>>> GetInvoiceDetails(int? id, int? page, int? size, int? CashReceiptId)
+        {
+            var response = new Response<List<CashReceiptInvDtls>>();
+
+            try
+            {
+                var query = _db.GetCashReceiptInvDtls.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.CashRcptInvDtlsId == id.Value);
+                }
+                if (CashReceiptId.HasValue)
+                {
+                    query = query.Where(s => s.CashReceiptId == CashReceiptId.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<CashReceiptInvDtls>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+
+        public async Task<Response<List<CashReceiptDtl>>> GetPaymentDetails(int? id, int? page, int? size, int? CashReceiptId)
+        {
+            var response = new Response<List<CashReceiptDtl>>();
+
+            try
+            {
+                var query = _db.GetCashReceiptDtl.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.CashReceiptDtlId == id.Value);
+                }
+                if (CashReceiptId.HasValue)
+                {
+                    query = query.Where(s => s.CashReceipthdrId == CashReceiptId.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<CashReceiptDtl>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<Response<List<CashReceiptHdr>>> GetPaymentReceiptHeader(int? id, int? page, int? size)
+        {
+            var response = new Response<List<CashReceiptHdr>>();
+
+            try
+            {
+                var query = _db.GetCashReceiptHdr.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.CashReceiptId == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<CashReceiptHdr>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
 
     }
 }
