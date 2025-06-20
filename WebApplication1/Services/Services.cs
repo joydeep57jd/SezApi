@@ -2456,7 +2456,7 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<ResponseYardInvoiceFlat>>> GetPaymentReceiptInvoiceDetails(int? id, string? PayeeName, int? page, int? size)
+        public async Task<Response<List<ResponseYardInvoiceFlat>>> GetPaymentReceiptInvoiceDetails(int? id, string? PayeeName, int? payeeId, int? page, int? size)
         {
             var response = new Response<List<ResponseYardInvoiceFlat>>();
 
@@ -2468,6 +2468,7 @@ namespace SezApi.Services
                             from ch in chargeGroup.DefaultIfEmpty()
                             where (!id.HasValue || inv.YardInvId == id.Value)
                                   && (string.IsNullOrEmpty(PayeeName) || inv.PayeeName == PayeeName)
+                                  && (!payeeId.HasValue || inv.PayeeId == payeeId.Value)
                             select new ResponseYardInvoiceFlat
                             {
                                 // From InvoiceYard

@@ -1060,9 +1060,9 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetPaymentReceiptInvoiceDetails")]
-        public async Task<IActionResult> GetPaymentReceiptInvoiceDetails(int? id, string? PayeeName, int? page, int? size)
+        public async Task<IActionResult> GetPaymentReceiptInvoiceDetails(int? id, string? PayeeName,int? payeeId, int? page, int? size)
         {
-            var response = await _services.GetPaymentReceiptInvoiceDetails(id, PayeeName, page, size);
+            var response = await _services.GetPaymentReceiptInvoiceDetails(id, PayeeName, payeeId, page, size);
 
             if (response.Data == null || !response.Data.Any())
             {

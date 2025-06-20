@@ -78,7 +78,7 @@ namespace SezApi.Services
         Task<Response<List<CashReceiptDtl>>> GetPaymentDetails(int? id, int? page, int? size, int? CashReceiptId);
         Task<Response<List<CashReceiptHdr>>> GetPaymentReceiptHeader(int? id, int? page, int? size);
         Task<Response<List<YardInvoiceCharges>>> GetYardInvoiceCharge(int? id, int? InoviceId, int? page, int? size);
-        Task<Response<List<ResponseYardInvoiceFlat>>> GetPaymentReceiptInvoiceDetails(int? id, string? PayeeName, int? page, int? size);
+        Task<Response<List<ResponseYardInvoiceFlat>>> GetPaymentReceiptInvoiceDetails(int? id, string? PayeeName,int? payeeId, int? page, int? size);
         Task<Response<ResponseImportChargesInvoice>> GetImportChargesInvoice(string? InvoiceNo);
     }
 }
