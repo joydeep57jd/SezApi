@@ -16,6 +16,7 @@ namespace SezApi.Model.Response
         public decimal MinimumRate { get; set; }
         public decimal ExtraRatePerKg { get; set; }
         public decimal TotalEntryValue { get; set; }
+        public string? EntrySacCode { get; set; }
         public decimal CGSTper { get; set; }
         public decimal SGSTper { get; set; }
         public decimal IGSTper { get; set; }
@@ -23,7 +24,8 @@ namespace SezApi.Model.Response
         public decimal EntrySGSTAmount { get; set; }
         public decimal EntryIGSTAmount { get; set; }
         public decimal TotalEntryAmt { get; set; }
-        public decimal FinalExamFee { get; set; }
+        public decimal TotalExamValue { get; set; }
+        public string? ExaminationSacCode { get; set; }
         public decimal CGSTperExam { get; set; }
         public decimal SGSTperExam { get; set; }
         public decimal IGSTperExam { get; set; }
