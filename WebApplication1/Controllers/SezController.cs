@@ -1046,6 +1046,45 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
+        [HttpGet("GetYardInvoiceCharge")]
+        public async Task<IActionResult> GetYardInvoiceCharge(int? id, int? InoviceId, int? page, int? size)
+        {
+            var response = await _services.GetYardInvoiceCharge(id, InoviceId, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetPaymentReceiptInvoiceDetails")]
+        public async Task<IActionResult> GetPaymentReceiptInvoiceDetails(int? id, string? PayeeName, int? page, int? size)
+        {
+            var response = await _services.GetPaymentReceiptInvoiceDetails(id, PayeeName, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetImportChargesInvoice")]
+        public async Task<IActionResult> GetImportChargesInvoice(string? InvoiceNo)
+        {
+            var response = await _services.GetImportChargesInvoice(InvoiceNo);
+
+            if (response.Data == null )
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
 
     }
 }
