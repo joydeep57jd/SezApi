@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static SezApi.Model.Response.ResponseYardInvoiceFlat;
 namespace SezApi.Services
 {
     public class Services : IServices
@@ -2408,6 +2409,227 @@ namespace SezApi.Services
                 response.Status = false;
                 response.TotalCount = 0;
                 response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<Response<List<YardInvoiceCharges>>> GetYardInvoiceCharge(int? id, int? InoviceId, int? page, int? size)
+        {
+            var response = new Response<List<YardInvoiceCharges>>();
+
+            try
+            {
+                var query = _db.GetYardInvoiceCharges.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.YardInvoiceChargeId == id.Value);
+                }
+                if (InoviceId.HasValue)
+                {
+                    query = query.Where(s => s.InoviceId == InoviceId.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<YardInvoiceCharges>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<Response<List<ResponseYardInvoiceFlat>>> GetPaymentReceiptInvoiceDetails(int? id, string? PayeeName, int? page, int? size)
+        {
+            var response = new Response<List<ResponseYardInvoiceFlat>>();
+
+            try
+            {
+                var query = from inv in _db.GetYardInvoiceList
+                            join charges in _db.GetYardInvoiceCharges
+                                on inv.YardInvId equals charges.InoviceId into chargeGroup
+                            from ch in chargeGroup.DefaultIfEmpty()
+                            where (!id.HasValue || inv.YardInvId == id.Value)
+                                  && (string.IsNullOrEmpty(PayeeName) || inv.PayeeName == PayeeName)
+                            select new ResponseYardInvoiceFlat
+                            {
+                                // From InvoiceYard
+                                YardInvId = inv.YardInvId,
+                                TaxInvoice = inv.TaxInvoice,
+                                BillOfSupply = inv.BillOfSupply,
+                                InvoiceNo = inv.InvoiceNo,
+                                DeliveryDate = inv.DeliveryDate,
+                                ApplicationId = inv.ApplicationId,
+                                InvoiceDate = inv.InvoiceDate,
+                                PartyId = inv.PartyId,
+                                PayeeId = inv.PayeeId,
+                                GSTNo = inv.GSTNo,
+                                PaymentMode = inv.PaymentMode,
+                                FactoryDestuffing = inv.FactoryDestuffing,
+                                DirectDestuffing = inv.DirectDestuffing,
+                                PlaceOfSupply = inv.PlaceOfSupply,
+                                SEZId = inv.SEZId,
+                                OTHours = inv.OTHours,
+                                Container = inv.Container,
+                                CreatedBy = inv.CreatedBy,
+                                UpdatedBy = inv.UpdatedBy,
+                                CreatedAt = inv.CreatedAt,
+                                UpdatedAt = inv.UpdatedAt,
+                                PayeeName = inv.PayeeName,
+
+                                // From YardInvoiceCharges (can be null due to left join)
+                                YardInvoiceChargeId = ch != null ? ch.YardInvoiceChargeId : null,
+                                ChargesTypeId = ch.ChargesTypeId,
+                                InoviceId = ch.InoviceId,
+                                OperationId = ch.OperationId,
+                                Clause = ch.Clause,
+                                ChargeType = ch.ChargeType,
+                                ChargeName = ch.ChargeName,
+                                SACCode = ch.SACCode,
+                                Quantity = ch.Quantity,
+                                Rate = ch.Rate,
+                                Amount = ch.Amount,
+                                Discount = ch.Discount,
+                                Taxable = ch.Taxable,
+                                IGSTPer = ch.IGSTPer,
+                                IGSTAmt = ch.IGSTAmt,
+                                CGSTPer = ch.CGSTPer,
+                                CGSTAmt = ch.CGSTAmt,
+                                SGSTPer = ch.SGSTPer,
+                                SGSTAmt = ch.SGSTAmt,
+                                Total = ch.Total
+                            };
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    int skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ResponseYardInvoiceFlat>();
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.TotalCount = 0;
+            }
+
+            return response;
+        }
+
+        public async Task<Response<ResponseImportChargesInvoice>> GetImportChargesInvoice(string? InvoiceNo)
+        {
+            var response = new Response<ResponseImportChargesInvoice>();
+
+            try
+            {
+                var flatRows = await _db
+                    .Set<FlatImportChargesRow>()
+                    .FromSqlInterpolated($"EXEC dbo.ImportChargesReport {InvoiceNo}")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var first = flatRows.FirstOrDefault();
+                if (first == null)
+                {
+                    response.Data = null;
+                    response.Status = false;
+                    response.Message = "No data found";
+                    return response;
+                }
+
+                var result = new ResponseImportChargesInvoice
+                {
+                    // Header Info
+                    CompanyName = first.CompanyName,
+                    CompanyAddress = first.CompanyAddress,
+                    EmailAddress = first.EmailAddress,
+                    CWCGSTNO = first.CWCGSTNO,
+                    InvNo = first.InvNo,
+                    InvDate = first.InvDate,
+                    PartyName = first.PartyName,
+                    PartyAddress = first.PartyAddress,
+                    PartyGST = first.PartyGST,
+                    StateName = first.StateName,
+                    StateCode = first.StateCode,
+                    PlaceOfSupply = first.PlaceOfSupply,
+                    IsService = first.IsService,
+                    PayerName = first.PayerName,
+                    Remarks = first.Remarks,
+                    PrintedBy = first.PrintedBy,
+
+                    // Group unique containers
+                    ContainerCharges = flatRows
+                        .GroupBy(x => x.ContainerCBTNo)
+                        .Select(g => new ContainerChargeDto
+                        {
+                            ICDNo = g.First().ICDNo,
+                            ContainerCBTNo = g.Key,
+                            Size = g.First().Size,
+                            Reefer = g.First().Reefer,
+                            OBLHBLNo = g.First().OBLHBLNo,
+                            CargoType = g.First().CargoType,
+                            NoOfPackage = g.First().NoOfPackage,
+                            GrWt = g.First().GrWt,
+                            DoValidateDate = g.First().DoValidateDate
+                        })
+                        .ToList(),
+
+                    // All charges
+                    Charges = flatRows
+                        .Select(r => new ChargeDetailDto
+                        {
+                            ChargeCode = r.ChargeCode,
+                            Descripton = r.Descripton,
+                            SACCode = r.SACCode,
+                            Rate = r.Rate,
+                            TaxableAmt = r.TaxableAmt,
+                            CGSTRate = r.CGSTRate,
+                            CGSTAmt = r.CGSTAmt,
+                            SGSTRate = r.SGSTRate,
+                            SGSTAmt = r.SGSTAmt,
+                            IGSTRate = r.IGSTRate,
+                            IGSTAmt = r.IGSTAmt,
+                            Total = r.Total
+                        })
+                        .ToList()
+                };
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = flatRows.Count;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.Data = null;
+                response.TotalCount = 0;
             }
 
             return response;

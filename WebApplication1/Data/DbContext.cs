@@ -75,6 +75,10 @@ namespace SezApi.Data
         public DbSet<CashReceiptDtl> GetCashReceiptDtl { get; set; }
 
         public DbSet<CashReceiptHdr> GetCashReceiptHdr { get; set; }
+
+        public DbSet<YardInvoiceCharges> GetYardInvoiceCharges { get; set; }
+
+        public DbSet<FlatImportChargesRow> FlatImportChargesRow { get; set; }
     }
 }
 
