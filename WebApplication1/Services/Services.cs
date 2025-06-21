@@ -1689,8 +1689,8 @@ namespace SezApi.Services
                                 Reefer = gateentry.Reefer,
                                 OBL_HBL_No = obldetails.OBL_HBL_No,
                                 CargoType = AppContainerDetails.CargoType,
-                                NoOfPackage = AppContainerDetails.NoOfPackages,
-                                GrWt = AppContainerDetails.GrossWeightKg,
+                                NoOfPackage = obldetails.No_of_PKG,
+                                GrWt = obldetails.GR_WT_Kg,
                                 DoValidateDate = AppDoDetails.DoValidDate
                             };
 
