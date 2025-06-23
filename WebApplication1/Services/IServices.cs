@@ -93,5 +93,7 @@ namespace SezApi.Services
         Task<AddEditResponse> AddEditRentTableSpaceCharges(RequestRentTableSpaceCharges request);
 
         Task<Response<List<RentTableSpaceCharges>>> GetRentTableSpaceCharges(int? id, int? page, int? size);
+        Task<AddEditResponse> CreateGatePassAsync(GatePassRequest request);
+        Task<Response<List<ResponseGatePassGateOut>>> GetGatePassGateOut(int? GatePassDtlId);
     }
 }

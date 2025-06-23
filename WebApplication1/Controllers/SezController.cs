@@ -1116,6 +1116,25 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+        [HttpPost("CreateGatePass")]
+        public async Task<IActionResult> CreateGatePass([FromBody] GatePassRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+
+            try
+            {
+                var result = await _services.CreateGatePassAsync(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
 
         [HttpPost("AddEditStorageChargesGodown")]
         public async Task<IActionResult> AddEditStorageChargesGodown(RequestStorageChargesGodown request)
@@ -1204,6 +1223,20 @@ namespace SezApi.Controllers
         {
 
             var response = await _services.GetRentTableSpaceCharges(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetGatePassGateOut")]
+        public async Task<IActionResult> GetGatePassGateOut( int? GatePassDtlId)
+        {
+
+            var response = await _services.GetGatePassGateOut(GatePassDtlId);
 
             if (response.Data == null || !response.Data.Any())
             {
