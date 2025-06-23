@@ -1245,5 +1245,24 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost("CreateExitThroughGate")]
+        public async Task<IActionResult> CreateExitThroughGate(RequestExitThroughGate request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+
+            try
+            {
+                var result = await _services.CreateExitThroughGate(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

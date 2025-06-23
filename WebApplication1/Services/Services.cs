@@ -2681,10 +2681,10 @@ namespace SezApi.Services
 
              
                 await _db.Database.ExecuteSqlInterpolatedAsync($@"
-            EXEC sp_Insert_GatePassDtl_XML 
+               EXEC sp_Insert_GatePassDtl_XML 
                 @GatepassId = {newGatePassId},
                 @XmlData = {xmlData}
-        ");
+             ");
 
                 await transaction.CommitAsync();
 
@@ -3016,6 +3016,67 @@ namespace SezApi.Services
             return response;
         }
 
+        public async Task<AddEditResponse> CreateExitThroughGate(RequestExitThroughGate request)
+        {
+            var response = new AddEditResponse();
+            try
+            {
+                var result = await _db.Set<ResponseCustomForExitThroughGate>()
+                .FromSqlInterpolated($@"
+                  EXEC dbo.Sp_AddEditExitThroughGateHeader
+                  @ExitIdHeaderId = {request.ExitThroughGateHeader.ExitIdHeaderId},
+                  @GateExitNo = {request.ExitThroughGateHeader.GateExitNo},
+                  @GateExitDateTime = {request.ExitThroughGateHeader.GateExitDateTime},
+                  @GatePassId = {request.ExitThroughGateHeader.GatePassId},
+                  @GatePassNo = {request.ExitThroughGateHeader.GatePassNo},
+                  @GatePassDate = {request.ExitThroughGateHeader.GatePassDate},
+                  @ExpectedTime = {request.ExitThroughGateHeader.ExpectedTime},
+                  @CBTNo = {request.ExitThroughGateHeader.CBTNo},
+                  @Size = {request.ExitThroughGateHeader.Size},
+                  @ShippingLine = {request.ExitThroughGateHeader.ShippingLine},
+                  @CHAName = {request.ExitThroughGateHeader.CHAName},
+                  @CargoDescription = {request.ExitThroughGateHeader.CargoDescription},
+                  @CreatedBy = {request.ExitThroughGateHeader.CreatedBy},
+                  @CreatedOn = {request.ExitThroughGateHeader.CreatedOn},
+                  @UpdatedBy = {request.ExitThroughGateHeader.UpdatedBy},
+                  @UpdatedOn = {request.ExitThroughGateHeader.UpdatedOn},
+                  @BranchId = {request.ExitThroughGateHeader.BranchId},
+                  @MsgFlag = {request.ExitThroughGateHeader.MsgFlag},
+                  @Actual_File_Name = {request.ExitThroughGateHeader.Actual_File_Name},
+                  @RuleCode = {request.ExitThroughGateHeader.RuleCode},
+                  @DTMsgStatus = {request.ExitThroughGateHeader.DTMsgStatus},
+                  @DTAmendStatus = {request.ExitThroughGateHeader.DTAmendStatus}
+                    ")
+                  .AsNoTracking()
+                  .ToListAsync();
 
+
+                var spResult = result.FirstOrDefault();
+                if (spResult == null || spResult.Id == 0)
+                {
+                    response.Response = "CashReceiptHdrresult failed or returned no ID.";
+                    return response;
+                }
+                if (request.ExitThroughGateDetails?.Any() == true)
+                {
+
+                    var xmlData = XmlConvertercs.ConvertToXmlExitThroughGateDetails(request.ExitThroughGateDetails);
+
+
+                    await _db.Database.ExecuteSqlInterpolatedAsync($@"
+                      EXEC sp_AddEditExitThroughGateDetails_XML 
+                        @ExitIdHeader= {spResult.Id},
+                       @XmlData = {xmlData}
+                      ");
+                  }
+              
+                response.Response = "OK";
+            }
+            catch (Exception ex)
+            {
+                response.Response = $"Error: {ex.Message}";
+            }
+            return response;
+        }
     }
 }
