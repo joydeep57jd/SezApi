@@ -2636,5 +2636,144 @@ namespace SezApi.Services
             return response;
         }
 
+        public async Task<AddEditResponse> AddEditTransportationCharges(RequestTransportationCharges request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+                EXEC dbo.Sp_AddEditTransportationCharges 
+                    @TransportationChargesID = {request.TransportationChargesID},
+                    @EffectiveDate = {request.EffectiveDate},
+                    @SacCodeId = {request.SacCodeId},
+                    @ApplicableForId = {request.ApplicableForId},
+                    @ApplicableForName = {request.ApplicableForName},
+                    @ValueId = {request.ValueId},
+                    @Rate = {request.Rate},
+                    @AdditionalRatePerPacket = {request.AdditionalRatePerPacket},
+                    @CreatedBy = {request.CreatedBy},
+                    @UpdatedBy = {request.UpdatedBy}
+                   ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEditTransportationCharges", ex);
+            }
+        }
+
+        public async Task<Response<List<TransportationCharges>>> GetTransportationCharges(int? id, int? page, int? size)
+        {
+            var response = new Response<List<TransportationCharges>>();
+
+            try
+            {
+                var query = _db.GetTransportationCharges.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.TransportationChargesID == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<TransportationCharges>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<AddEditResponse> AddEditStorageChargesGodown(RequestStorageChargesGodown request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+                EXEC dbo.Sp_AddEditStorageChargesGodown 
+                    @StorageChargeID = {request.StorageChargeID},
+                    @EffectiveDate = {request.EffectiveDate},
+                    @SacCodeId = {request.SacCodeId},
+                    @StorageForId = {request.StorageForId},
+                    @StorageForName = {request.StorageForName},
+                    @AreaTypeId = {request.AreaTypeId},
+                    @AreaTypeName = {request.AreaTypeName},
+                    @BasisId = {request.BasisId},
+                    @BasisName = {request.BasisName},
+                    @RatePerSqmWeek = {request.RatePerSqmWeek},
+                    @RatePerSqmMonth = {request.RatePerSqmMonth},
+                    @CreatedBy = {request.CreatedBy},
+                    @UpdatedBy = {request.UpdatedBy}
+                ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEditStorageChargesGodown", ex);
+            }
+        }
+
+        public async Task<Response<List<StorageChargesGodown>>> GetStorageChargesGodown(int? id, int? page, int? size)
+        {
+            var response = new Response<List<StorageChargesGodown>>();
+
+            try
+            {
+                var query = _db.GetStorageChargesGodown.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.StorageChargeID == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<StorageChargesGodown>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
     }
 }

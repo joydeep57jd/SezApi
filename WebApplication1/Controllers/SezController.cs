@@ -1085,6 +1085,68 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
+        [HttpPost("AddEditTransportationCharges")]
+        public async Task<IActionResult> AddEditTransportationCharges(RequestTransportationCharges request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditTransportationCharges(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
+        [HttpGet("GetTransportationCharges")]
+        public async Task<IActionResult> GetTransportationCharges(int? id, int? page, int? size)
+        {
+
+            var response = await _services.GetTransportationCharges(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("AddEditStorageChargesGodown")]
+        public async Task<IActionResult> AddEditStorageChargesGodown(RequestStorageChargesGodown request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditStorageChargesGodown(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetStorageChargesGodown")]
+        public async Task<IActionResult> GetStorageChargesGodown(int? id, int? page, int? size)
+        {
+
+            var response = await _services.GetStorageChargesGodown(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
     }
 }

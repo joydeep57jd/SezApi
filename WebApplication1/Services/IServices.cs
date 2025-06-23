@@ -80,5 +80,12 @@ namespace SezApi.Services
         Task<Response<List<YardInvoiceCharges>>> GetYardInvoiceCharge(int? id, int? InoviceId, int? page, int? size);
         Task<Response<List<ResponseYardInvoiceFlat>>> GetPaymentReceiptInvoiceDetails(int? id, string? PayeeName,int? payeeId, int? page, int? size);
         Task<Response<ResponseImportChargesInvoice>> GetImportChargesInvoice(string? InvoiceNo);
+        Task<AddEditResponse> AddEditTransportationCharges(RequestTransportationCharges request);
+
+        Task<Response<List<TransportationCharges>>> GetTransportationCharges(int? id, int? page, int? size);
+
+        Task<AddEditResponse> AddEditStorageChargesGodown(RequestStorageChargesGodown request);
+
+        Task<Response<List<StorageChargesGodown>>> GetStorageChargesGodown(int? id, int? page, int? size);
     }
 }

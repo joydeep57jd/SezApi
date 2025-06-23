@@ -79,6 +79,9 @@ namespace SezApi.Data
         public DbSet<YardInvoiceCharges> GetYardInvoiceCharges { get; set; }
 
         public DbSet<FlatImportChargesRow> FlatImportChargesRow { get; set; }
+
+        public DbSet<TransportationCharges> GetTransportationCharges { get; set; }
+        public DbSet<StorageChargesGodown> GetStorageChargesGodown { get; set; }
     }
 }
 
