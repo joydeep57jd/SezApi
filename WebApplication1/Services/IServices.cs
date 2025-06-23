@@ -87,5 +87,6 @@ namespace SezApi.Services
         Task<AddEditResponse> AddEditStorageChargesGodown(RequestStorageChargesGodown request);
 
         Task<Response<List<StorageChargesGodown>>> GetStorageChargesGodown(int? id, int? page, int? size);
+        Task<AddEditResponse> CreateGatePassAsync(GatePassRequest request);
     }
 }

@@ -1116,6 +1116,25 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+        [HttpPost("CreateGatePass")]
+        public async Task<IActionResult> CreateGatePass([FromBody] GatePassRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+
+            try
+            {
+                var result = await _services.CreateGatePassAsync(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
 
         [HttpPost("AddEditStorageChargesGodown")]
         public async Task<IActionResult> AddEditStorageChargesGodown(RequestStorageChargesGodown request)
