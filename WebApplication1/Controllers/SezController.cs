@@ -1148,5 +1148,69 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost("AddEditRequestRentOfficeSpaceCharges")]
+        public async Task<IActionResult> AddEditRequestRentOfficeSpaceCharges(RequestRentOfficeSpaceCharges request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditRequestRentOfficeSpaceCharges(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetRequestRentOfficeSpaceCharges")]
+        public async Task<IActionResult> GetRequestRentOfficeSpaceCharges(int? id, int? page, int? size)
+        {
+
+            var response = await _services.GetRentOfficeSpaceCharges(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("AddEditRentTableSpaceCharges")]
+        public async Task<IActionResult> AddEditRentTableSpaceCharges(RequestRentTableSpaceCharges request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.AddEditRentTableSpaceCharges(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetRentTableSpaceCharges")]
+        public async Task<IActionResult> GetRentTableSpaceCharges(int? id, int? page, int? size)
+        {
+
+            var response = await _services.GetRentTableSpaceCharges(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
     }
 }

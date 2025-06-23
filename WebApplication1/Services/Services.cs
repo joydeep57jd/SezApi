@@ -2775,5 +2775,132 @@ namespace SezApi.Services
             return response;
         }
 
+        public async Task<AddEditResponse> AddEditRequestRentOfficeSpaceCharges(RequestRentOfficeSpaceCharges request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+                EXEC dbo.Sp_AddEditRentOfficeSpaceCharges 
+                    @RentOfficeSpaceID = {request.RentOfficeSpaceID},
+                    @EffectiveDate = {request.EffectiveDate},
+                    @SacCodeId = {request.SacCodeId},
+                    @Rate = {request.Rate},
+                    @CreatedBy = {request.CreatedBy},
+                    @UpdatedBy = {request.UpdatedBy}
+            ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEditRentOfficeSpaceCharges", ex);
+            }
+        }
+
+        public async Task<Response<List<RentOfficeSpaceCharges>>> GetRentOfficeSpaceCharges(int? id, int? page, int? size)
+        {
+            var response = new Response<List<RentOfficeSpaceCharges>>();
+
+            try
+            {
+                var query = _db.GetRentOfficeSpaceCharges.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.RentOfficeSpaceID == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<RentOfficeSpaceCharges>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<AddEditResponse> AddEditRentTableSpaceCharges(RequestRentTableSpaceCharges request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+            EXEC dbo.Sp_AddEditRentTableSpaceCharge 
+                @RentTableSpaceID = {request.RentTableSpaceID},
+                @EffectiveDate = {request.EffectiveDate},
+                @SacCodeId = {request.SacCodeId},
+                @Rate = {request.Rate},
+                @CreatedBy = {request.CreatedBy},
+                @UpdatedBy = {request.UpdatedBy}
+            ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEditRentTableSpaceCharges", ex);
+            }
+
+        }
+        public async Task<Response<List<RentTableSpaceCharges>>> GetRentTableSpaceCharges(int? id, int? page, int? size)
+        {
+            var response = new Response<List<RentTableSpaceCharges>>();
+
+            try
+            {
+                var query = _db.GetRentTableSpaceCharges.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.RentTableSpaceID == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<RentTableSpaceCharges>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
     }
 }
