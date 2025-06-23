@@ -2841,5 +2841,55 @@ namespace SezApi.Services
             return response;
         }
 
+        public async Task<Response<List<ResponseGatePassGateOut>>> GetGatePassGateOut(int? GatePassId, int? GatePassDtlId)
+        {
+            var response = new Response<List<ResponseGatePassGateOut>>();
+
+            try
+            {
+                var query = from GPassHeader in _db.GatePassHeader
+                            join GPassDetails in _db.GatePassDetails
+                                on GPassHeader.GatepassId equals GPassDetails.GatepassId
+                            join YardInv in _db.GetYardInvoiceList
+                                on GPassHeader.InvoiceId equals YardInv.YardInvId
+                                join AppContDetails in _db.GetAppraisementContainerDetails
+                                on GPassDetails.ContainerNo equals AppContDetails.ContainerCBTNo
+                            where
+                                (!GatePassId.HasValue || GPassHeader.GatepassId == GatePassId) &&
+                                (!GatePassDtlId.HasValue || GPassDetails.GatepassDtlId == GatePassDtlId)
+                            select new ResponseGatePassGateOut
+                            {
+                                GatePassNo = GPassHeader.GatePassNo,
+                                VehicleNo = GPassDetails.VehicleNo,
+                                Importer = GPassHeader.ImpExpName,
+                                ShipplingLine = GPassHeader.ShippingLineName,
+                                GatePassDateTime = GPassHeader.GatePssDate,
+                                ContainerNo = GPassDetails.ContainerNo,
+                                ContainerSize = GPassDetails.Size,
+                                CHAName = GPassHeader.ChaName,
+                                InvoiceNo = YardInv.InvoiceNo,
+                                GatePassValidity = GPassHeader.ExpDate,
+                                BoeNo= AppContDetails.BOENo
+                            };
+        
+
+        var data = await query.ToListAsync();
+
+                response.Data = data;
+                response.Status = true;
+                response.TotalCount = data.Count;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ResponseGatePassGateOut>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+
     }
 }

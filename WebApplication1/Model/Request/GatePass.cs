@@ -1,7 +1,14 @@
-﻿namespace SezApi.Model.Request
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SezApi.Model.Request
 {
+    
+        [Table("GatePass")]
     public class GatePass
     {
+        [Key]
         public int GatepassId { get; set; }
         public string GatePassNo { get; set; }
         public DateTime? GatePssDate { get; set; }

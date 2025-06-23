@@ -1167,5 +1167,19 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("GetGatePassGateOut")]
+        public async Task<IActionResult> GetGatePassGateOut(int? GatePassId, int? GatePassDtlId)
+        {
+
+            var response = await _services.GetGatePassGateOut(GatePassId,GatePassDtlId);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
     }
 }

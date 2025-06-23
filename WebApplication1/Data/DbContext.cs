@@ -3,6 +3,7 @@ using Azure;
 using Microsoft.EntityFrameworkCore;
 using SezApi.Model;
 using SezApi.Model.DBModels;
+using SezApi.Model.Request;
 using SezApi.Model.Response;
 
 namespace SezApi.Data
@@ -82,6 +83,9 @@ namespace SezApi.Data
 
         public DbSet<TransportationCharges> GetTransportationCharges { get; set; }
         public DbSet<StorageChargesGodown> GetStorageChargesGodown { get; set; }
+        public DbSet<GatePass> GatePassHeader { get; set; }
+        public DbSet<GatePassDtl> GatePassDetails { get; set; }
+
     }
 }
 
