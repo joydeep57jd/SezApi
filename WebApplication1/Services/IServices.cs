@@ -88,6 +88,6 @@ namespace SezApi.Services
 
         Task<Response<List<StorageChargesGodown>>> GetStorageChargesGodown(int? id, int? page, int? size);
         Task<AddEditResponse> CreateGatePassAsync(GatePassRequest request);
-        Task<Response<List<ResponseGatePassGateOut>>> GetGatePassGateOut(int? GatePassId, int? GatePassDtlId);
+        Task<Response<List<ResponseGatePassGateOut>>> GetGatePassGateOut(int? GatePassDtlId);
     }
 }

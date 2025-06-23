@@ -1169,10 +1169,10 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetGatePassGateOut")]
-        public async Task<IActionResult> GetGatePassGateOut(int? GatePassId, int? GatePassDtlId)
+        public async Task<IActionResult> GetGatePassGateOut( int? GatePassDtlId)
         {
 
-            var response = await _services.GetGatePassGateOut(GatePassId,GatePassDtlId);
+            var response = await _services.GetGatePassGateOut(GatePassDtlId);
 
             if (response.Data == null || !response.Data.Any())
             {

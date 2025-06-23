@@ -2841,7 +2841,7 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<ResponseGatePassGateOut>>> GetGatePassGateOut(int? GatePassId, int? GatePassDtlId)
+        public async Task<Response<List<ResponseGatePassGateOut>>> GetGatePassGateOut( int? GatePassDtlId)
         {
             var response = new Response<List<ResponseGatePassGateOut>>();
 
@@ -2855,7 +2855,6 @@ namespace SezApi.Services
                                 join AppContDetails in _db.GetAppraisementContainerDetails
                                 on GPassDetails.ContainerNo equals AppContDetails.ContainerCBTNo
                             where
-                                (!GatePassId.HasValue || GPassHeader.GatepassId == GatePassId) &&
                                 (!GatePassDtlId.HasValue || GPassDetails.GatepassDtlId == GatePassDtlId)
                             select new ResponseGatePassGateOut
                             {
