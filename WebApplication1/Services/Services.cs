@@ -3,14 +3,17 @@ using Azure.Core;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SezApi.Data;
 using SezApi.Model.DBModels;
 using SezApi.Model.Request;
 using SezApi.Model.Response;
 using System.ComponentModel;
+using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Xml;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static SezApi.Model.Response.ResponseYardInvoiceFlat;
 namespace SezApi.Services
@@ -2635,6 +2638,69 @@ namespace SezApi.Services
 
             return response;
         }
+
+        public async Task<AddEditResponse> CreateGatePassAsync(GatePassRequest request)
+        {
+            using var transaction = await _db.Database.BeginTransactionAsync();
+
+            try
+            {
+                var response = new AddEditResponse();
+
+                var outputId = new SqlParameter
+                {
+                    ParameterName = "@NewGatePassId",
+                    SqlDbType = SqlDbType.Int,
+                    Direction = ParameterDirection.Output
+                };
+
+                await _db.Database.ExecuteSqlInterpolatedAsync($@"
+            EXEC sp_Insert_GatePass 
+                @GatePassNo = {request.GatePass.GatePassNo},
+                @GatePssDate = {request.GatePass.GatePssDate},
+                @ExpDate = {request.GatePass.ExpDate},
+                @ChaName = {request.GatePass.ChaName},
+                @ImpExpName = {request.GatePass.ImpExpName},
+                @ShippingLineName = {request.GatePass.ShippingLineName},
+                @Remarks = {request.GatePass.Remarks},
+                @InvoiceId = {request.GatePass.InvoiceId},
+                @BranchId = {request.GatePass.BranchId},
+                @CreatedOn = {DateTime.Now},
+                @CreatedBy = {request.GatePass.CreatedBy},
+                @DepartureDate = {request.GatePass.DepartureDate},
+                @ArrivalDate = {request.GatePass.ArrivalDate},
+                @FileName = {request.GatePass.FileName},
+                @FileCode = {request.GatePass.FileCode},
+                @NewGatePassId = {outputId} OUTPUT
+        ");
+
+                int newGatePassId = (int)outputId.Value;
+
+             
+                var xmlData = XmlConvertercs.ConvertToXmlGatePassDtl(request.GatePassDetails);
+
+             
+                await _db.Database.ExecuteSqlInterpolatedAsync($@"
+            EXEC sp_Insert_GatePassDtl_XML 
+                @GatepassId = {newGatePassId},
+                @XmlData = {xmlData}
+        ");
+
+                await transaction.CommitAsync();
+
+             
+                response.Response = $"GatePass saved successfully. GatePassId: {newGatePassId}";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception("An error occurred while saving GatePass.", ex);
+            }
+        }
+
+
+
 
     }
 }
