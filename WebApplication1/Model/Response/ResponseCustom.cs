@@ -9,4 +9,11 @@ namespace SezApi.Model.Response
         public int? Id { get; set; }
         public string? ErrorMessage { get; set; }  // Optional if included in SP
     }
+
+    public class ResponseCustomForExitThroughGate
+    {
+        [Key]
+        public string? Response { get; set; }  // "OK" or "NOT OK"
+        public int? Id { get; set; }
+    }
 }

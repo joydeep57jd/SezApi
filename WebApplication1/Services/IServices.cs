@@ -87,9 +87,17 @@ namespace SezApi.Services
         Task<AddEditResponse> AddEditStorageChargesGodown(RequestStorageChargesGodown request);
 
         Task<Response<List<StorageChargesGodown>>> GetStorageChargesGodown(int? id, int? page, int? size);
+        Task<AddEditResponse> AddEditRequestRentOfficeSpaceCharges(RequestRentOfficeSpaceCharges request);
+        Task<Response<List<RentOfficeSpaceCharges>>> GetRentOfficeSpaceCharges(int? id, int? page, int? size);
+
+        Task<AddEditResponse> AddEditRentTableSpaceCharges(RequestRentTableSpaceCharges request);
+
+        Task<Response<List<RentTableSpaceCharges>>> GetRentTableSpaceCharges(int? id, int? page, int? size);
         Task<AddEditResponse> CreateGatePassAsync(GatePassRequest request);
         Task<Response<List<ResponseGatePassGateOut>>> GetGatePassGateOut(int? GatePassDtlId);
         Task<Response<List<GatePass>>> GetPassHeader(int? id, int? page, int? size);
         Task<Response<List<GatePassDtl>>> GetPassDetails(int? id, int? page, int? size);
+
+        Task<AddEditResponse> CreateExitThroughGate(RequestExitThroughGate request);
     }
 }

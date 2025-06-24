@@ -2681,10 +2681,10 @@ namespace SezApi.Services
 
              
                 await _db.Database.ExecuteSqlInterpolatedAsync($@"
-            EXEC sp_Insert_GatePassDtl_XML 
+               EXEC sp_Insert_GatePassDtl_XML 
                 @GatepassId = {newGatePassId},
                 @XmlData = {xmlData}
-        ");
+             ");
 
                 await transaction.CommitAsync();
 
@@ -2841,6 +2841,133 @@ namespace SezApi.Services
             return response;
         }
 
+        public async Task<AddEditResponse> AddEditRequestRentOfficeSpaceCharges(RequestRentOfficeSpaceCharges request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+                EXEC dbo.Sp_AddEditRentOfficeSpaceCharges 
+                    @RentOfficeSpaceID = {request.RentOfficeSpaceID},
+                    @EffectiveDate = {request.EffectiveDate},
+                    @SacCodeId = {request.SacCodeId},
+                    @Rate = {request.Rate},
+                    @CreatedBy = {request.CreatedBy},
+                    @UpdatedBy = {request.UpdatedBy}
+            ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEditRentOfficeSpaceCharges", ex);
+            }
+        }
+
+        public async Task<Response<List<RentOfficeSpaceCharges>>> GetRentOfficeSpaceCharges(int? id, int? page, int? size)
+        {
+            var response = new Response<List<RentOfficeSpaceCharges>>();
+
+            try
+            {
+                var query = _db.GetRentOfficeSpaceCharges.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.RentOfficeSpaceID == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<RentOfficeSpaceCharges>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<AddEditResponse> AddEditRentTableSpaceCharges(RequestRentTableSpaceCharges request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
+            EXEC dbo.Sp_AddEditRentTableSpaceCharge 
+                @RentTableSpaceID = {request.RentTableSpaceID},
+                @EffectiveDate = {request.EffectiveDate},
+                @SacCodeId = {request.SacCodeId},
+                @Rate = {request.Rate},
+                @CreatedBy = {request.CreatedBy},
+                @UpdatedBy = {request.UpdatedBy}
+            ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEditRentTableSpaceCharges", ex);
+            }
+
+        }
+        public async Task<Response<List<RentTableSpaceCharges>>> GetRentTableSpaceCharges(int? id, int? page, int? size)
+        {
+            var response = new Response<List<RentTableSpaceCharges>>();
+
+            try
+            {
+                var query = _db.GetRentTableSpaceCharges.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.RentTableSpaceID == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<RentTableSpaceCharges>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
         public async Task<Response<List<ResponseGatePassGateOut>>> GetGatePassGateOut( int? GatePassDtlId)
         {
             var response = new Response<List<ResponseGatePassGateOut>>();
@@ -2897,6 +3024,68 @@ namespace SezApi.Services
             return response;
         }
 
+        public async Task<AddEditResponse> CreateExitThroughGate(RequestExitThroughGate request)
+        {
+            var response = new AddEditResponse();
+            try
+            {
+                var result = await _db.Set<ResponseCustomForExitThroughGate>()
+                .FromSqlInterpolated($@"
+                  EXEC dbo.Sp_AddEditExitThroughGateHeader
+                  @ExitIdHeaderId = {request.ExitThroughGateHeader.ExitIdHeaderId},
+                  @GateExitNo = {request.ExitThroughGateHeader.GateExitNo},
+                  @GateExitDateTime = {request.ExitThroughGateHeader.GateExitDateTime},
+                  @GatePassId = {request.ExitThroughGateHeader.GatePassId},
+                  @GatePassNo = {request.ExitThroughGateHeader.GatePassNo},
+                  @GatePassDate = {request.ExitThroughGateHeader.GatePassDate},
+                  @ExpectedTime = {request.ExitThroughGateHeader.ExpectedTime},
+                  @CBTNo = {request.ExitThroughGateHeader.CBTNo},
+                  @Size = {request.ExitThroughGateHeader.Size},
+                  @ShippingLine = {request.ExitThroughGateHeader.ShippingLine},
+                  @CHAName = {request.ExitThroughGateHeader.CHAName},
+                  @CargoDescription = {request.ExitThroughGateHeader.CargoDescription},
+                  @CreatedBy = {request.ExitThroughGateHeader.CreatedBy},
+                  @CreatedOn = {request.ExitThroughGateHeader.CreatedOn},
+                  @UpdatedBy = {request.ExitThroughGateHeader.UpdatedBy},
+                  @UpdatedOn = {request.ExitThroughGateHeader.UpdatedOn},
+                  @BranchId = {request.ExitThroughGateHeader.BranchId},
+                  @MsgFlag = {request.ExitThroughGateHeader.MsgFlag},
+                  @Actual_File_Name = {request.ExitThroughGateHeader.Actual_File_Name},
+                  @RuleCode = {request.ExitThroughGateHeader.RuleCode},
+                  @DTMsgStatus = {request.ExitThroughGateHeader.DTMsgStatus},
+                  @DTAmendStatus = {request.ExitThroughGateHeader.DTAmendStatus}
+                    ")
+                  .AsNoTracking()
+                  .ToListAsync();
+
+
+                var spResult = result.FirstOrDefault();
+                if (spResult == null || spResult.Id == 0)
+                {
+                    response.Response = "CashReceiptHdrresult failed or returned no ID.";
+                    return response;
+                }
+                if (request.ExitThroughGateDetails?.Any() == true)
+                {
+
+                    var xmlData = XmlConvertercs.ConvertToXmlExitThroughGateDetails(request.ExitThroughGateDetails);
+
+
+                    await _db.Database.ExecuteSqlInterpolatedAsync($@"
+                      EXEC sp_AddEditExitThroughGateDetails_XML 
+                        @ExitIdHeader= {spResult.Id},
+                       @XmlData = {xmlData}
+                      ");
+                  }
+              
+                response.Response = "OK";
+            }
+            catch (Exception ex)
+            {
+                response.Response = $"Error: {ex.Message}";
+            }
+            return response;
+        }
 
         public async Task<Response<List<GatePass>>> GetPassHeader(int? id, int? page, int? size)
         {
