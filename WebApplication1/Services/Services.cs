@@ -2848,31 +2848,39 @@ namespace SezApi.Services
             try
             {
                 var query = from GPassHeader in _db.GatePassHeader
-                            join GPassDetails in _db.GatePassDetails
-                                on GPassHeader.GatePassId equals GPassDetails.GatepassId
-                            join YardInv in _db.GetYardInvoiceList
-                                on GPassHeader.InvoiceId equals YardInv.YardInvId
-                                join AppContDetails in _db.GetAppraisementContainerDetails
-                                on GPassDetails.ContainerNo equals AppContDetails.ContainerCBTNo
-                            where
-                                (!GatePassDtlId.HasValue || GPassDetails.GatepassDtlId == GatePassDtlId)
+
+                            join GPassDetailsTemp in _db.GatePassDetails
+                                on GPassHeader.GatePassId equals GPassDetailsTemp.GatepassId into GPassDetailsJoin
+                            from GPassDetails in GPassDetailsJoin.DefaultIfEmpty()
+
+                            join YardInvTemp in _db.GetYardInvoiceList
+                                on GPassHeader.InvoiceId equals YardInvTemp.YardInvId into YardInvJoin
+                            from YardInv in YardInvJoin.DefaultIfEmpty()
+
+                            join AppContDetailsTemp in _db.GetAppraisementContainerDetails
+                                on GPassDetails.ContainerNo equals AppContDetailsTemp.ContainerCBTNo into AppContDetailsJoin
+                            from AppContDetails in AppContDetailsJoin.DefaultIfEmpty()
+
+                            where (!GatePassDtlId.HasValue || GPassDetails.GatepassDtlId == GatePassDtlId)
+
                             select new ResponseGatePassGateOut
                             {
                                 GatePassNo = GPassHeader.GatePassNo,
-                                VehicleNo = GPassDetails.VehicleNo,
+                                VehicleNo = GPassDetails != null ? GPassDetails.VehicleNo : null,
                                 Importer = GPassHeader.ImpExpName,
                                 ShipplingLine = GPassHeader.ShippingLineName,
                                 GatePassDateTime = GPassHeader.GatePssDate,
-                                ContainerNo = GPassDetails.ContainerNo,
-                                ContainerSize = GPassDetails.Size,
+                                ContainerNo = GPassDetails != null ? GPassDetails.ContainerNo : null,
+                                ContainerSize = GPassDetails != null ? GPassDetails.Size : null,
                                 CHAName = GPassHeader.ChaName,
-                                InvoiceNo = YardInv.InvoiceNo,
+                                InvoiceNo = YardInv != null ? YardInv.InvoiceNo : null,
                                 GatePassValidity = GPassHeader.ExpDate,
-                                BoeNo= AppContDetails.BOENo
+                                BoeNo = AppContDetails != null ? AppContDetails.BOENo : null
                             };
-        
 
-        var data = await query.ToListAsync();
+
+
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
