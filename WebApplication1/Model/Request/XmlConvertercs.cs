@@ -9,7 +9,8 @@ namespace SezApi.Model.Request
         {
             var xDoc = new XElement("Details",
                 details.Select(d => new XElement("Detail",
-                    new XElement("ContainerNo", d.ContainerNo),
+				   new XElement("DtlId", d.GatepassDtlId),
+					new XElement("ContainerNo", d.ContainerNo),
                     new XElement("IsReefer", d.IsReefer),
                     new XElement("Size", d.Size),
                     new XElement("CargoDescription", d.CargoDescription),

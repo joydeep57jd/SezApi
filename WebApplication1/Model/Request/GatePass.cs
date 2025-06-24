@@ -9,7 +9,7 @@ namespace SezApi.Model.Request
     public class GatePass
     {
         [Key]
-        public int GatepassId { get; set; }
+        public int GatePassId { get; set; }
         public string GatePassNo { get; set; }
         public DateTime? GatePssDate { get; set; }
         public DateTime? ExpDate { get; set; }
