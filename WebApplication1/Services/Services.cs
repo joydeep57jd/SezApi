@@ -2656,6 +2656,7 @@ namespace SezApi.Services
 
                 await _db.Database.ExecuteSqlInterpolatedAsync($@"
             EXEC sp_Insert_GatePass 
+                @GatePassId = {request.GatePass.GatePassId},
                 @GatePassNo = {request.GatePass.GatePassNo},
                 @GatePssDate = {request.GatePass.GatePssDate},
                 @ExpDate = {request.GatePass.ExpDate},
@@ -2665,7 +2666,6 @@ namespace SezApi.Services
                 @Remarks = {request.GatePass.Remarks},
                 @InvoiceId = {request.GatePass.InvoiceId},
                 @BranchId = {request.GatePass.BranchId},
-                @CreatedOn = {DateTime.Now},
                 @CreatedBy = {request.GatePass.CreatedBy},
                 @DepartureDate = {request.GatePass.DepartureDate},
                 @ArrivalDate = {request.GatePass.ArrivalDate},
@@ -2849,13 +2849,13 @@ namespace SezApi.Services
             {
                 var query = from GPassHeader in _db.GatePassHeader
                             join GPassDetails in _db.GatePassDetails
-                                on GPassHeader.GatepassId equals GPassDetails.GatepassId
+                                on GPassHeader.GatePassId equals GPassDetails.GatepassId
                             join YardInv in _db.GetYardInvoiceList
                                 on GPassHeader.InvoiceId equals YardInv.YardInvId
                                 join AppContDetails in _db.GetAppraisementContainerDetails
                                 on GPassDetails.ContainerNo equals AppContDetails.ContainerCBTNo
                             where
-                                (!GatePassId.HasValue || GPassHeader.GatepassId == GatePassId) &&
+                                (!GatePassId.HasValue || GPassHeader.GatePassId == GatePassId) &&
                                 (!GatePassDtlId.HasValue || GPassDetails.GatepassDtlId == GatePassDtlId)
                             select new ResponseGatePassGateOut
                             {
