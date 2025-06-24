@@ -1261,10 +1261,10 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetPassDetails")]
-        public async Task<IActionResult> GetPassDetails(int? id, int? page, int? size)
+        public async Task<IActionResult> GetPassDetails(int? id,int? gatepassId , int? page, int? size)
         {
 
-            var response = await _services.GetPassDetails(id, page, size);
+            var response = await _services.GetPassDetails(id, gatepassId, page, size);
 
             if (response.Data == null || !response.Data.Any())
             {

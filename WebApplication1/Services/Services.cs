@@ -3125,7 +3125,7 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<GatePassDtl>>> GetPassDetails(int? id, int? page, int? size)
+        public async Task<Response<List<GatePassDtl>>> GetPassDetails(int? id, int? gatepassId, int? page, int? size)
         {
             var response = new Response<List<GatePassDtl>>();
 
@@ -3136,6 +3136,11 @@ namespace SezApi.Services
                 if (id.HasValue)
                 {
                     query = query.Where(s => s.GatepassDtlId == id.Value);
+                }
+
+                if (gatepassId.HasValue)
+                {
+                    query = query.Where(s => s.GatepassId == gatepassId.Value);
                 }
 
                 var totalRecords = await query.CountAsync();
