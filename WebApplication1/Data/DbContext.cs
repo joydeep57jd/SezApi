@@ -88,8 +88,9 @@ namespace SezApi.Data
         public DbSet<RentTableSpaceCharges> GetRentTableSpaceCharges { get; set; }
         public DbSet<GatePass> GatePassHeader { get; set; }
         public DbSet<GatePassDtl> GatePassDetails { get; set; }
-
         public DbSet<ResponseCustomForExitThroughGate> ResponseCustomForExitThroughGate { get; set; }
+        public DbSet<ExitThroughGateHeader> EThroughGateHeader { get; set; }
+        public DbSet<ExitThroughGateDetails> EThroughGateDetails { get; set; }
     }
 }
 

@@ -1292,5 +1292,33 @@ namespace SezApi.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpGet("GetExitThroughHeader")]
+        public async Task<IActionResult> GetExitThroughHeader(int? id, int? page, int? size)
+        {
+
+            var response = await _services.GetExitThroughHeader(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetExitThroughDetails")]
+        public async Task<IActionResult> GetExitThroughDetails(int? id, int? page, int? size)
+        {
+
+            var response = await _services.GetExitThroughDetails(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
     }
 }

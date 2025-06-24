@@ -3163,6 +3163,82 @@ namespace SezApi.Services
             return response;
         }
 
+        public async Task<Response<List<ExitThroughGateHeader>>> GetExitThroughHeader(int? id, int? page, int? size)
+        {
+            var response = new Response<List<ExitThroughGateHeader>>();
+
+            try
+            {
+                var query = _db.EThroughGateHeader.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.ExitIdHeaderId == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ExitThroughGateHeader>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+        public async Task<Response<List<ExitThroughGateDetails>>> GetExitThroughDetails(int? id, int? page, int? size)
+        {
+            var response = new Response<List<ExitThroughGateDetails>>();
+
+            try
+            {
+                var query = _db.EThroughGateDetails.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.ExitIdDtls == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ExitThroughGateDetails>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+
 
 
     }

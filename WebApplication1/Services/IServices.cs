@@ -97,7 +97,8 @@ namespace SezApi.Services
         Task<Response<List<ResponseGatePassGateOut>>> GetGatePassGateOut(int? GatePassDtlId);
         Task<Response<List<GatePass>>> GetPassHeader(int? id, int? page, int? size);
         Task<Response<List<GatePassDtl>>> GetPassDetails(int? id, int? page, int? size);
-
+        Task<Response<List<ExitThroughGateHeader>>> GetExitThroughHeader(int? id, int? page, int? size);
         Task<AddEditResponse> CreateExitThroughGate(RequestExitThroughGate request);
+        Task<Response<List<ExitThroughGateDetails>>> GetExitThroughDetails(int? id, int? page, int? size);
     }
 }
