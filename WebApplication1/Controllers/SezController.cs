@@ -1181,5 +1181,33 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("GetPassHeader")]
+        public async Task<IActionResult> GetPassHeader(int? id, int? page, int? size)
+        {
+
+            var response = await _services.GetPassHeader(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetPassDetails")]
+        public async Task<IActionResult> GetPassDetails(int? id, int? page, int? size)
+        {
+
+            var response = await _services.GetPassDetails(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
     }
 }

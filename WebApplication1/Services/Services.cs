@@ -2898,5 +2898,83 @@ namespace SezApi.Services
         }
 
 
+        public async Task<Response<List<GatePass>>> GetPassHeader(int? id, int? page, int? size)
+        {
+            var response = new Response<List<GatePass>>();
+
+            try
+            {
+                var query = _db.GatePassHeader.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.GatePassId == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<GatePass>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<Response<List<GatePassDtl>>> GetPassDetails(int? id, int? page, int? size)
+        {
+            var response = new Response<List<GatePassDtl>>();
+
+            try
+            {
+                var query = _db.GatePassDetails.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.GatepassDtlId == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<GatePassDtl>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+
+
     }
 }
