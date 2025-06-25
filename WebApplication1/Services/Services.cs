@@ -3395,7 +3395,7 @@ namespace SezApi.Services
                       ");
                 }
 
-	}
+	
                 response.Response = "OK";
             }
             catch (Exception ex)

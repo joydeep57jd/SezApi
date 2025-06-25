@@ -103,7 +103,7 @@ namespace SezApi.Services
         Task<AddEditResponse> AddEditCCINEntry(RequestCCINAddEdit request);
         Task<Response<List<CCINEntry>>> GetCCINEntry(int? id, int? page, int? size);
 
-	}
+	
         Task<AddEditResponse> AddEditDestuffingEntry(RequestDestuffingEntry request);
         Task<Response<List<ImpDestuffingEntryHdr>>> GetDestuffingEntryHdr(int? id, int? page, int? size);
 
