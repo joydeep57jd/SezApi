@@ -3243,8 +3243,147 @@ namespace SezApi.Services
             return response;
         }
 
+        public async Task<AddEditResponse> AddEditDestuffingEntry(RequestDestuffingEntry request)
+        {
+            var response = new AddEditResponse();
+            try
+            {
+                var result = await _db.Set<ResponseCustomFor>()
+                                 .FromSqlInterpolated($@"
+                                  EXEC dbo.Sp_AddEditImpDestuffingEntryHdr
+                                   @DestuffingEntryId = {request.DestuffingEntryHdr.DestuffingEntryId},
+                                   @DestuffingEntryNo = {request.DestuffingEntryHdr.DestuffingEntryNo},
+                                   @StartDate = {request.DestuffingEntryHdr.StartDate},
+                                   @DestuffingEntryDate = {request.DestuffingEntryHdr.DestuffingEntryDate},
+                                   @TallySheetId = {request.DestuffingEntryHdr.TallySheetId},
+                                   @ContainerId = {request.DestuffingEntryHdr.ContainerId},
+                                   @ContainerNo = {request.DestuffingEntryHdr.ContainerNo},
+                                   @Size = {request.DestuffingEntryHdr.Size},
+                                   @CFSCode = {request.DestuffingEntryHdr.CFSCode},
+                                   @ShippingLineId = {request.DestuffingEntryHdr.ShippingLineId},
+                                   @CHAId = {request.DestuffingEntryHdr.CHAId},
+                                   @Rotation = {request.DestuffingEntryHdr.Rotation},
+                                   @DeliveryType = {request.DestuffingEntryHdr.DeliveryType},
+                                   @DOType = {request.DestuffingEntryHdr.DOType},
+                                   @GodownId = {request.DestuffingEntryHdr.GodownId},
+                                   @BranchId = {request.DestuffingEntryHdr.BranchId},
+                                   @CreatedBy = {request.DestuffingEntryHdr.CreatedBy},
+                                   @CreatedOn = {request.DestuffingEntryHdr.CreatedOn},
+                                   @UpdatedBy = {request.DestuffingEntryHdr.UpdatedBy},
+                                   @UpdatedOn = {request.DestuffingEntryHdr.UpdatedOn},
+                                   @CargoDelivery = {request.DestuffingEntryHdr.CargoDelivery}
+                                     ")
+                                  .AsNoTracking()
+                                .ToListAsync();
 
 
 
+                var spResult = result.FirstOrDefault();
+                if (spResult == null || spResult.Id == 0)
+                {
+                    response.Response = "CashReceiptHdrresult failed or returned no ID.";
+                    return response;
+                }
+                if (request.DestuffingEntryDtl?.Any() == true)
+                {
+
+                    var xmlData = XmlConvertercs.ConvertToXmlImpDestuffingEntryDtls(request.DestuffingEntryDtl);
+
+
+                    await _db.Database.ExecuteSqlInterpolatedAsync($@"
+                      EXEC Sp_AddEditImpDestuffingEntryDtl_XML
+                        @DestuffingEntryId= {spResult.Id},
+                       @XmlData = {xmlData}
+                      ");
+                }
+
+                response.Response = "OK";
+            }
+            catch (Exception ex)
+            {
+                response.Response = $"Error: {ex.Message}";
+            }
+            return response;
+        }
+
+        public async Task<Response<List<ImpDestuffingEntryHdr>>> GetDestuffingEntryHdr(int? id, int? page, int? size)
+        {
+            var response = new Response<List<ImpDestuffingEntryHdr>>();
+
+            try
+            {
+                var query = _db.ResponseImpDestuffingEntryHdr.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.DestuffingEntryId == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ImpDestuffingEntryHdr>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<Response<List<ImpDestuffingEntryDtl>>> GetDestuffingEntryDtl(int? id, int? DestuffingEntryId, int? page, int? size)
+        {
+            var response = new Response<List<ImpDestuffingEntryDtl>>();
+
+            try
+            {
+                var query = _db.ResponseImpDestuffingEntryDtl.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.DestuffingEntryDtlId == id.Value);
+                }
+                if (DestuffingEntryId.HasValue)
+                {
+                    query = query.Where(s => s.DestuffingEntryId == DestuffingEntryId.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ImpDestuffingEntryDtl>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
     }
 }

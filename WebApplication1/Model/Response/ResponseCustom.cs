@@ -16,4 +16,10 @@ namespace SezApi.Model.Response
         public string? Response { get; set; }  // "OK" or "NOT OK"
         public int? Id { get; set; }
     }
+    public class ResponseCustomFor
+    {
+        [Key]
+        public string? Response { get; set; }  // "OK" or "NOT OK"
+        public int? Id { get; set; }
+    }
 }

@@ -91,6 +91,10 @@ namespace SezApi.Data
         public DbSet<ResponseCustomForExitThroughGate> ResponseCustomForExitThroughGate { get; set; }
         public DbSet<ExitThroughGateHeader> EThroughGateHeader { get; set; }
         public DbSet<ExitThroughGateDetails> EThroughGateDetails { get; set; }
+        public DbSet<ResponseCustomFor> ResponseCustomFor { get; set; }
+
+        public DbSet<ImpDestuffingEntryHdr> ResponseImpDestuffingEntryHdr { get; set; }
+        public DbSet<ImpDestuffingEntryDtl> ResponseImpDestuffingEntryDtl { get; set; }
     }
 }
 

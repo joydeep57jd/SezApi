@@ -1320,5 +1320,52 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost("AddEditDestuffingEntry")]
+        public async Task<IActionResult> AddEditDestuffingEntry(RequestDestuffingEntry request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+
+            try
+            {
+                var result = await _services.AddEditDestuffingEntry(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetDestuffingEntryHdr")]
+        public async Task<IActionResult> GetDestuffingEntryHdr(int? id, int? page, int? size)
+        {
+
+            var response = await _services.GetDestuffingEntryHdr(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetDestuffingEntryDtl")]
+        public async Task<IActionResult> GetDestuffingEntryDtl(int? id, int? DestuffingEntryId, int? page, int? size)
+        {
+
+            var response = await _services.GetDestuffingEntryDtl(id, DestuffingEntryId, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
     }
 }

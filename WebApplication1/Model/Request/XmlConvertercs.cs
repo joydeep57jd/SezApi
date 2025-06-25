@@ -61,6 +61,45 @@ namespace SezApi.Model.Request
 
             return xml.ToString();
         }
+
+
+        public static string ConvertToXmlImpDestuffingEntryDtls(List<ImpDestuffingEntryDtl> details)
+        {
+            var xml = new XElement("DestuffingDetails",
+                details.Select(d =>
+                    new XElement("DestuffingDetail",
+                        new XElement("DestuffingEntryDtlId", d.DestuffingEntryDtlId),
+                        new XElement("DestuffingEntryId", d.DestuffingEntryId),
+                        new XElement("TallySheetDtlId", d.TallySheetDtlId),
+                        new XElement("OblHblNo", d.OblHblNo),
+                        new XElement("OblHblDate", d.OblHblDate?.ToString("yyyy-MM-dd")),
+                        new XElement("CommodityId", d.CommodityId),
+                        new XElement("BOENo", d.BOENo),
+                        new XElement("BOEDate", d.BOEDate?.ToString("yyyy-MM-dd")),
+                        new XElement("LineNo", d.LineNo),
+                        new XElement("CargoDescription", d.CargoDescription),
+                        new XElement("NoOfPackages", d.NoOfPackages),
+                        new XElement("ReceivedPackages", d.ReceivedPackages),
+                        new XElement("UOM", d.UOM),
+                        new XElement("GrossWeight", d.GrossWeight),
+                        new XElement("DestuffWeight", d.DestuffWeight),
+                        new XElement("CIFValue", d.CIFValue),
+                        new XElement("GrossDuty", d.GrossDuty),
+                        new XElement("Area", d.Area),
+                        new XElement("GodownWiseLocationIds", d.GodownWiseLocationIds),
+                        new XElement("GodownWiseLctnNames", d.GodownWiseLctnNames),
+                        new XElement("Remarks", d.Remarks),
+                        new XElement("OblWiseDestuffingDate", d.OblWiseDestuffingDate?.ToString("yyyy-MM-dd")),
+                        new XElement("CargoType", d.CargoType),
+                        new XElement("LocationId", d.LocationId),
+                        new XElement("Location", d.Location)
+                    )
+                )
+            );
+
+            return xml.ToString();
+        }
+
     }
 }
 
