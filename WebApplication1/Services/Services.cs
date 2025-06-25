@@ -3205,15 +3205,19 @@ namespace SezApi.Services
 
             return response;
         }
-        public async Task<Response<List<ExitThroughGateDetails>>> GetExitThroughDetails(int? id, int? page, int? size)
+        public async Task<Response<List<ExitThroughGateDetails>>> GetExitThroughDetails(int? id, int? page, int? size, int?GateExitHeaderId)
         {
             var response = new Response<List<ExitThroughGateDetails>>();
 
             try
             {
                 var query = _db.EThroughGateDetails.AsQueryable();
+				if (GateExitHeaderId.HasValue)
+				{
+					query = query.Where(s => s.ExitIdHeader == GateExitHeaderId.Value);
+				}
 
-                if (id.HasValue)
+				if (id.HasValue)
                 {
                     query = query.Where(s => s.ExitIdDtls == id.Value);
                 }

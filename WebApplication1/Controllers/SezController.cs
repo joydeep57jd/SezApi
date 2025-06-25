@@ -1308,10 +1308,10 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetExitThroughDetails")]
-        public async Task<IActionResult> GetExitThroughDetails(int? id, int? page, int? size)
+        public async Task<IActionResult> GetExitThroughDetails(int? id, int? page, int? size, int? GateExitHeaderId)
         {
 
-            var response = await _services.GetExitThroughDetails(id, page, size);
+            var response = await _services.GetExitThroughDetails(id, page, size, GateExitHeaderId);
 
             if (response.Data == null || !response.Data.Any())
             {
