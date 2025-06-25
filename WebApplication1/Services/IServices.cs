@@ -100,5 +100,8 @@ namespace SezApi.Services
         Task<Response<List<ExitThroughGateHeader>>> GetExitThroughHeader(int? id, int? page, int? size);
         Task<AddEditResponse> CreateExitThroughGate(RequestExitThroughGate request);
         Task<Response<List<ExitThroughGateDetails>>> GetExitThroughDetails(int? id, int? page, int? size);
-    }
+        Task<AddEditResponse> AddEditCCINEntry(RequestCCINAddEdit request);
+        Task<Response<List<CCINEntry>>> GetCCINEntry(int? id, int? page, int? size);
+
+	}
 }

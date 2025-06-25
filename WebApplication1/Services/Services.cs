@@ -3243,8 +3243,106 @@ namespace SezApi.Services
             return response;
         }
 
+		public async Task<AddEditResponse> AddEditCCINEntry(RequestCCINAddEdit request)
+		{
+			try
+			{
+				var result = await _db.AddEditResponse
+					.FromSqlInterpolated($@"
+                EXEC dbo.Sp_AddEditCCINEntry
+                    @CCINId = {request.CCINId},
+                    @CCINNo = {request.CCINNo},
+                    @CCINDate = {request.CCINDate},
+                    @SBNo = {request.SBNo},
+                    @SBDate = {request.SBDate},
+                    @SBType = {request.SBType},
+                    @ExporterId = {request.ExporterId},
+                    @ShippingLineId = {request.ShippingLineId},
+                    @CHAId = {request.CHAId},
+                    @ConsigneeName = {request.ConsigneeName},
+                    @ConsigneeAdd = {request.ConsigneeAdd},
+                    @CountryId = {request.CountryId},
+                    @StateId = {request.StateId},
+                    @CityId = {request.CityId},
+                    @PortOfLoadingId = {request.PortOfLoadingId},
+                    @PortOfDischarge = {request.PortOfDischarge},
+                    @Package = {request.Package},
+                    @Weight = {request.Weight},
+                    @FOB = {request.FOB},
+                    @CommodityId = {request.CommodityId},
+                    @CreatedBy = {request.CreatedBy},
+                    @UpdatedBy = {request.UpdatedBy},
+                    @InvoiceId = {request.InvoiceId},
+                    @Remarks = {request.Remarks},
+                    @IsApproved = {request.IsApproved},
+                    @ApprovedBy = {request.ApprovedBy},
+                    @ApprovedDate = {request.ApprovedDate},
+                    @CargoType = {request.CargoType},
+                    @GodownId = {request.GodownId},
+                    @GodownName = {request.GodownName},
+                    @PortofDestId = {request.PortofDestId},
+                    @OTHr = {request.OTHr},
+                    @IsCancelled = {request.IsCancelled},
+                    @EximappID = {request.EximappID},
+                    @PackageType = {request.PackageType},
+                    @PackUQCCode = {request.PackUQCCode},
+                    @PackUQCDesc = {request.PackUQCDesc},
+                    @SEZ = {request.SEZ}
+            ")
+					.AsNoTracking()
+					.ToListAsync();
+
+				var response = result.FirstOrDefault();
+				return response ?? new AddEditResponse { Response = "No response from procedure." };
+			}
+			catch (Exception ex)
+			{
+				throw new ApplicationException("Failed to execute Sp_AddEditCCINEntry", ex);
+			}
+		}
+
+		public async Task<Response<List<CCINEntry>>> GetCCINEntry(int? id,  int? page, int? size)
+		{
+			var response = new Response<List<CCINEntry>>();
+
+			try
+			{
+				var query = _db.CCINEntryDetails.AsQueryable();
+
+				if (id.HasValue)
+				{
+					query = query.Where(s => s.CCINId == id.Value);
+				}
+
+				
+				var totalRecords = await query.CountAsync();
+
+				if (page.HasValue && page > 0 && size.HasValue && size > 0)
+				{
+					var skip = (page.Value - 1) * size.Value;
+					query = query.Skip(skip).Take(size.Value);
+				}
+
+				var result = await query.ToListAsync();
+
+				response.Data = result;
+				response.Status = true;
+				response.TotalCount = totalRecords;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<CCINEntry>();
+				response.Status = false;
+				response.TotalCount = 0;
+				response.Message = $"Error: {ex.Message}";
+			}
+
+			return response;
+		}
 
 
 
-    }
+
+
+	}
 }

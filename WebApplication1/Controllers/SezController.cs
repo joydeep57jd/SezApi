@@ -1320,5 +1320,38 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
-    }
+
+		[HttpPost("AddEditCCINEntry")]
+		public async Task<IActionResult> AddEditCCINEntry(RequestCCINAddEdit request)
+		{
+			if (request == null)
+			{
+				return BadRequest("Request data is required.");
+			}
+			try
+			{
+				var result = await _services.AddEditCCINEntry(request);
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
+
+		[HttpGet("GetCCINEntry")]
+		public async Task<IActionResult> GetCCINEntry(int? id, int? page, int? size)
+		{
+
+			var response = await _services.GetCCINEntry(id, page, size);
+
+			if (response.Data == null || !response.Data.Any())
+			{
+				return NotFound(new { message = "No entries found." });
+			}
+
+			return Ok(response);
+		}
+
+	}
 }
