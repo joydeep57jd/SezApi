@@ -104,4 +104,9 @@ namespace SezApi.Services
         Task<Response<List<CCINEntry>>> GetCCINEntry(int? id, int? page, int? size);
 
 	}
+        Task<AddEditResponse> AddEditDestuffingEntry(RequestDestuffingEntry request);
+        Task<Response<List<ImpDestuffingEntryHdr>>> GetDestuffingEntryHdr(int? id, int? page, int? size);
+
+        Task<Response<List<ImpDestuffingEntryDtl>>> GetDestuffingEntryDtl(int? id, int? DestuffingEntryId, int? page, int? size);
+    }
 }
