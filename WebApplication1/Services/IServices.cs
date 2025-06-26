@@ -113,5 +113,9 @@ namespace SezApi.Services
         Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList();
 
         Task<AddEditResponse> AddEditDeliveryApplication(RequestImpDeliveryApplication request);
+
+        Task<Response<List<ImpDeliveryApplicationHdr>>> GetImpDeliveryApplicationHdr(int? id, int? page, int? size);
+
+        Task<Response<List<ImpDeliveryApplicationDtl>>> GetImpDeliveryApplicationDtl(int? id, int? DeliveryId, int? page, int? size);
     }
 }

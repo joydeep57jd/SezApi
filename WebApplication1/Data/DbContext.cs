@@ -99,6 +99,10 @@ namespace SezApi.Data
         public DbSet<ImpDestuffingEntryDtl> ResponseImpDestuffingEntryDtl { get; set; }
 
         public DbSet<ResponseImportTransportChargesCalc> ResponseImportTransportChargesCalc { get; set; }
+
+        public DbSet<ImpDeliveryApplicationHdr> RequestImpDeliveryApplicationHdr { get; set; }
+
+        public DbSet<ImpDeliveryApplicationDtl> RequestImpDeliveryApplicationDtl { get; set; }
     }
 }
 

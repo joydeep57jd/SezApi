@@ -1450,5 +1450,34 @@ namespace SezApi.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpGet("GetImpDeliveryApplicationHdr")]
+        public async Task<IActionResult> GetImpDeliveryApplicationHdr(int? id,int? page, int? size)
+        {
+
+            var response = await _services.GetImpDeliveryApplicationHdr(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetImpDeliveryApplicationDtl")]
+        public async Task<IActionResult> GetImpDeliveryApplicationDtl(int? id, int? DeliveryId, int? page, int? size)
+        {
+
+            var response = await _services.GetImpDeliveryApplicationDtl(id, DeliveryId, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
     }
 }

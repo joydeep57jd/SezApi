@@ -3598,6 +3598,87 @@ namespace SezApi.Services
 
             return response;
 
-        }  
+        }
+
+        public async Task<Response<List<ImpDeliveryApplicationHdr>>> GetImpDeliveryApplicationHdr(int? id, int? page, int? size)
+        {
+            var response = new Response<List<ImpDeliveryApplicationHdr>>();
+
+            try
+            {
+                var query = _db.RequestImpDeliveryApplicationHdr.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.DeliveryId == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ImpDeliveryApplicationHdr>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<Response<List<ImpDeliveryApplicationDtl>>> GetImpDeliveryApplicationDtl(int? id, int? DeliveryId, int? page, int? size)
+        {
+            var response = new Response<List<ImpDeliveryApplicationDtl>>();
+
+            try
+            {
+                var query = _db.RequestImpDeliveryApplicationDtl.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.DeliveryDtlId == id.Value);
+                }
+
+                if (DeliveryId.HasValue)
+                {
+                    query = query.Where(s => s.DeliveryId == DeliveryId.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ImpDeliveryApplicationDtl>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
     }
 }
