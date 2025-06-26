@@ -3493,44 +3493,24 @@ namespace SezApi.Services
         {
             try
             {
-                var result = await _db.ResponseImportTransportChargesCalc
+                var resultList = await _db.ResponseImportTransportChargesCalc
                     .FromSqlInterpolated($@"
-                  EXEC dbo.ImportTransportChargesCalc
-                @ContainerOBLList = {ContainerOBLList},
+            EXEC dbo.ImportTransportChargesCalc 
+                @ContainerOBLList = {ContainerOBLList}, 
                 @PartyId = {PartyId}
-               ")
-                     .AsNoTracking()
-                     .FirstOrDefaultAsync();
+            ")
+                    .AsNoTracking()
+                    .ToListAsync(); 
 
-                return result ?? new ResponseImportTransportChargesCalc
-                {
-                    NoOfPackets = 0,
-                    ChargeName_HV = "High Value",
-                    ChargeName_LV = "Low Value",
-                    TotalHighValue = 0,
-                    SacCode_HV = "",
-                    CGST_HV = 0,
-                    SGST_HV = 0,
-                    IGST_HV = 0,
-                    HighValueCGSTAmount = 0,
-                    HighValueSGSTAmount = 0,
-                    HighValueIGSTAmount = 0,
-                    TotalAmt_HV = 0,
-                    TotLowValue = 0,
-                    SacCode_LV = "",
-                    CGST_LV = 0,
-                    SGST_LV = 0,
-                    IGST_LV = 0,
-                    LowValueCGSTAmount = 0,
-                    LowValueSGSTAmount = 0,
-                    LowValueIGSTAmount = 0,
-                    TotalAmt_LV = 0
-                };
+                var result = resultList.FirstOrDefault(); 
+
+                return result ?? new ResponseImportTransportChargesCalc();
             }
             catch (Exception ex)
             {
                 throw new ApplicationException("Failed to execute ImportTransportChargesCalc procedure", ex);
             }
+
 
         }
 
