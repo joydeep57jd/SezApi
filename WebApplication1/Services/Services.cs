@@ -3691,7 +3691,7 @@ namespace SezApi.Services
 
 
 
-	}
+	
 
         public async Task<AddEditResponse> AddEditDeliveryApplication(RequestImpDeliveryApplication request)
         {
