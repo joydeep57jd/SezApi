@@ -111,5 +111,7 @@ namespace SezApi.Services
         Task<ResponseImportTransportChargesCalc> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId);
 
         Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList();
+
+        Task<AddEditResponse> AddEditDeliveryApplication(RequestImpDeliveryApplication request);
     }
 }

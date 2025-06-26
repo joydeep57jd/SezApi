@@ -1432,6 +1432,23 @@ namespace SezApi.Controllers
             }
         }
 
+        [HttpPost("AddEditDeliveryApplication")]
+        public async Task<IActionResult> AddEditDeliveryApplication(RequestImpDeliveryApplication request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
 
+            try
+            {
+                var result = await _services.AddEditDeliveryApplication(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }
