@@ -102,14 +102,16 @@ namespace SezApi.Services
         Task<Response<List<ExitThroughGateDetails>>> GetExitThroughDetails(int? id, int? page, int? size, int? GateExitHeaderId);
         Task<AddEditResponse> AddEditCCINEntry(RequestCCINAddEdit request);
         Task<Response<List<CCINEntry>>> GetCCINEntry(int? id, int? page, int? size);
+        Task<Response<List<LoadContainerRequestHeader>>> GetLoadContainerHeader(int? id, int? page, int? size);
+        Task<Response<List<LoadContainerRequestDetails>>> GetLoadContainerDetails(int? id, int? page, int? size, int? LoaderHeaderId);
 
-	
-        Task<AddEditResponse> AddEditDestuffingEntry(RequestDestuffingEntry request);
+		Task<AddEditResponse> AddEditDestuffingEntry(RequestDestuffingEntry request);
         Task<Response<List<ImpDestuffingEntryHdr>>> GetDestuffingEntryHdr(int? id, int? page, int? size);
 
         Task<Response<List<ImpDestuffingEntryDtl>>> GetDestuffingEntryDtl(int? id, int? DestuffingEntryId, int? page, int? size);
         Task<ResponseImportTransportChargesCalc> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId);
+        Task<AddEditResponse> CreateLoadContainerRequest(RequestLoadContainerRequest request);
 
-        Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList();
+		Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList();
     }
 }

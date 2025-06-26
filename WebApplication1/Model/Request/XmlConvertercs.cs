@@ -100,6 +100,49 @@ namespace SezApi.Model.Request
             return xml.ToString();
         }
 
-    }
+      
+
+public static string ConvertToXmlLoadContainerRequestDetails(List<LoadContainerRequestDetails> details)
+	{
+		var xml = new XElement("LoadContainerRequestDetailsList",
+			details.Select(d =>
+				new XElement("LoadContainerRequestDetail",
+					new XElement("LoadContReqDetlId", d.LoadContReqDetlId),
+					new XElement("LoadContReqId", d.LoadContReqId),
+					new XElement("ExporterId", d.ExporterId),
+					new XElement("ShippingLineId", d.ShippingLineId),
+					new XElement("ContainerNo", d.ContainerNo),
+					new XElement("Size", d.Size),
+					new XElement("Reefer", d.Reefer),
+					new XElement("IsInsured", d.IsInsured),
+					new XElement("ShippingBillNo", d.ShippingBillNo),
+					new XElement("ShippingBillDate", d.ShippingBillDate?.ToString("yyyy-MM-dd")),
+					new XElement("CommodityId", d.CommodityId),
+					new XElement("CargoType", d.CargoType),
+					new XElement("CargoDescription", d.CargoDescription),
+					new XElement("GrossWt", d.GrossWt),
+					new XElement("NoOfUnits", d.NoOfUnits),
+					new XElement("FobValue", d.FobValue),
+					new XElement("PackUQCCode", d.PackUQCCode),
+					new XElement("PackUQCDesc", d.PackUQCDesc),
+					new XElement("SEZ", d.SEZ),
+					new XElement("SFSend", d.SFSend),
+					new XElement("EquipmentSealType", d.EquipmentSealType),
+					new XElement("EquipmentStatus", d.EquipmentStatus),
+					new XElement("EquipmentQUC", d.EquipmentQUC),
+					new XElement("PackageType", d.PackageType),
+					new XElement("ContLoadType", d.ContLoadType),
+					new XElement("CustomSeal", d.CustomSeal),
+					new XElement("PacketsFrom", d.packetsFrom),
+					new XElement("PacketsTo", d.packetsTo)
+				)
+			)
+		);
+
+		return xml.ToString();
+	}
+
+
+}
 }
 

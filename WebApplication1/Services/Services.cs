@@ -3566,5 +3566,150 @@ namespace SezApi.Services
             return response;
 
         }
-    }
+
+		public async Task<AddEditResponse> CreateLoadContainerRequest(RequestLoadContainerRequest request)
+		{
+			var response = new AddEditResponse();
+
+			try
+			{
+				var result = await _db.ResponseLoadContainerRequest
+					.FromSqlInterpolated($@"
+                EXEC Sp_AddEditLoadContainerRequestHeader
+                    @LoadContReqId = {request.LoadContainerHeader.LoadContReqId},
+                    @LoadContReqNo = {request.LoadContainerHeader.LoadContReqNo},
+                    @LoadContReqDate = {request.LoadContainerHeader.LoadContReqDate},
+                    @CHAId = {request.LoadContainerHeader.CHAId},
+                    @FinalDestinationLocationID = {request.LoadContainerHeader.FinalDestinationLocationID},
+                    @FinalDestinationLocation = {request.LoadContainerHeader.FinalDestinationLocation},
+                    @Remarks = {request.LoadContainerHeader.Remarks},
+                    @Movement = {request.LoadContainerHeader.Movement},
+                    @ExamType = {request.LoadContainerHeader.ExamType},
+                    @BranchId = {request.LoadContainerHeader.BranchId},
+                    @CreatedBy = {request.LoadContainerHeader.CreatedBy},
+                    @CreatedOn = {request.LoadContainerHeader.CreatedOn},
+                    @UpdatedBy = {request.LoadContainerHeader.UpdatedBy},
+                    @UpdatedOn = {request.LoadContainerHeader.UpdatedOn},
+                    @IsApproved = {request.LoadContainerHeader.IsApproved},
+                    @SFMsgStatus = {request.LoadContainerHeader.SFMsgStatus},
+                    @Origin = {request.LoadContainerHeader.Origin},
+                    @Via = {request.LoadContainerHeader.Via},
+                    @TransactionType = {request.LoadContainerHeader.TransactionType},
+                    @SFSend = {request.LoadContainerHeader.SFSend}
+            ")
+					.AsNoTracking()
+					.ToListAsync();
+
+				var spResult = result?.FirstOrDefault();
+				if (spResult == null || spResult.Id == 0)
+				{
+					response.Response = $"Stored procedure failed. Message: {spResult?.Response ?? "No response"}";
+					return response;
+				}
+
+				// Save details only if header was inserted successfully
+				if (request.LoadContainerRequestDetails?.Any() == true)
+				{
+					var xmlData = XmlConvertercs.ConvertToXmlLoadContainerRequestDetails(request.LoadContainerRequestDetails);
+
+					await _db.Database.ExecuteSqlInterpolatedAsync($@"
+                EXEC Sp_AddEditLoadContainerRequestDetails_XML 
+                    @LoadContReqId = {spResult.Id},
+                    @XmlData = {xmlData}
+            ");
+				}
+
+				response.Response = "OK";
+			}
+			catch (Exception ex)
+			{
+				response.Response = $"Error: {ex.Message}";
+			}
+
+			return response;
+		}
+
+
+		public async Task<Response<List<LoadContainerRequestHeader>>> GetLoadContainerHeader(int? id, int? page, int? size)
+		{
+			var response = new Response<List<LoadContainerRequestHeader>>();
+
+			try
+			{
+				var query = _db.LoadContainerRtHeader.AsQueryable();
+
+				if (id.HasValue)
+				{
+					query = query.Where(s => s.LoadContReqId == id.Value);
+				}
+
+				var totalRecords = await query.CountAsync();
+
+				if (page.HasValue && page > 0 && size.HasValue && size > 0)
+				{
+					var skip = (page.Value - 1) * size.Value;
+					query = query.Skip(skip).Take(size.Value);
+				}
+
+				var result = await query.ToListAsync();
+
+				response.Data = result;
+				response.Status = true;
+				response.TotalCount = totalRecords;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<LoadContainerRequestHeader>();
+				response.Status = false;
+				response.TotalCount = 0;
+				response.Message = $"Error: {ex.Message}";
+			}
+
+			return response;
+		}
+		public async Task<Response<List<LoadContainerRequestDetails>>> GetLoadContainerDetails(int? id, int? page, int? size, int? LoaderHeaderId)
+		{
+			var response = new Response<List<LoadContainerRequestDetails>>();
+
+			try
+			{
+				var query = _db.LoadContainerRDetails.AsQueryable();
+				if (LoaderHeaderId.HasValue)
+				{
+					query = query.Where(s => s.LoadContReqId == LoaderHeaderId.Value);
+				}
+
+				if (id.HasValue)
+				{
+					query = query.Where(s => s.LoadContReqDetlId == id.Value);
+				}
+
+				var totalRecords = await query.CountAsync();
+
+				if (page.HasValue && page > 0 && size.HasValue && size > 0)
+				{
+					var skip = (page.Value - 1) * size.Value;
+					query = query.Skip(skip).Take(size.Value);
+				}
+
+				var result = await query.ToListAsync();
+
+				response.Data = result;
+				response.Status = true;
+				response.TotalCount = totalRecords;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<LoadContainerRequestDetails>();
+				response.Status = false;
+				response.TotalCount = 0;
+				response.Message = $"Error: {ex.Message}";
+			}
+
+			return response;
+		}
+
+
+
+	}
 }

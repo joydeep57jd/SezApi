@@ -1432,6 +1432,53 @@ namespace SezApi.Controllers
             }
         }
 
+		[HttpPost("CreateLoadContainerRequest")]
+		public async Task<IActionResult> CreateLoadContainerRequest(RequestLoadContainerRequest request)
+		{
+			if (request == null)
+			{
+				return BadRequest("Request data is required.");
+			}
 
-    }
+			try
+			{
+				var result = await _services.CreateLoadContainerRequest(request);
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
+
+		[HttpGet("GetLoadContainerHeader")]
+		public async Task<IActionResult> GetLoadContainerHeader(int? id, int? page, int? size)
+		{
+
+			var response = await _services.GetLoadContainerHeader(id, page, size);
+
+			if (response.Data == null || !response.Data.Any())
+			{
+				return NotFound(new { message = "No entries found." });
+			}
+
+			return Ok(response);
+		}
+
+		[HttpGet("GetLoadContainerDetails")]
+		public async Task<IActionResult> GetLoadContainerDetails(int? id, int? page, int? size, int? LoaderHeaderId)
+		{
+
+			var response = await _services.GetLoadContainerDetails(id, page, size, LoaderHeaderId);
+
+			if (response.Data == null || !response.Data.Any())
+			{
+				return NotFound(new { message = "No entries found." });
+			}
+
+			return Ok(response);
+		}
+
+
+	}
 }

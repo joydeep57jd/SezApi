@@ -99,6 +99,11 @@ namespace SezApi.Data
         public DbSet<ImpDestuffingEntryDtl> ResponseImpDestuffingEntryDtl { get; set; }
 
         public DbSet<ResponseImportTransportChargesCalc> ResponseImportTransportChargesCalc { get; set; }
-    }
+
+		public DbSet<LoadContainerRequestHeader> LoadContainerRtHeader { get; set; }
+		public DbSet<LoadContainerRequestDetails> LoadContainerRDetails { get; set; }
+
+		public DbSet<ResponseLoadContainerRequest> ResponseLoadContainerRequest { get; set; }
+	}
 }
 
