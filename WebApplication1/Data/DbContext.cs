@@ -97,6 +97,8 @@ namespace SezApi.Data
 
         public DbSet<ImpDestuffingEntryHdr> ResponseImpDestuffingEntryHdr { get; set; }
         public DbSet<ImpDestuffingEntryDtl> ResponseImpDestuffingEntryDtl { get; set; }
+
+        public DbSet<ResponseImportTransportChargesCalc> ResponseImportTransportChargesCalc { get; set; }
     }
 }
 

@@ -1401,5 +1401,37 @@ namespace SezApi.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("GetImportTransportChargesCalc")]
+        public async Task<IActionResult> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId)
+        {
+            try
+            {
+                var response = await _services.GetImportTransportChargesCalc(ContainerOBLList, PartyId);
+                return Ok(response);
+            }         
+
+             catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetGetInContainerList")]
+        public async Task<IActionResult> GetGetInContainerList()
+        {
+            try
+            {
+                var response = await _services.GetGetInContainerList();
+                return Ok(response);
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
     }
 }

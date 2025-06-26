@@ -3488,5 +3488,83 @@ namespace SezApi.Services
 
             return response;
         }
+
+        public async Task<ResponseImportTransportChargesCalc> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId)
+        {
+            try
+            {
+                var result = await _db.ResponseImportTransportChargesCalc
+                    .FromSqlInterpolated($@"
+                  EXEC dbo.ImportTransportChargesCalc
+                @ContainerOBLList = {ContainerOBLList},
+                @PartyId = {PartyId}
+               ")
+                     .AsNoTracking()
+                     .FirstOrDefaultAsync();
+
+                return result ?? new ResponseImportTransportChargesCalc
+                {
+                    NoOfPackets = 0,
+                    ChargeName_HV = "High Value",
+                    ChargeName_LV = "Low Value",
+                    TotalHighValue = 0,
+                    SacCode_HV = "",
+                    CGST_HV = 0,
+                    SGST_HV = 0,
+                    IGST_HV = 0,
+                    HighValueCGSTAmount = 0,
+                    HighValueSGSTAmount = 0,
+                    HighValueIGSTAmount = 0,
+                    TotalAmt_HV = 0,
+                    TotLowValue = 0,
+                    SacCode_LV = "",
+                    CGST_LV = 0,
+                    SGST_LV = 0,
+                    IGST_LV = 0,
+                    LowValueCGSTAmount = 0,
+                    LowValueSGSTAmount = 0,
+                    LowValueIGSTAmount = 0,
+                    TotalAmt_LV = 0
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute ImportTransportChargesCalc procedure", ex);
+            }
+
+        }
+
+        public async Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList()
+        {
+            var response = new Response<List<ResponseGetinContainer>>();
+
+            try
+            {
+                var query = _db.GetEntryList.AsQueryable();               
+
+                var totalCount = await query.CountAsync();             
+
+                var data = await query
+                    .Select(x => new ResponseGetinContainer
+                    {
+                        ContainerNo = x.ContainerNo
+                    }).Distinct()
+                    .ToListAsync();
+
+                response.Data = data;
+                response.Status = true;
+                response.TotalCount = totalCount;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ResponseGetinContainer>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+
+        }
     }
 }

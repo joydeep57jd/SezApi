@@ -108,5 +108,8 @@ namespace SezApi.Services
         Task<Response<List<ImpDestuffingEntryHdr>>> GetDestuffingEntryHdr(int? id, int? page, int? size);
 
         Task<Response<List<ImpDestuffingEntryDtl>>> GetDestuffingEntryDtl(int? id, int? DestuffingEntryId, int? page, int? size);
+        Task<ResponseImportTransportChargesCalc> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId);
+
+        Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList();
     }
 }
