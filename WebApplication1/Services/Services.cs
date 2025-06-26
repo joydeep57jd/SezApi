@@ -2354,7 +2354,7 @@ namespace SezApi.Services
                     query = query.Where(s => s.CashReceipthdrId == CashReceiptId.Value);
                 }
 
-                var totalRecords = await query.CountAsync();
+                var totalRecords = await query.CountAsync();  
 
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
                 {
@@ -3546,5 +3546,58 @@ namespace SezApi.Services
             return response;
 
         }
+
+        public async Task<AddEditResponse> AddEditDeliveryApplication(RequestImpDeliveryApplication request)
+        {
+            var response = new AddEditResponse();
+
+            try
+            {
+                // Step 1: Call SP to insert/update header
+                var headerResult = await _db.Set<ResponseCustomFor>()
+                    .FromSqlInterpolated($@"
+                EXEC dbo.Sp_AddEditImpDeliveryApplicationHdr
+                    @DeliveryId = {request.ImpDeliveryApplicationHdr.DeliveryId},
+                    @DeliveryNo = {request.ImpDeliveryApplicationHdr.DeliveryNo},
+                    @DestuffingId = {request.ImpDeliveryApplicationHdr.DestuffingId},
+                    @CHAId = {request.ImpDeliveryApplicationHdr.CHAId},
+                    @ImporterId = {request.ImpDeliveryApplicationHdr.ImporterId},
+                    @CreatedBy = {request.ImpDeliveryApplicationHdr.CreatedBy},
+                    @CreatedOn = {request.ImpDeliveryApplicationHdr.CreatedOn},
+                    @UpdatedBy = {request.ImpDeliveryApplicationHdr.UpdatedBy},
+                    @UpdatedOn = {request.ImpDeliveryApplicationHdr.UpdatedOn}
+            ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var spResult = headerResult.FirstOrDefault();
+
+                if (spResult == null || spResult.Id == 0)
+                {
+                    response.Response = "Header creation failed or returned no ID.";
+                    return response;
+                }
+
+                if (request.ImpDeliveryApplicationDtl?.Any() == true)
+                {
+                    var xmlData = XmlConvertercs.ConvertToXmlImpDeliveryApplicationDtls(request.ImpDeliveryApplicationDtl);
+
+                    await _db.Database.ExecuteSqlInterpolatedAsync($@"
+                EXEC dbo.Sp_AddEditImpDeliveryApplicationDtl_XML
+                    @DeliveryHdrId = {spResult.Id},
+                    @XmlData = {xmlData}
+            ");
+                }
+
+                response.Response = "OK";
+            }
+            catch (Exception ex)
+            {
+                response.Response = $"Error: {ex.Message}";
+            }
+
+            return response;
+
+        }  
     }
 }
