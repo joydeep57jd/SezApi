@@ -104,7 +104,7 @@ namespace SezApi.Data
 		public DbSet<LoadContainerRequestDetails> LoadContainerRDetails { get; set; }
 
 		public DbSet<ResponseLoadContainerRequest> ResponseLoadContainerRequest { get; set; }
-	}
+	
 
         public DbSet<ImpDeliveryApplicationHdr> RequestImpDeliveryApplicationHdr { get; set; }
 

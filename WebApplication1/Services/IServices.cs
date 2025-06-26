@@ -113,7 +113,6 @@ namespace SezApi.Services
         Task<AddEditResponse> CreateLoadContainerRequest(RequestLoadContainerRequest request);
 
 		Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList();
-        Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList();
 
         Task<AddEditResponse> AddEditDeliveryApplication(RequestImpDeliveryApplication request);
 
