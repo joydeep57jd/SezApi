@@ -2354,7 +2354,7 @@ namespace SezApi.Services
                     query = query.Where(s => s.CashReceipthdrId == CashReceiptId.Value);
                 }
 
-                var totalRecords = await query.CountAsync();
+                var totalRecords = await query.CountAsync();  
 
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
                 {
@@ -3692,4 +3692,139 @@ namespace SezApi.Services
 
 
 	}
+
+        public async Task<AddEditResponse> AddEditDeliveryApplication(RequestImpDeliveryApplication request)
+        {
+            var response = new AddEditResponse();
+
+            try
+            {
+                // Step 1: Call SP to insert/update header
+                var headerResult = await _db.Set<ResponseCustomFor>()
+                    .FromSqlInterpolated($@"
+                EXEC dbo.Sp_AddEditImpDeliveryApplicationHdr
+                    @DeliveryId = {request.ImpDeliveryApplicationHdr.DeliveryId},
+                    @DeliveryNo = {request.ImpDeliveryApplicationHdr.DeliveryNo},
+                    @DestuffingId = {request.ImpDeliveryApplicationHdr.DestuffingId},
+                    @CHAId = {request.ImpDeliveryApplicationHdr.CHAId},
+                    @ImporterId = {request.ImpDeliveryApplicationHdr.ImporterId},
+                    @CreatedBy = {request.ImpDeliveryApplicationHdr.CreatedBy},
+                    @CreatedOn = {request.ImpDeliveryApplicationHdr.CreatedOn},
+                    @UpdatedBy = {request.ImpDeliveryApplicationHdr.UpdatedBy},
+                    @UpdatedOn = {request.ImpDeliveryApplicationHdr.UpdatedOn}
+            ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var spResult = headerResult.FirstOrDefault();
+
+                if (spResult == null || spResult.Id == 0)
+                {
+                    response.Response = "Header creation failed or returned no ID.";
+                    return response;
+                }
+
+                if (request.ImpDeliveryApplicationDtl?.Any() == true)
+                {
+                    var xmlData = XmlConvertercs.ConvertToXmlImpDeliveryApplicationDtls(request.ImpDeliveryApplicationDtl);
+
+                    await _db.Database.ExecuteSqlInterpolatedAsync($@"
+                EXEC dbo.Sp_AddEditImpDeliveryApplicationDtl_XML
+                    @DeliveryHdrId = {spResult.Id},
+                    @XmlData = {xmlData}
+            ");
+                }
+
+                response.Response = "OK";
+            }
+            catch (Exception ex)
+            {
+                response.Response = $"Error: {ex.Message}";
+            }
+
+            return response;
+
+        }
+
+        public async Task<Response<List<ImpDeliveryApplicationHdr>>> GetImpDeliveryApplicationHdr(int? id, int? page, int? size)
+        {
+            var response = new Response<List<ImpDeliveryApplicationHdr>>();
+
+            try
+            {
+                var query = _db.RequestImpDeliveryApplicationHdr.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.DeliveryId == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ImpDeliveryApplicationHdr>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<Response<List<ImpDeliveryApplicationDtl>>> GetImpDeliveryApplicationDtl(int? id, int? DeliveryId, int? page, int? size)
+        {
+            var response = new Response<List<ImpDeliveryApplicationDtl>>();
+
+            try
+            {
+                var query = _db.RequestImpDeliveryApplicationDtl.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.DeliveryDtlId == id.Value);
+                }
+
+                if (DeliveryId.HasValue)
+                {
+                    query = query.Where(s => s.DeliveryId == DeliveryId.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ImpDeliveryApplicationDtl>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+    }
 }

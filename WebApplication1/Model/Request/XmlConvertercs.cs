@@ -144,5 +144,42 @@ public static string ConvertToXmlLoadContainerRequestDetails(List<LoadContainerR
 
 
 }
+        public static string ConvertToXmlImpDeliveryApplicationDtls(List<ImpDeliveryApplicationDtl> details)
+        {
+            var xml = new XElement("DeliveryDetails",
+                details.Select(d =>
+                    new XElement("Detail",
+                        new XElement("DeliveryDtlId", d.DeliveryDtlId),
+                        new XElement("DeliveryId", d.DeliveryId),
+                        new XElement("DestuffingEntryDtlId", d.DestuffingEntryDtlId),
+                        new XElement("LineNo", d.LineNo),
+                        new XElement("OBL", d.OBL),
+                        new XElement("CargoDescription", d.CargoDescription),
+                        new XElement("CommodityId", d.CommodityId),
+                        new XElement("NoOfPackages", d.NoOfPackages),
+                        new XElement("GrossWt", d.GrossWt),
+                        new XElement("SQM", d.SQM),
+                        new XElement("CUM", d.CUM),
+                        new XElement("CIF", d.CIF),
+                        new XElement("Duty", d.Duty),
+                        new XElement("DelNoOfPackages", d.DelNoOfPackages),
+                        new XElement("DelGrossWt", d.DelGrossWt),
+                        new XElement("DelSQM", d.DelSQM),
+                        new XElement("DelCUM", d.DelCUM),
+                        new XElement("DelCIF", d.DelCIF),
+                        new XElement("DelDuty", d.DelDuty),
+                        new XElement("BOE_NO", d.BOE_NO),
+                        new XElement("BOE_DATE", d.BOE_DATE),
+                        new XElement("ImporterId", d.ImporterId),
+                        new XElement("InvCancel", d.InvCancel ?? 0)
+                    )
+                )
+            );
+
+            return xml.ToString();
+        }
+
+
+    }
 }
 

@@ -1479,6 +1479,52 @@ namespace SezApi.Controllers
 			return Ok(response);
 		}
 
+        [HttpPost("AddEditDeliveryApplication")]
+        public async Task<IActionResult> AddEditDeliveryApplication(RequestImpDeliveryApplication request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+
+            try
+            {
+                var result = await _services.AddEditDeliveryApplication(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetImpDeliveryApplicationHdr")]
+        public async Task<IActionResult> GetImpDeliveryApplicationHdr(int? id,int? page, int? size)
+        {
+
+            var response = await _services.GetImpDeliveryApplicationHdr(id, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetImpDeliveryApplicationDtl")]
+        public async Task<IActionResult> GetImpDeliveryApplicationDtl(int? id, int? DeliveryId, int? page, int? size)
+        {
+
+            var response = await _services.GetImpDeliveryApplicationDtl(id, DeliveryId, page, size);
+
+            if (response.Data == null || !response.Data.Any())
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
 
 	}
 }
