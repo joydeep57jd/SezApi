@@ -1480,4 +1480,24 @@ namespace SezApi.Controllers
         }
 
     }
+
+		[HttpPost("AddGodownInvoice")]
+		public async Task<IActionResult> AddGodownInvoice(RequestGodownInvoice request)
+		{
+			if (request == null)
+			{
+				return BadRequest("Request data is required.");
+			}
+			try
+			{
+				var result = await _services.AddEditGodownInvoice(request);
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
+
+	}
 }

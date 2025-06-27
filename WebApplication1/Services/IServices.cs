@@ -117,5 +117,7 @@ namespace SezApi.Services
         Task<Response<List<ImpDeliveryApplicationHdr>>> GetImpDeliveryApplicationHdr(int? id, int? page, int? size);
 
         Task<Response<List<ImpDeliveryApplicationDtl>>> GetImpDeliveryApplicationDtl(int? id, int? DeliveryId, int? page, int? size);
-    }
+
+		Task<AddEditResponse> AddEditGodownInvoice(RequestGodownInvoice request);
+	}
 }
