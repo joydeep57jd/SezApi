@@ -104,20 +104,18 @@ namespace SezApi.Services
         Task<Response<List<CCINEntry>>> GetCCINEntry(int? id, int? page, int? size);
         Task<Response<List<LoadContainerRequestHeader>>> GetLoadContainerHeader(int? id, int? page, int? size);
         Task<Response<List<LoadContainerRequestDetails>>> GetLoadContainerDetails(int? id, int? page, int? size, int? LoaderHeaderId);
-
 		Task<AddEditResponse> AddEditDestuffingEntry(RequestDestuffingEntry request);
         Task<Response<List<ImpDestuffingEntryHdr>>> GetDestuffingEntryHdr(int? id, int? page, int? size);
-
         Task<Response<List<ImpDestuffingEntryDtl>>> GetDestuffingEntryDtl(int? id, int? DestuffingEntryId, int? page, int? size);
         Task<ResponseImportTransportChargesCalc> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId);
         Task<AddEditResponse> CreateLoadContainerRequest(RequestLoadContainerRequest request);
-
 		Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList();
-
         Task<AddEditResponse> AddEditDeliveryApplication(RequestImpDeliveryApplication request);
-
         Task<Response<List<ImpDeliveryApplicationHdr>>> GetImpDeliveryApplicationHdr(int? id, int? page, int? size);
-
         Task<Response<List<ImpDeliveryApplicationDtl>>> GetImpDeliveryApplicationDtl(int? id, int? DeliveryId, int? page, int? size);
-    }
+        Task<AddEditResponse> AddEditContainerStuffing(RequestContainerStuffing request);
+        Task<Response<List<ContainerStuffingHeader>>> GetContainerStuffingHdr(int? id, int? page, int? size);
+        Task<Response<List<ContainerStuffingDetails>>> GetContainerStuffingDtl(int? id, int? StuffingId, int? page, int? size);
+
+	}
 }
