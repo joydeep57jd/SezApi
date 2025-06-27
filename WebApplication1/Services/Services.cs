@@ -3826,5 +3826,168 @@ namespace SezApi.Services
 
             return response;
         }
-    }
+
+
+		public async Task<AddEditResponse> AddEditContainerStuffing(RequestContainerStuffing request)
+		{
+			var response = new AddEditResponse();
+
+			try
+			{
+				var headerResult = await _db.Set<ResponseContainerStuffing>()
+					.FromSqlInterpolated($@"
+                EXEC dbo.Sp_AddEditContainerStuffingHeader
+                    @StuffingReqId = {request.ContainerStuffingHeader.StuffingReqId},
+                    @ByTrain = {request.ContainerStuffingHeader.ByTrain},
+                    @ByRoad = {request.ContainerStuffingHeader.ByRoad},
+                    @StuffingReqNo = {request.ContainerStuffingHeader.StuffingReqNo},
+                    @StuffingReqNoId = {request.ContainerStuffingHeader.StuffingReqNoId},
+                    @RequestDate = {request.ContainerStuffingHeader.RequestDate},
+                    @StuffingNo = {request.ContainerStuffingHeader.StuffingNo},
+                    @StuffingDate = {request.ContainerStuffingHeader.StuffingDate},
+                    @ContainerNo = {request.ContainerStuffingHeader.ContainerNo},
+                    @ICDCode = {request.ContainerStuffingHeader.ICDCode},
+                    @ContainerSize = {request.ContainerStuffingHeader.ContainerSize},
+                    @FCL = {request.ContainerStuffingHeader.FCL},
+                    @LCL = {request.ContainerStuffingHeader.LCL},
+                    @POD = {request.ContainerStuffingHeader.POD},
+                    @PODId = {request.ContainerStuffingHeader.PODId},
+                    @Origin = {request.ContainerStuffingHeader.Origin},
+                    @OriginId = {request.ContainerStuffingHeader.OriginId},
+                    @ContPOL = {request.ContainerStuffingHeader.ContPOL},
+                    @ContPOLId = {request.ContainerStuffingHeader.ContPOLId},
+                    @Via = {request.ContainerStuffingHeader.Via},
+                    @ViaId = {request.ContainerStuffingHeader.ViaId},
+                    @ShippingLine = {request.ContainerStuffingHeader.ShippingLine},
+                    @ShippingSeal = {request.ContainerStuffingHeader.ShippingSeal},
+                    @CustomSeal = {request.ContainerStuffingHeader.CustomSeal},
+                    @FinalDestinationLocation = {request.ContainerStuffingHeader.FinalDestinationLocation},
+                    @FinalDestinationLocationId = {request.ContainerStuffingHeader.FinalDestinationLocationId},
+                    @EquipmentSealType = {request.ContainerStuffingHeader.EquipmentSealType},
+                    @EquipmentSealTypeId = {request.ContainerStuffingHeader.EquipmentSealTypeId},
+                    @EquipmentStatus = {request.ContainerStuffingHeader.EquipmentStatus},
+                    @EquipmentStatusId = {request.ContainerStuffingHeader.EquipmentStatusId},
+                    @EquipmentQUC = {request.ContainerStuffingHeader.EquipmentQUC},
+                    @EquipmentQUCId = {request.ContainerStuffingHeader.EquipmentQUCId},
+                    @Remarks = {request.ContainerStuffingHeader.Remarks},
+                    @SEZ = {request.ContainerStuffingHeader.SEZ},
+                    @DirectStuffing = {request.ContainerStuffingHeader.DirectStuffing}
+            ")
+					.AsNoTracking()
+					.ToListAsync();
+
+				var spResult = headerResult.FirstOrDefault();
+
+				if (spResult == null || spResult.Id == 0)
+				{
+					response.Response = "Header creation failed or returned no ID.";
+					return response;
+				}
+
+				// Step 2: Insert/Update ContainerStuffingDetails using XML
+				if (request.ContainerStuffingDetails?.Any() == true)
+				{
+					var xmlData = XmlConvertercs.ConvertToXmlContainerStuffingDetails(request.ContainerStuffingDetails);
+
+					await _db.Database.ExecuteSqlInterpolatedAsync($@"
+                EXEC dbo.Sp_AddEditContainerStuffingDetails_XML
+                    @StuffingHdrId = {spResult.Id},
+                    @XmlData = {xmlData}
+            ");
+				}
+
+				response.Response = "OK";
+			}
+			catch (Exception ex)
+			{
+				response.Response = $"Error: {ex.Message}";
+			}
+
+			return response;
+		}
+
+
+		public async Task<Response<List<ContainerStuffingHeader>>> GetContainerStuffingHdr(int? id, int? page, int? size)
+		{
+			var response = new Response<List<ContainerStuffingHeader>>();
+
+			try
+			{
+				var query = _db.ContainerStuffingHeader.AsQueryable();
+
+				if (id.HasValue)
+				{
+					query = query.Where(s => s.StuffingReqId == id.Value);
+				}
+
+				var totalRecords = await query.CountAsync();
+
+				if (page.HasValue && page > 0 && size.HasValue && size > 0)
+				{
+					var skip = (page.Value - 1) * size.Value;
+					query = query.Skip(skip).Take(size.Value);
+				}
+
+				var result = await query.ToListAsync();
+
+				response.Data = result;
+				response.Status = true;
+				response.TotalCount = totalRecords;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<ContainerStuffingHeader>();
+				response.Status = false;
+				response.TotalCount = 0;
+				response.Message = $"Error: {ex.Message}";
+			}
+
+			return response;
+		}
+
+		public async Task<Response<List<ContainerStuffingDetails>>> GetContainerStuffingDtl(int? id, int? StuffingId, int? page, int? size)
+		{
+			var response = new Response<List<ContainerStuffingDetails>>();
+
+			try
+			{
+				var query = _db.ContainerStuffingDetails.AsQueryable();
+
+				if (id.HasValue)
+				{
+					query = query.Where(s => s.StuffingDtlId == id.Value);
+				}
+
+				if (StuffingId.HasValue)
+				{
+					query = query.Where(s => s.StuffingReqId == StuffingId.Value);
+				}
+
+				var totalRecords = await query.CountAsync();
+
+				if (page.HasValue && page > 0 && size.HasValue && size > 0)
+				{
+					var skip = (page.Value - 1) * size.Value;
+					query = query.Skip(skip).Take(size.Value);
+				}
+
+				var result = await query.ToListAsync();
+
+				response.Data = result;
+				response.Status = true;
+				response.TotalCount = totalRecords;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<ContainerStuffingDetails>();
+				response.Status = false;
+				response.TotalCount = 0;
+				response.Message = $"Error: {ex.Message}";
+			}
+
+			return response;
+		}
+
+
+	}
 }

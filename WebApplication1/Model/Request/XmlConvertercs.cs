@@ -178,8 +178,38 @@ public static string ConvertToXmlLoadContainerRequestDetails(List<LoadContainerR
 
             return xml.ToString();
         }
+		public static string ConvertToXmlContainerStuffingDetails(List<ContainerStuffingDetails> details)
+		{
+			var xml = new XElement("StuffingDetails",
+				details.Select(d =>
+					new XElement("Detail",
+						new XElement("StuffingDtlId", d.StuffingDtlId),
+						new XElement("StuffingReqId", d.StuffingReqId),
+						new XElement("ShippingBillNo", d.ShippingBillNo ?? string.Empty),
+						new XElement("ShippingDate", d.ShippingDate?.ToString("yyyy-MM-dd") ?? string.Empty),
+						new XElement("CHAId", d.CHAId ?? 0),
+						new XElement("CHA", d.CHA ?? string.Empty),
+						new XElement("ContainerNo", d.ContainerNo ?? string.Empty),
+						new XElement("Exporter", d.Exporter ?? string.Empty),
+						new XElement("Consignee", d.Consignee ?? string.Empty),
+						new XElement("CargoDescription", d.CargoDescription ?? string.Empty),
+						new XElement("MarksNo", d.MarksNo ?? string.Empty),
+						new XElement("Fob", d.Fob ?? 0),
+						new XElement("StuffQuantity", d.StuffQuantity ?? 0),
+						new XElement("StuffWeight", d.StuffWeight),
+						new XElement("Insured", d.Insured.HasValue && d.Insured.Value ? 1 : 0),
+						new XElement("MCINPCIN", d.MCINPCIN ?? string.Empty),
+						new XElement("CFSCode", d.CFSCode ?? string.Empty),
+						new XElement("Size", d.Size ?? 0),
+						new XElement("StuffingType", d.StuffingType ?? string.Empty)
+					)
+				)
+			);
 
+			return xml.ToString();
+		}
+	}
 
-    }
 }
+
 

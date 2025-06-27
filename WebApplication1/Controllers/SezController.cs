@@ -1526,5 +1526,52 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
+		[HttpPost("AddEditContainerStuffing")]
+		public async Task<IActionResult> AddEditContainerStuffing(RequestContainerStuffing request)
+		{
+			if (request == null)
+			{
+				return BadRequest("Request data is required.");
+			}
+
+			try
+			{
+				var result = await _services.AddEditContainerStuffing(request);
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
+
+		[HttpGet("GetContainerStuffingHdr")]
+		public async Task<IActionResult> GetContainerStuffingHdr(int? id, int? page, int? size)
+		{
+
+			var response = await _services.GetContainerStuffingHdr(id, page, size);
+
+			if (response.Data == null || !response.Data.Any())
+			{
+				return NotFound(new { message = "No entries found." });
+			}
+
+			return Ok(response);
+		}
+
+		[HttpGet("GetContainerStuffingDtl")]
+		public async Task<IActionResult> GetContainerStuffingDtl(int? id, int? StuffingId, int? page, int? size)
+		{
+
+			var response = await _services.GetContainerStuffingDtl(id, StuffingId, page, size);
+
+			if (response.Data == null || !response.Data.Any())
+			{
+				return NotFound(new { message = "No entries found." });
+			}
+
+			return Ok(response);
+		}
+
 	}
 }

@@ -102,13 +102,12 @@ namespace SezApi.Data
 
 		public DbSet<LoadContainerRequestHeader> LoadContainerRtHeader { get; set; }
 		public DbSet<LoadContainerRequestDetails> LoadContainerRDetails { get; set; }
-
 		public DbSet<ResponseLoadContainerRequest> ResponseLoadContainerRequest { get; set; }
-	
-
         public DbSet<ImpDeliveryApplicationHdr> RequestImpDeliveryApplicationHdr { get; set; }
-
         public DbSet<ImpDeliveryApplicationDtl> RequestImpDeliveryApplicationDtl { get; set; }
-    }
+		public DbSet<ContainerStuffingHeader> ContainerStuffingHeader { get; set; }
+		public DbSet<ContainerStuffingDetails> ContainerStuffingDetails { get; set; }
+		public DbSet<ResponseContainerStuffing> ResponseContainerStuffing { get; set; }
+	}
 }
 
