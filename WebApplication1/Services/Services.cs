@@ -1681,6 +1681,8 @@ namespace SezApi.Services
                                 on obl.Id equals AppContainerDetails.OBLNoId
                             join AppDoDetails in _db.GetAppraisementDoDetails
                                 on AppContainerDetails.CustomAppraisementId equals AppDoDetails.CustomAppraisementId
+                                into AppDoDetailsGroup
+                            from AppDoDetails in AppDoDetailsGroup.DefaultIfEmpty()
                             where
                           (string.IsNullOrEmpty(containerNo) || gateentry.ContainerNo == containerNo) &&
                           (string.IsNullOrEmpty(oblHblNo) || obldetails.OBL_HBL_No == oblHblNo)
