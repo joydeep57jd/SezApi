@@ -4037,7 +4037,7 @@ namespace SezApi.Services
                     var result1 = await _db.Set<AddEditResponse>()
                         .FromSqlInterpolated($@"
 					               EXEC dbo.SP_AddGodownInvoiceChargesJson
-					                   @YardInvId = {response.Id},
+					                   @GodownInvId = {response.Id},
 					                   @jsonData = {request.jsonData}
 					           ")
                         .AsNoTracking()
