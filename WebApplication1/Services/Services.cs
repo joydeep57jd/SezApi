@@ -4050,7 +4050,7 @@ namespace SezApi.Services
 			}
 			catch (Exception ex)
 			{
-				throw new ApplicationException("Failed to execute AddEditYardInvoice", ex);
+				throw new ApplicationException("Failed to execute GodownInvoice", ex);
 			}
 		}
 	}
