@@ -3990,9 +3990,6 @@ namespace SezApi.Services
 			return response;
 		}
 
-
-	
-
 		public async Task<AddEditResponse> AddEditGodownInvoice(RequestGodownInvoice request)
 		{
 			// insert to yard invoice 
@@ -4053,5 +4050,59 @@ namespace SezApi.Services
 				throw new ApplicationException("Failed to execute AddEditYardInvoice", ex);
 			}
 		}
-	}
+
+        public async Task<Response<List<ResponseStorageChargesCalc>>> GetImportStorageChargesCalc(string containerOBLList, int partyId, DateTime InvoiceDate)
+        {
+            var response = new Response<List<ResponseStorageChargesCalc>>();
+
+            try
+            {
+                var results = await _db
+                    .Set<ResponseStorageChargesCalc>()
+                    .FromSqlInterpolated($"EXEC [dbo].[ImportStorageChargesCalc] {containerOBLList}, {partyId}, {InvoiceDate}")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                response.Data = results;
+                response.Status = true;
+                response.TotalCount = results.Count;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ResponseStorageChargesCalc>();
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.TotalCount = 0;
+            }
+
+            return response;
+        }
+
+        public async Task<Response<List<ResponseImportInsuaranceCharges>>> GetImportInsuranceChargesCalc(string containerOBLList, int partyId, DateTime InvoiceDate)
+        {
+            var response = new Response<List<ResponseImportInsuaranceCharges>>();
+
+            try
+            {
+                var results = await _db
+                    .Set<ResponseImportInsuaranceCharges>()
+                    .FromSqlInterpolated($"EXEC [dbo].[ImportInsuranceChargesCalc] {containerOBLList}, {partyId},{InvoiceDate}")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                response.Data = results;
+                response.Status = true;
+                response.TotalCount = results.Count;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ResponseImportInsuaranceCharges>();
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.TotalCount = 0;
+            }
+
+            return response;
+        }
+    }
 }

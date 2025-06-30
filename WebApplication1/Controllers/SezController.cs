@@ -1593,5 +1593,28 @@ namespace SezApi.Controllers
 			}
 		}
 
-	}
+		[HttpPost("GetImportStorageChargesCalc")]
+		public async Task<IActionResult> GetImportStorageChargesCalc([FromBody] RequestStorageChargesCalc request)
+		{
+			var result = await _services.GetImportStorageChargesCalc(
+				request.ContainerOBLList,
+				request.PartyId,
+				request.InvoiceDate
+			);
+			return Ok(result);
+		}
+
+
+		[HttpPost("GetImportInsuranceChargesCalc")]
+        public async Task<IActionResult> GetImportInsuranceChargesCalc([FromBody] RequestInsuaranceCharges request)
+        {
+            var result = await _services.GetImportInsuranceChargesCalc(
+                request.ContainerOBLList,
+                request.PartyId,
+				request.InvoiceDate
+			);
+            return Ok(result);
+        }
+
+    }
 }

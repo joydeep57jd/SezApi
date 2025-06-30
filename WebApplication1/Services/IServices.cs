@@ -116,7 +116,8 @@ namespace SezApi.Services
         Task<AddEditResponse> AddEditContainerStuffing(RequestContainerStuffing request);
         Task<Response<List<ContainerStuffingHeader>>> GetContainerStuffingHdr(int? id, int? page, int? size);
         Task<Response<List<ContainerStuffingDetails>>> GetContainerStuffingDtl(int? id, int? StuffingId, int? page, int? size);
-
-		Task<AddEditResponse> AddEditGodownInvoice(RequestGodownInvoice request);
+       Task<Response<List<ResponseStorageChargesCalc>>> GetImportStorageChargesCalc(string containerOBLList, int partyId, DateTime InvoiceDate);
+        Task<Response<List<ResponseImportInsuaranceCharges>>> GetImportInsuranceChargesCalc(string containerOBLList, int partyId, DateTime InvoiceDate);
+        Task<AddEditResponse> AddEditGodownInvoice(RequestGodownInvoice request);
 	}
 }

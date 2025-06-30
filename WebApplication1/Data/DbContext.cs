@@ -61,6 +61,8 @@ namespace SezApi.Data
 
         public DbSet<AppraisementContainerDetails> GetAppraisementContainerDetails { get; set; }
         public DbSet<ResponseImportChargesCalc> ImportChargesCalc { get; set; }
+        public DbSet<ResponseStorageChargesCalc> ImportStorageChargesCalc { get; set; }
+        public DbSet<ResponseImportInsuaranceCharges> ImportInsuaranceCharges { get; set; }
         public DbSet<ChargesTypes> ListChargesTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -68,6 +70,8 @@ namespace SezApi.Data
             
             modelBuilder.Entity<ResponseImportChargesCalc>().HasNoKey();
             modelBuilder.Entity<ResponseAddEdityard>().HasNoKey();
+            modelBuilder.Entity<ResponseStorageChargesCalc>().HasNoKey();
+            modelBuilder.Entity<ResponseImportInsuaranceCharges>().HasNoKey();
         }
         public DbSet<ResponseCustom> ResponseCustom { get; set; }
 
