@@ -3991,5 +3991,67 @@ namespace SezApi.Services
 		}
 
 
+	
+
+		public async Task<AddEditResponse> AddEditGodownInvoice(RequestGodownInvoice request)
+		{
+			// insert to yard invoice 
+			try
+			{
+				var result = await _db.Set<ResponseCustomFor>()
+            	.FromSqlInterpolated($@"
+             EXEC dbo.AddEditGodownInvoice 
+            @GodownInvId = {request.GodownInvId},
+            @IsTaxInvoice = {request.IsTaxInvoice},
+            @IsBillOfSupply = {request.IsBillOfSupply},
+            @InvoiceNo = {request.InvoiceNo},
+            @DeliveryDate = {request.DeliveryDate},
+            @ApplicationNo = {request.ApplicationNo},
+            @InvoiceDate = {request.InvoiceDate},
+            @PartyName = {request.PartyName},
+            @PartyId = {request.PartyId},
+            @PayeeName = {request.PayeeName},
+            @PayeeId = {request.PayeeId},
+            @GSTNo = {request.GSTNo},
+            @OTHours = {request.OTHours},
+            @PaymentMode = {request.PaymentMode},
+            @Remarks = {request.Remarks},
+            @CreatedBy = {request.CreatedBy},
+            @UpdatedBy = {request.UpdatedBy}
+                     ")
+	           .AsNoTracking()
+	          .ToListAsync();
+
+
+				var response = result.FirstOrDefault();
+				AddEditResponse resultres = null;
+				if (response == null || response.Id == 0)
+				{
+					resultres.Response = "Main SP failed or returned no ID.";
+					return resultres;
+				}
+
+				// insert yard charges  
+				if (response != null && response.Id != 0 && request.jsonData != null)
+                {
+                    var result1 = await _db.Set<AddEditResponse>()
+                        .FromSqlInterpolated($@"
+					               EXEC dbo.SP_AddGodownInvoiceChargesJson
+					                   @YardInvId = {response.Id},
+					                   @jsonData = {request.jsonData}
+					           ")
+                        .AsNoTracking()
+                        .ToListAsync();
+
+                    resultres = result1.FirstOrDefault();
+                }
+
+				return resultres;
+			}
+			catch (Exception ex)
+			{
+				throw new ApplicationException("Failed to execute AddEditYardInvoice", ex);
+			}
+		}
 	}
 }

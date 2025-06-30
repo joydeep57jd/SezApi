@@ -117,5 +117,6 @@ namespace SezApi.Services
         Task<Response<List<ContainerStuffingHeader>>> GetContainerStuffingHdr(int? id, int? page, int? size);
         Task<Response<List<ContainerStuffingDetails>>> GetContainerStuffingDtl(int? id, int? StuffingId, int? page, int? size);
 
+		Task<AddEditResponse> AddEditGodownInvoice(RequestGodownInvoice request);
 	}
 }
