@@ -3721,18 +3721,18 @@ namespace SezApi.Services
 
 				// insert yard charges  
 				if (response != null && response.Id != 0 && request.jsonData != null)
-				{
-					//var result1 = await _db.Set<AddEditResponse>()
-					//	.FromSqlInterpolated($@"
-     //               EXEC dbo.SP_AddYardInvoiceChargesJson
-     //                   @YardInvId = {response.YardInvId},
-     //                   @jsonData = {request.jsonData}
-     //           ")
-					//	.AsNoTracking()
-					//	.ToListAsync();
+                {
+                    var result1 = await _db.Set<AddEditResponse>()
+                        .FromSqlInterpolated($@"
+					               EXEC dbo.SP_AddGodownInvoiceChargesJson
+					                   @YardInvId = {response.Id},
+					                   @jsonData = {request.jsonData}
+					           ")
+                        .AsNoTracking()
+                        .ToListAsync();
 
-					//resultres = result1.FirstOrDefault();
-				}
+                    resultres = result1.FirstOrDefault();
+                }
 
 				return resultres;
 			}
