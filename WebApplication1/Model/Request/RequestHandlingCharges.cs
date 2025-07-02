@@ -14,5 +14,7 @@
 
         public int? Weight { get; set; }    
         public int? AdditionalPktCharges { get; set; }
+
+        public decimal? Maxvalue_CRORE { get; set; }    
 	}
 }

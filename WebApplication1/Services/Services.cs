@@ -1553,7 +1553,8 @@ namespace SezApi.Services
                     @BasisId = {request.BasisId},
                     @BasisName =  {request.BasisName},
                     @Weight = {request.Weight},
-                    @AdditionalPktCharges = {request.AdditionalPktCharges}
+                    @AdditionalPktCharges = {request.AdditionalPktCharges},
+                     @Maxvalue_CRORE = {request.Maxvalue_CRORE}
                        
                 ")
                     .AsNoTracking()
