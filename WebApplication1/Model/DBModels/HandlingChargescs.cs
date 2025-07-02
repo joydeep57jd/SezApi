@@ -16,5 +16,10 @@ namespace SezApi.Model.DBModels
         public DateTime CreatedOn { get; set; }
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
-    }
+		public int? BasisId { get; set; }
+		public string? BasisName { get; set; }
+
+		public int? Weight { get; set; }
+		public int? AdditionalPktCharges { get; set; }
+	}
 }

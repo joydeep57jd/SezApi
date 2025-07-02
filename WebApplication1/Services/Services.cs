@@ -1549,7 +1549,11 @@ namespace SezApi.Services
                     @Rate = {request.Rate},
                     @MinRateperSBBOE = {request.MinRateperSBBOE},
                     @CreatedBy = {request.CreatedBy},
-                    @UpdatedBy = {request.UpdatedBy}
+                    @UpdatedBy = {request.UpdatedBy},
+                    @BasisId = {request.BasisId},
+                    @BasisName =  {request.BasisName},
+                    @Weight = {request.Weight},
+                    @AdditionalPktCharges = {request.AdditionalPktCharges}
                        
                 ")
                     .AsNoTracking()
