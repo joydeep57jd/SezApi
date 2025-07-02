@@ -1369,7 +1369,9 @@ namespace SezApi.Services
                     @UpdatedBy = {request.UpdatedBy},
                     @PayeeName = {request.PayeeName},
                     @ExaminationChargeType = {request.ExaminationChargeType},
-                    @Remarks = {request.Remarks}
+                    @Remarks = {request.Remarks},
+                    @MoveToId = {request.MoveToId},
+                    @IsLoadContainerInvoice = {request.IsLoadContainerInvoice}
 
             ")
                     .AsNoTracking()
@@ -1407,7 +1409,7 @@ namespace SezApi.Services
         }
 
 
-        public async Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName)
+        public async Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice)
         {
             var response = new Response<List<InvoiceYard>>();
 
@@ -1426,8 +1428,11 @@ namespace SezApi.Services
                     var skip = (page.Value - 1) * size.Value;
                     query = query.Skip(skip).Take(size.Value);
                 }
-
-                var data = await query.ToListAsync();
+				if (IsLoadContainerInvoice.HasValue)
+				{
+					query = query.Where(x => x.IsLoadContainerInvoice == IsLoadContainerInvoice.Value);
+				}
+				var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -4104,5 +4109,31 @@ namespace SezApi.Services
 
             return response;
         }
-    }
+
+		public async Task<ResponsehandlingCharges> GetHandlingChargesCalc(string ContainerOBLList, int PartyId)
+		{
+			try
+			{
+				var resultList = await _db.ResponsehandlingCharges
+					.FromSqlInterpolated($@"
+            EXEC dbo.ImportTransportChargesCalc 
+                @ContainerOBLList = {ContainerOBLList}, 
+                @PartyId = {PartyId}
+            ")
+					.AsNoTracking()
+					.ToListAsync();
+
+				var result = resultList.FirstOrDefault();
+
+				return result ?? new ResponsehandlingCharges();
+			}
+			catch (Exception ex)
+			{
+				throw new ApplicationException("Failed to execute ImportTransportChargesCalc procedure", ex);
+			}
+
+
+		}
+
+	}
 }

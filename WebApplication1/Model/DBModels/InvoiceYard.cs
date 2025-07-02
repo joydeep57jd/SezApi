@@ -29,5 +29,9 @@ namespace SezApi.Model.DBModels
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public string? PayeeName { get; set; }
-    }
+		public int? ExaminationChargeType { get; set; }
+		public string? Remarks { get; set; }
+		public int? MoveToId { get; set; }
+		public bool? IsLoadContainerInvoice { get; set; }
+	}
 }

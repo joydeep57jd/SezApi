@@ -691,10 +691,10 @@ namespace SezApi.Controllers
             }
         }
         [HttpGet("GetYardInvoice")]
-        public async Task<ActionResult<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName)
+        public async Task<ActionResult<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice)
         {
 
-            var response = await _services.GetYardInvoice(page, size, PayeeName);
+            var response = await _services.GetYardInvoice(page, size, PayeeName, IsLoadContainerInvoice);
 
             if (response.Data == null || !response.Data.Any())
             {
@@ -1604,7 +1604,6 @@ namespace SezApi.Controllers
 			return Ok(result);
 		}
 
-
 		[HttpPost("GetImportInsuranceChargesCalc")]
         public async Task<IActionResult> GetImportInsuranceChargesCalc([FromBody] RequestInsuaranceCharges request)
         {
@@ -1616,5 +1615,21 @@ namespace SezApi.Controllers
             return Ok(result);
         }
 
-    }
+		[HttpGet("GetHandlingChargesCalc")]
+		public async Task<IActionResult> GetHandlingChargesCalc(string ContainerOBLList, int PartyId)
+		{
+			try
+			{
+				var response = await _services.GetHandlingChargesCalc(ContainerOBLList, PartyId);
+				return Ok(response);
+			}
+
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
+
+
+	}
 }

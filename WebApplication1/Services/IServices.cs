@@ -51,7 +51,7 @@ namespace SezApi.Services
         Task<Response<List<GoDown>>> GetMstGoDown(int? page, int? size);
         Task<Response<List<Country>>> GetCountry(int? page, int? size);
         Task<AddEditResponse> AddEditYardInvoice(RequestYardInvocie request);
-        Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName);
+        Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice);
         Task<AddEditResponse> AddEditOBLEntry(RequestOBLEntry request);
         Task<Response<List<OBLEntry>>> GetOblEntry(int? id, int? page, int? size);
         Task<Response<List<OblEntryAdditionalDetails>>> GetOblEntryAdditionalDetails(int? id, int? OBLEntryId);
@@ -66,8 +66,9 @@ namespace SezApi.Services
         Task<Response<List<ExaminationCharge>>> GetExaminationCharge(int? id, int? page, int? size);
         Task<Response<List<ResponseCbcContainerList>>> GetCbtContainerDetailsList(int? page, int? size);
         Task<AddEditResponse> AddEditCustomAppraisementApplicationHeader(RequestCustomAppraisementApplicationHeader request);
+        Task<ResponsehandlingCharges> GetHandlingChargesCalc(string ContainerOBLList, int PartyId);
 
-        Task<Response<List<CustomAppraisementApplicationHeader>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size);
+		Task<Response<List<CustomAppraisementApplicationHeader>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size);
         Task<Response<List<AppraisementDoDetails>>> GetAppraisementDoDetails(int? id, int? page, int? size, int? CustAppId);
         Task<Response<List<AppraisementContainerDetails>>> GetAppraisementContainerDetails(int? id, int? page, int? size, int? CustAppId);
         Task<Response<List<ResponseOBLEntryWithDetailsDto>>> GetOBLEntriesWithDetails(int? id = null, string containerNo = null, int? page = null, int? size = null);

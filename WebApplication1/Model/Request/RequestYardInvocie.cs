@@ -24,6 +24,8 @@
         public string PayeeName { get; set; }
         public int ExaminationChargeType { get; set; }
         public string Remarks { get; set; }
-        public string jsonData { get; set; }
+		public int MoveToId { get; set; }
+		public bool IsLoadContainerInvoice { get; set; }
+		public string jsonData { get; set; }
     }
 }
