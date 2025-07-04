@@ -43,7 +43,7 @@ namespace SezApi.Services
         Task<Response<List<MstEximTraderMaster>>> GetMstEximTraderMaster(int? page, int? size);
         Task<AddEditResponse> AddEditMstCommodity(RequestMstCommodity request);
         Task<Response<List<MstCommodity>>> GetMstCommodity(int? page, int? size);
-        Task<Response<RegisterOfOutwardSupplyReportResponse>> GetRegisterOfOutwardSupplyReport(DateTime? FromDate, DateTime? ToDate);
+        Task<Response<RegisterOfOutwardSupplyReportResponse>> GetRegisterOfOutwardSupplyReport(DateTime? FromDate, DateTime? ToDate, string InvoiceType);
 
 		Task<ResponsePort> AddEditPort(RequestPort request);
         Task<Response<List<ResponseAddEditPort>>> GetPort(int? page, int? size);

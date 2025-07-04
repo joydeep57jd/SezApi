@@ -4145,7 +4145,7 @@ namespace SezApi.Services
         }
 
 
-		public async Task<Response<RegisterOfOutwardSupplyReportResponse>> GetRegisterOfOutwardSupplyReport(DateTime? FromDate, DateTime? ToDate)
+		public async Task<Response<RegisterOfOutwardSupplyReportResponse>> GetRegisterOfOutwardSupplyReport(DateTime? FromDate, DateTime? ToDate, string InvoiceType)
 		{
 			var response = new Response<RegisterOfOutwardSupplyReportResponse>();
 
@@ -4153,7 +4153,7 @@ namespace SezApi.Services
 			{
 				var flatRows = await _db
 					.Set<RegisterOfOutwardSupplyReportResponse>()
-					.FromSqlInterpolated($"EXEC dbo.RegisterOfOutwardSupplyReport {FromDate},{ToDate}")
+					.FromSqlInterpolated($"EXEC dbo.RegisterOfOutwardSupplyReport {FromDate},{ToDate},{InvoiceType ?? (object)DBNull.Value}")
 					.AsNoTracking()
 					.ToListAsync();
 

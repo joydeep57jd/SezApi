@@ -1630,11 +1630,11 @@ namespace SezApi.Controllers
 			}
 		}
 		[HttpGet("GetRegisterOfOutwardSupplyReport")]
-		public async Task<IActionResult> GetRegisterOfOutwardSupplyReport(DateTime? FromDate, DateTime? ToDate)
+		public async Task<IActionResult> GetRegisterOfOutwardSupplyReport(DateTime? FromDate, DateTime? ToDate, string? InvoiceType)
 		{
 			try
 			{
-				var response = await _services.GetRegisterOfOutwardSupplyReport(FromDate, ToDate);
+				var response = await _services.GetRegisterOfOutwardSupplyReport(FromDate, ToDate, InvoiceType);
 				return Ok(response);
 			}
 
