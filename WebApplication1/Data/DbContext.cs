@@ -117,6 +117,9 @@ namespace SezApi.Data
 		public DbSet<ContainerStuffingHeader> ContainerStuffingHeader { get; set; }
 		public DbSet<ContainerStuffingDetails> ContainerStuffingDetails { get; set; }
 		public DbSet<ResponseContainerStuffing> ResponseContainerStuffing { get; set; }
+
+		public DbSet<ResponseChargeSummaryByInvoice> ResponseChargeSummaryByInvoice { get; set; }
+
 	}
 }
 

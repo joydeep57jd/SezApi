@@ -9,8 +9,8 @@ namespace SezApi.Model.DBModels
         [Key]
         public int SacId { get; set; }
         public int? BranchId { get; set; }
-        public string SacCode { get; set; }
-        public string Description { get; set; }
+        public string? SacCode { get; set; }
+        public string? Description { get; set; }
         public decimal? Gst { get; set; }
         public decimal? Cess { get; set; }
         public int? CreatedBy { get; set; }
