@@ -66,7 +66,7 @@ namespace SezApi.Services
         Task<Response<List<ExaminationCharge>>> GetExaminationCharge(int? id, int? page, int? size);
         Task<Response<List<ResponseCbcContainerList>>> GetCbtContainerDetailsList(int? page, int? size);
         Task<AddEditResponse> AddEditCustomAppraisementApplicationHeader(RequestCustomAppraisementApplicationHeader request);
-        Task<ResponsehandlingCharges> GetHandlingChargesCalc(string ContainerOBLList, int PartyId);
+        Task<Response<ResponsehandlingCharges>> GetHandlingChargesCalc(string containerLoadConReqList, int partyId);
 
 		Task<Response<List<CustomAppraisementApplicationHeader>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size);
         Task<Response<List<AppraisementDoDetails>>> GetAppraisementDoDetails(int? id, int? page, int? size, int? CustAppId);

@@ -241,7 +241,7 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<AddEditResponse> AddEditMstSac(RequestMstSac request) 
+        public async Task<AddEditResponse> AddEditMstSac(RequestMstSac request)
         {
             try
             {
@@ -318,7 +318,7 @@ namespace SezApi.Services
             }
 
         }
-        
+
         public async Task<Response<List<MstEntryFee>>> GetMstEntryFee()
         {
             var response = new Response<List<MstEntryFee>>();
@@ -501,7 +501,7 @@ namespace SezApi.Services
                 response.Data = new List<ReeferCharges>();
                 response.Status = false;
             }
-          return response;
+            return response;
         }
 
         public async Task<AddEditResponse> AddEditMovementChrg(RequestMovementCharges request)
@@ -901,7 +901,7 @@ namespace SezApi.Services
                     query = _db.GetMstEximTraderMaster
                         .Where(x => x.OperationType.ToLower() == partyType.ToLower())
                         .AsQueryable();
-                }               
+                }
 
 
                 var totalRecords = await query.CountAsync();
@@ -1282,7 +1282,7 @@ namespace SezApi.Services
                     query = query.Where(s => s.Id == id.Value);
                 }
 
-                var totalRecords = await query.CountAsync(); 
+                var totalRecords = await query.CountAsync();
 
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
                 {
@@ -1384,7 +1384,7 @@ namespace SezApi.Services
                     resultres.Response = "Main SP failed or returned no ID.";
                     return resultres;
                 }
-                
+
                 // insert yard charges  
                 if (response != null && response.YardInvId != 0 && request.jsonData != null)
                 {
@@ -1428,11 +1428,11 @@ namespace SezApi.Services
                     var skip = (page.Value - 1) * size.Value;
                     query = query.Skip(skip).Take(size.Value);
                 }
-				if (IsLoadContainerInvoice.HasValue)
-				{
-					query = query.Where(x => x.IsLoadContainerInvoice == IsLoadContainerInvoice.Value);
-				}
-				var data = await query.ToListAsync();
+                if (IsLoadContainerInvoice.HasValue)
+                {
+                    query = query.Where(x => x.IsLoadContainerInvoice == IsLoadContainerInvoice.Value);
+                }
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -1671,7 +1671,7 @@ namespace SezApi.Services
         }
 
 
-        public async Task<Response<List<ResponseOBLContauner>>> GetOBLContainerList(int? page, int? size,string? containerNo,string? oblHblNo)
+        public async Task<Response<List<ResponseOBLContauner>>> GetOBLContainerList(int? page, int? size, string? containerNo, string? oblHblNo)
         {
             var response = new Response<List<ResponseOBLContauner>>();
 
@@ -1813,9 +1813,9 @@ namespace SezApi.Services
                             {
                                 ContainerCBTNo = obl.ContainerCBTNo,
                                 OBL_HBL_No = obldetails.OBL_HBL_No,
-                                Cargo_Type=obldetails.Cargo_Type,
-                                No_of_PKG=obldetails.No_of_PKG,
-                                GR_WT_Kg=obldetails.GR_WT_Kg
+                                Cargo_Type = obldetails.Cargo_Type,
+                                No_of_PKG = obldetails.No_of_PKG,
+                                GR_WT_Kg = obldetails.GR_WT_Kg
                             };
 
                 var totalRecords = await query.CountAsync();
@@ -2361,7 +2361,7 @@ namespace SezApi.Services
                     query = query.Where(s => s.CashReceipthdrId == CashReceiptId.Value);
                 }
 
-                var totalRecords = await query.CountAsync();  
+                var totalRecords = await query.CountAsync();
 
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
                 {
@@ -2683,10 +2683,10 @@ namespace SezApi.Services
 
                 int newGatePassId = (int)outputId.Value;
 
-             
+
                 var xmlData = XmlConvertercs.ConvertToXmlGatePassDtl(request.GatePassDetails);
 
-             
+
                 await _db.Database.ExecuteSqlInterpolatedAsync($@"
                EXEC sp_Insert_GatePassDtl_XML 
                 @GatepassId = {newGatePassId},
@@ -2695,7 +2695,7 @@ namespace SezApi.Services
 
                 await transaction.CommitAsync();
 
-             
+
                 response.Response = $"GatePass saved successfully. GatePassId: {newGatePassId}";
                 return response;
             }
@@ -2975,7 +2975,7 @@ namespace SezApi.Services
 
             return response;
         }
-        public async Task<Response<List<ResponseGatePassGateOut>>> GetGatePassGateOut( int? GatePassDtlId)
+        public async Task<Response<List<ResponseGatePassGateOut>>> GetGatePassGateOut(int? GatePassDtlId)
         {
             var response = new Response<List<ResponseGatePassGateOut>>();
 
@@ -3083,8 +3083,8 @@ namespace SezApi.Services
                         @ExitIdHeader= {spResult.Id},
                        @XmlData = {xmlData}
                       ");
-                  }
-              
+                }
+
                 response.Response = "OK";
             }
             catch (Exception ex)
@@ -3212,19 +3212,19 @@ namespace SezApi.Services
 
             return response;
         }
-        public async Task<Response<List<ExitThroughGateDetails>>> GetExitThroughDetails(int? id, int? page, int? size, int?GateExitHeaderId)
+        public async Task<Response<List<ExitThroughGateDetails>>> GetExitThroughDetails(int? id, int? page, int? size, int? GateExitHeaderId)
         {
             var response = new Response<List<ExitThroughGateDetails>>();
 
             try
             {
                 var query = _db.EThroughGateDetails.AsQueryable();
-				if (GateExitHeaderId.HasValue)
-				{
-					query = query.Where(s => s.ExitIdHeader == GateExitHeaderId.Value);
-				}
+                if (GateExitHeaderId.HasValue)
+                {
+                    query = query.Where(s => s.ExitIdHeader == GateExitHeaderId.Value);
+                }
 
-				if (id.HasValue)
+                if (id.HasValue)
                 {
                     query = query.Where(s => s.ExitIdDtls == id.Value);
                 }
@@ -3254,12 +3254,12 @@ namespace SezApi.Services
             return response;
         }
 
-		public async Task<AddEditResponse> AddEditCCINEntry(RequestCCINAddEdit request)
-		{
-			try
-			{
-				var result = await _db.AddEditResponse
-					.FromSqlInterpolated($@"
+        public async Task<AddEditResponse> AddEditCCINEntry(RequestCCINAddEdit request)
+        {
+            try
+            {
+                var result = await _db.AddEditResponse
+                    .FromSqlInterpolated($@"
                 EXEC dbo.Sp_AddEditCCINEntry
                     @CCINId = {request.CCINId},
                     @CCINNo = {request.CCINNo},
@@ -3300,56 +3300,56 @@ namespace SezApi.Services
                     @PackUQCDesc = {request.PackUQCDesc},
                     @SEZ = {request.SEZ}
             ")
-					.AsNoTracking()
-					.ToListAsync();
+                    .AsNoTracking()
+                    .ToListAsync();
 
-				var response = result.FirstOrDefault();
-				return response ?? new AddEditResponse { Response = "No response from procedure." };
-			}
-			catch (Exception ex)
-			{
-				throw new ApplicationException("Failed to execute Sp_AddEditCCINEntry", ex);
-			}
-		}
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute Sp_AddEditCCINEntry", ex);
+            }
+        }
 
-		public async Task<Response<List<CCINEntry>>> GetCCINEntry(int? id,  int? page, int? size)
-		{
-			var response = new Response<List<CCINEntry>>();
+        public async Task<Response<List<CCINEntry>>> GetCCINEntry(int? id, int? page, int? size)
+        {
+            var response = new Response<List<CCINEntry>>();
 
-			try
-			{
-				var query = _db.CCINEntryDetails.AsQueryable();
+            try
+            {
+                var query = _db.CCINEntryDetails.AsQueryable();
 
-				if (id.HasValue)
-				{
-					query = query.Where(s => s.CCINId == id.Value);
-				}
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.CCINId == id.Value);
+                }
 
-				
-				var totalRecords = await query.CountAsync();
 
-				if (page.HasValue && page > 0 && size.HasValue && size > 0)
-				{
-					var skip = (page.Value - 1) * size.Value;
-					query = query.Skip(skip).Take(size.Value);
-				}
+                var totalRecords = await query.CountAsync();
 
-				var result = await query.ToListAsync();
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
 
-				response.Data = result;
-				response.Status = true;
-				response.TotalCount = totalRecords;
-			}
-			catch (Exception ex)
-			{
-				response.Data = new List<CCINEntry>();
-				response.Status = false;
-				response.TotalCount = 0;
-				response.Message = $"Error: {ex.Message}";
-			}
+                var result = await query.ToListAsync();
 
-			return response;
-		}
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<CCINEntry>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
 
 
         public async Task<AddEditResponse> AddEditDestuffingEntry(RequestDestuffingEntry request)
@@ -3406,7 +3406,7 @@ namespace SezApi.Services
                       ");
                 }
 
-	
+
                 response.Response = "OK";
             }
             catch (Exception ex)
@@ -3507,9 +3507,9 @@ namespace SezApi.Services
                 @PartyId = {PartyId}
             ")
                     .AsNoTracking()
-                    .ToListAsync(); 
+                    .ToListAsync();
 
-                var result = resultList.FirstOrDefault(); 
+                var result = resultList.FirstOrDefault();
 
                 return result ?? new ResponseImportTransportChargesCalc();
             }
@@ -3527,9 +3527,9 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetEntryList.AsQueryable();               
+                var query = _db.GetEntryList.AsQueryable();
 
-                var totalCount = await query.CountAsync();             
+                var totalCount = await query.CountAsync();
 
                 var data = await query
                     .Select(x => new ResponseGetinContainer
@@ -3554,14 +3554,14 @@ namespace SezApi.Services
 
         }
 
-		public async Task<AddEditResponse> CreateLoadContainerRequest(RequestLoadContainerRequest request)
-		{
-			var response = new AddEditResponse();
+        public async Task<AddEditResponse> CreateLoadContainerRequest(RequestLoadContainerRequest request)
+        {
+            var response = new AddEditResponse();
 
-			try
-			{
-				var result = await _db.ResponseLoadContainerRequest
-					.FromSqlInterpolated($@"
+            try
+            {
+                var result = await _db.ResponseLoadContainerRequest
+                    .FromSqlInterpolated($@"
                 EXEC Sp_AddEditLoadContainerRequestHeader
                     @LoadContReqId = {request.LoadContainerHeader.LoadContReqId},
                     @LoadContReqNo = {request.LoadContainerHeader.LoadContReqNo},
@@ -3584,121 +3584,121 @@ namespace SezApi.Services
                     @TransactionType = {request.LoadContainerHeader.TransactionType},
                     @SFSend = {request.LoadContainerHeader.SFSend}
             ")
-					.AsNoTracking()
-					.ToListAsync();
+                    .AsNoTracking()
+                    .ToListAsync();
 
-				var spResult = result?.FirstOrDefault();
-				if (spResult == null || spResult.Id == 0)
-				{
-					response.Response = $"Stored procedure failed. Message: {spResult?.Response ?? "No response"}";
-					return response;
-				}
+                var spResult = result?.FirstOrDefault();
+                if (spResult == null || spResult.Id == 0)
+                {
+                    response.Response = $"Stored procedure failed. Message: {spResult?.Response ?? "No response"}";
+                    return response;
+                }
 
-				// Save details only if header was inserted successfully
-				if (request.LoadContainerRequestDetails?.Any() == true)
-				{
-					var xmlData = XmlConvertercs.ConvertToXmlLoadContainerRequestDetails(request.LoadContainerRequestDetails);
+                // Save details only if header was inserted successfully
+                if (request.LoadContainerRequestDetails?.Any() == true)
+                {
+                    var xmlData = XmlConvertercs.ConvertToXmlLoadContainerRequestDetails(request.LoadContainerRequestDetails);
 
-					await _db.Database.ExecuteSqlInterpolatedAsync($@"
+                    await _db.Database.ExecuteSqlInterpolatedAsync($@"
                 EXEC Sp_AddEditLoadContainerRequestDetails_XML 
                     @LoadContReqId = {spResult.Id},
                     @XmlData = {xmlData}
             ");
-				}
+                }
 
-				response.Response = "OK";
-			}
-			catch (Exception ex)
-			{
-				response.Response = $"Error: {ex.Message}";
-			}
+                response.Response = "OK";
+            }
+            catch (Exception ex)
+            {
+                response.Response = $"Error: {ex.Message}";
+            }
 
-			return response;
-		}
-
-
-		public async Task<Response<List<LoadContainerRequestHeader>>> GetLoadContainerHeader(int? id, int? page, int? size)
-		{
-			var response = new Response<List<LoadContainerRequestHeader>>();
-
-			try
-			{
-				var query = _db.LoadContainerRtHeader.AsQueryable();
-
-				if (id.HasValue)
-				{
-					query = query.Where(s => s.LoadContReqId == id.Value);
-				}
-
-				var totalRecords = await query.CountAsync();
-
-				if (page.HasValue && page > 0 && size.HasValue && size > 0)
-				{
-					var skip = (page.Value - 1) * size.Value;
-					query = query.Skip(skip).Take(size.Value);
-				}
-
-				var result = await query.ToListAsync();
-
-				response.Data = result;
-				response.Status = true;
-				response.TotalCount = totalRecords;
-			}
-			catch (Exception ex)
-			{
-				response.Data = new List<LoadContainerRequestHeader>();
-				response.Status = false;
-				response.TotalCount = 0;
-				response.Message = $"Error: {ex.Message}";
-			}
-
-			return response;
-		}
-		public async Task<Response<List<LoadContainerRequestDetails>>> GetLoadContainerDetails(int? id, int? page, int? size, int? LoaderHeaderId)
-		{
-			var response = new Response<List<LoadContainerRequestDetails>>();
-
-			try
-			{
-				var query = _db.LoadContainerRDetails.AsQueryable();
-				if (LoaderHeaderId.HasValue)
-				{
-					query = query.Where(s => s.LoadContReqId == LoaderHeaderId.Value);
-				}
-
-				if (id.HasValue)
-				{
-					query = query.Where(s => s.LoadContReqDetlId == id.Value);
-				}
-
-				var totalRecords = await query.CountAsync();
-
-				if (page.HasValue && page > 0 && size.HasValue && size > 0)
-				{
-					var skip = (page.Value - 1) * size.Value;
-					query = query.Skip(skip).Take(size.Value);
-				}
-
-				var result = await query.ToListAsync();
-
-				response.Data = result;
-				response.Status = true;
-				response.TotalCount = totalRecords;
-			}
-			catch (Exception ex)
-			{
-				response.Data = new List<LoadContainerRequestDetails>();
-				response.Status = false;
-				response.TotalCount = 0;
-				response.Message = $"Error: {ex.Message}";
-			}
-
-			return response;
-		}
+            return response;
+        }
 
 
+        public async Task<Response<List<LoadContainerRequestHeader>>> GetLoadContainerHeader(int? id, int? page, int? size)
+        {
+            var response = new Response<List<LoadContainerRequestHeader>>();
 
-	
+            try
+            {
+                var query = _db.LoadContainerRtHeader.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.LoadContReqId == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<LoadContainerRequestHeader>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+        public async Task<Response<List<LoadContainerRequestDetails>>> GetLoadContainerDetails(int? id, int? page, int? size, int? LoaderHeaderId)
+        {
+            var response = new Response<List<LoadContainerRequestDetails>>();
+
+            try
+            {
+                var query = _db.LoadContainerRDetails.AsQueryable();
+                if (LoaderHeaderId.HasValue)
+                {
+                    query = query.Where(s => s.LoadContReqId == LoaderHeaderId.Value);
+                }
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.LoadContReqDetlId == id.Value);
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<LoadContainerRequestDetails>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+
+
+
 
         public async Task<AddEditResponse> AddEditDeliveryApplication(RequestImpDeliveryApplication request)
         {
@@ -3835,14 +3835,14 @@ namespace SezApi.Services
         }
 
 
-		public async Task<AddEditResponse> AddEditContainerStuffing(RequestContainerStuffing request)
-		{
-			var response = new AddEditResponse();
+        public async Task<AddEditResponse> AddEditContainerStuffing(RequestContainerStuffing request)
+        {
+            var response = new AddEditResponse();
 
-			try
-			{
-				var headerResult = await _db.Set<ResponseContainerStuffing>()
-					.FromSqlInterpolated($@"
+            try
+            {
+                var headerResult = await _db.Set<ResponseContainerStuffing>()
+                    .FromSqlInterpolated($@"
                 EXEC dbo.Sp_AddEditContainerStuffingHeader
                     @StuffingReqId = {request.ContainerStuffingHeader.StuffingReqId},
                     @ByTrain = {request.ContainerStuffingHeader.ByTrain},
@@ -3880,128 +3880,128 @@ namespace SezApi.Services
                     @SEZ = {request.ContainerStuffingHeader.SEZ},
                     @DirectStuffing = {request.ContainerStuffingHeader.DirectStuffing}
             ")
-					.AsNoTracking()
-					.ToListAsync();
+                    .AsNoTracking()
+                    .ToListAsync();
 
-				var spResult = headerResult.FirstOrDefault();
+                var spResult = headerResult.FirstOrDefault();
 
-				if (spResult == null || spResult.Id == 0)
-				{
-					response.Response = "Header creation failed or returned no ID.";
-					return response;
-				}
+                if (spResult == null || spResult.Id == 0)
+                {
+                    response.Response = "Header creation failed or returned no ID.";
+                    return response;
+                }
 
-				// Step 2: Insert/Update ContainerStuffingDetails using XML
-				if (request.ContainerStuffingDetails?.Any() == true)
-				{
-					var xmlData = XmlConvertercs.ConvertToXmlContainerStuffingDetails(request.ContainerStuffingDetails);
+                // Step 2: Insert/Update ContainerStuffingDetails using XML
+                if (request.ContainerStuffingDetails?.Any() == true)
+                {
+                    var xmlData = XmlConvertercs.ConvertToXmlContainerStuffingDetails(request.ContainerStuffingDetails);
 
-					await _db.Database.ExecuteSqlInterpolatedAsync($@"
+                    await _db.Database.ExecuteSqlInterpolatedAsync($@"
                 EXEC dbo.Sp_AddEditContainerStuffingDetails_XML
                     @StuffingHdrId = {spResult.Id},
                     @XmlData = {xmlData}
             ");
-				}
+                }
 
-				response.Response = "OK";
-			}
-			catch (Exception ex)
-			{
-				response.Response = $"Error: {ex.Message}";
-			}
+                response.Response = "OK";
+            }
+            catch (Exception ex)
+            {
+                response.Response = $"Error: {ex.Message}";
+            }
 
-			return response;
-		}
+            return response;
+        }
 
 
-		public async Task<Response<List<ContainerStuffingHeader>>> GetContainerStuffingHdr(int? id, int? page, int? size)
-		{
-			var response = new Response<List<ContainerStuffingHeader>>();
+        public async Task<Response<List<ContainerStuffingHeader>>> GetContainerStuffingHdr(int? id, int? page, int? size)
+        {
+            var response = new Response<List<ContainerStuffingHeader>>();
 
-			try
-			{
-				var query = _db.ContainerStuffingHeader.AsQueryable();
+            try
+            {
+                var query = _db.ContainerStuffingHeader.AsQueryable();
 
-				if (id.HasValue)
-				{
-					query = query.Where(s => s.StuffingReqId == id.Value);
-				}
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.StuffingReqId == id.Value);
+                }
 
-				var totalRecords = await query.CountAsync();
+                var totalRecords = await query.CountAsync();
 
-				if (page.HasValue && page > 0 && size.HasValue && size > 0)
-				{
-					var skip = (page.Value - 1) * size.Value;
-					query = query.Skip(skip).Take(size.Value);
-				}
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
 
-				var result = await query.ToListAsync();
+                var result = await query.ToListAsync();
 
-				response.Data = result;
-				response.Status = true;
-				response.TotalCount = totalRecords;
-			}
-			catch (Exception ex)
-			{
-				response.Data = new List<ContainerStuffingHeader>();
-				response.Status = false;
-				response.TotalCount = 0;
-				response.Message = $"Error: {ex.Message}";
-			}
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ContainerStuffingHeader>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
 
-			return response;
-		}
+            return response;
+        }
 
-		public async Task<Response<List<ContainerStuffingDetails>>> GetContainerStuffingDtl(int? id, int? StuffingId, int? page, int? size)
-		{
-			var response = new Response<List<ContainerStuffingDetails>>();
+        public async Task<Response<List<ContainerStuffingDetails>>> GetContainerStuffingDtl(int? id, int? StuffingId, int? page, int? size)
+        {
+            var response = new Response<List<ContainerStuffingDetails>>();
 
-			try
-			{
-				var query = _db.ContainerStuffingDetails.AsQueryable();
+            try
+            {
+                var query = _db.ContainerStuffingDetails.AsQueryable();
 
-				if (id.HasValue)
-				{
-					query = query.Where(s => s.StuffingDtlId == id.Value);
-				}
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.StuffingDtlId == id.Value);
+                }
 
-				if (StuffingId.HasValue)
-				{
-					query = query.Where(s => s.StuffingReqId == StuffingId.Value);
-				}
+                if (StuffingId.HasValue)
+                {
+                    query = query.Where(s => s.StuffingReqId == StuffingId.Value);
+                }
 
-				var totalRecords = await query.CountAsync();
+                var totalRecords = await query.CountAsync();
 
-				if (page.HasValue && page > 0 && size.HasValue && size > 0)
-				{
-					var skip = (page.Value - 1) * size.Value;
-					query = query.Skip(skip).Take(size.Value);
-				}
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
 
-				var result = await query.ToListAsync();
+                var result = await query.ToListAsync();
 
-				response.Data = result;
-				response.Status = true;
-				response.TotalCount = totalRecords;
-			}
-			catch (Exception ex)
-			{
-				response.Data = new List<ContainerStuffingDetails>();
-				response.Status = false;
-				response.TotalCount = 0;
-				response.Message = $"Error: {ex.Message}";
-			}
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<ContainerStuffingDetails>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
 
-			return response;
-		}
+            return response;
+        }
 
-		public async Task<AddEditResponse> AddEditGodownInvoice(RequestGodownInvoice request)
-		{
-			// insert to yard invoice 
-			try
-			{
-				var result = await _db.Set<ResponseCustomFor>()
-            	.FromSqlInterpolated($@"
+        public async Task<AddEditResponse> AddEditGodownInvoice(RequestGodownInvoice request)
+        {
+            // insert to yard invoice 
+            try
+            {
+                var result = await _db.Set<ResponseCustomFor>()
+                .FromSqlInterpolated($@"
              EXEC dbo.AddEditGodownInvoice 
             @GodownInvId = {request.GodownInvId},
             @IsTaxInvoice = {request.IsTaxInvoice},
@@ -4021,20 +4021,20 @@ namespace SezApi.Services
             @CreatedBy = {request.CreatedBy},
             @UpdatedBy = {request.UpdatedBy}
                      ")
-	           .AsNoTracking()
-	          .ToListAsync();
+               .AsNoTracking()
+              .ToListAsync();
 
 
-				var response = result.FirstOrDefault();
-				AddEditResponse resultres = null;
-				if (response == null || response.Id == 0)
-				{
-					resultres.Response = "Main SP failed or returned no ID.";
-					return resultres;
-				}
+                var response = result.FirstOrDefault();
+                AddEditResponse resultres = null;
+                if (response == null || response.Id == 0)
+                {
+                    resultres.Response = "Main SP failed or returned no ID.";
+                    return resultres;
+                }
 
-				// insert yard charges  
-				if (response != null && response.Id != 0 && request.jsonData != null)
+                // insert yard charges  
+                if (response != null && response.Id != 0 && request.jsonData != null)
                 {
                     var result1 = await _db.Set<AddEditResponse>()
                         .FromSqlInterpolated($@"
@@ -4048,13 +4048,13 @@ namespace SezApi.Services
                     resultres = result1.FirstOrDefault();
                 }
 
-				return resultres;
-			}
-			catch (Exception ex)
-			{
-				throw new ApplicationException("Failed to execute GodownInvoice", ex);
-			}
-		}
+                return resultres;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to execute GodownInvoice", ex);
+            }
+        }
 
         public async Task<Response<List<ResponseStorageChargesCalc>>> GetImportStorageChargesCalc(string containerOBLList, int partyId, DateTime InvoiceDate)
         {
@@ -4110,30 +4110,34 @@ namespace SezApi.Services
             return response;
         }
 
-		public async Task<ResponsehandlingCharges> GetHandlingChargesCalc(string ContainerOBLList, int PartyId)
-		{
-			try
-			{
-				var resultList = await _db.ResponsehandlingCharges
-					.FromSqlInterpolated($@"
-            EXEC dbo.ImportTransportChargesCalc 
-                @ContainerOBLList = {ContainerOBLList}, 
-                @PartyId = {PartyId}
-            ")
-					.AsNoTracking()
-					.ToListAsync();
+        public async Task<Response<ResponsehandlingCharges>> GetHandlingChargesCalc(string containerLoadConReqList, int partyId)
+        {
+            var response = new Response<ResponsehandlingCharges>();
 
-				var result = resultList.FirstOrDefault();
+            try
+            {
+                var results = await _db
+                    .Set<ResponsehandlingCharges>()
+                    .FromSqlInterpolated($"EXEC dbo.HandlingChargesCalc {containerLoadConReqList}, {partyId}")
+                    .AsNoTracking()
+                    .ToListAsync();
 
-				return result ?? new ResponsehandlingCharges();
-			}
-			catch (Exception ex)
-			{
-				throw new ApplicationException("Failed to execute ImportTransportChargesCalc procedure", ex);
-			}
+                var result = results.FirstOrDefault() ?? new ResponsehandlingCharges();
 
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = 1;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new ResponsehandlingCharges();
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.TotalCount = 0;
+            }
 
-		}
+            return response;
+        }
 
-	}
+    }
 }
