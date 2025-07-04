@@ -1630,6 +1630,19 @@ namespace SezApi.Controllers
 			}
 		}
 
+		[HttpGet("GetChargeSummaryByInvoiceResponse")]
+		public async Task<IActionResult> GetChargeSummaryByInvoiceResponse()
+		{
+			try
+			{
+				var response = await _services.GetChargeSummaryByInvoiceResponse();
+				return Ok(response);
+			}
 
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
 	}
 }

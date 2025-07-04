@@ -4144,5 +4144,33 @@ namespace SezApi.Services
             return response;
         }
 
-    }
+		public async Task<Response<List<ResponseChargeSummaryByInvoice>>> GetChargeSummaryByInvoiceResponse()
+		{
+			var response = new Response<List<ResponseChargeSummaryByInvoice>>();
+
+			try
+			{
+				var results = await _db.ResponseChargeSummaryByInvoice
+					.FromSqlInterpolated($"EXEC dbo.SP_GetChargeSummaryByInvoice")
+					.AsNoTracking()
+					.ToListAsync();
+
+				response.Data = results;
+				response.Status = true;
+				response.TotalCount = results.Count;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<ResponseChargeSummaryByInvoice>();
+				response.Status = false;
+				response.Message = $"Error: {ex.Message}";
+				response.TotalCount = 0;
+			}
+
+			return response;
+		}
+
+
+
+	}
 }
