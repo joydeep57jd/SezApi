@@ -1629,7 +1629,20 @@ namespace SezApi.Controllers
 				return StatusCode(500, $"Internal server error: {ex.Message}");
 			}
 		}
+		[HttpGet("GetRegisterOfOutwardSupplyReport")]
+		public async Task<IActionResult> GetRegisterOfOutwardSupplyReport(DateTime? FromDate, DateTime? ToDate)
+		{
+			try
+			{
+				var response = await _services.GetRegisterOfOutwardSupplyReport(FromDate, ToDate);
+				return Ok(response);
+			}
 
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
 
 	}
 }

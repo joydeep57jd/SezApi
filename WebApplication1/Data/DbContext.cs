@@ -73,8 +73,11 @@ namespace SezApi.Data
             modelBuilder.Entity<ResponseStorageChargesCalc>().HasNoKey();
             modelBuilder.Entity<ResponseImportInsuaranceCharges>().HasNoKey();
 			modelBuilder.Entity<ResponsehandlingCharges>().HasNoKey();
+			modelBuilder.Entity<RegisterOfOutwardSupplyReportResponse>().HasNoKey();
 		}
-        public DbSet<ResponseCustom> ResponseCustom { get; set; }
+		public DbSet<RegisterOfOutwardSupplyReportResponse> RegisterOfOutwardSupplyReportResponse { get; set; }
+		
+		public DbSet<ResponseCustom> ResponseCustom { get; set; }
 
         public DbSet<CashReceiptInvDtls> GetCashReceiptInvDtls { get; set; }
 

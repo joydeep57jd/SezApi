@@ -4144,5 +4144,44 @@ namespace SezApi.Services
             return response;
         }
 
-    }
+
+		public async Task<Response<RegisterOfOutwardSupplyReportResponse>> GetRegisterOfOutwardSupplyReport(DateTime? FromDate, DateTime? ToDate)
+		{
+			var response = new Response<RegisterOfOutwardSupplyReportResponse>();
+
+			try
+			{
+				var flatRows = await _db
+					.Set<RegisterOfOutwardSupplyReportResponse>()
+					.FromSqlInterpolated($"EXEC dbo.RegisterOfOutwardSupplyReport {FromDate},{ToDate}")
+					.AsNoTracking()
+					.ToListAsync();
+
+				var first = flatRows.FirstOrDefault();
+				if (first == null)
+				{
+					response.Data = null;
+					response.Status = false;
+					response.Message = "No data found";
+					return response;
+				}
+
+				
+
+				response.Data = first;
+				response.Status = true;
+				response.TotalCount = flatRows.Count;
+			}
+			catch (Exception ex)
+			{
+				response.Status = false;
+				response.Message = $"Error: {ex.Message}";
+				response.Data = null;
+				response.TotalCount = 0;
+			}
+
+			return response;
+		}
+
+	}
 }
