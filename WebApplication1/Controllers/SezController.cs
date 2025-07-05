@@ -1657,5 +1657,35 @@ namespace SezApi.Controllers
 				return StatusCode(500, $"Internal server error: {ex.Message}");
 			}
 		}
-	}
+
+        [HttpGet("GetRegisterOfOutwardSupplyReportInvoice")]
+        public async Task<IActionResult> GetRegisterOfOutwardSupplyReportInvoice(DateTime? FromDate, DateTime? ToDate, string? InvoiceType)
+        {
+            try
+            {
+                var response = await _services.GetRegisterOfOutwardSupplyReportInvoice(FromDate, ToDate, InvoiceType);
+                return Ok(response);
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetRegisterOfOutwardSupplyReportCancel")]
+        public async Task<IActionResult> GetRegisterOfOutwardSupplyReportCancel(DateTime? FromDate, DateTime? ToDate, string? InvoiceType)
+        {
+            try
+            {
+                var response = await _services.GetRegisterOfOutwardSupplyReportCancel(FromDate, ToDate, InvoiceType);
+                return Ok(response);
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+    }
 }
