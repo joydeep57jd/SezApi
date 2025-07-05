@@ -700,35 +700,43 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<AddEditResponse> AddEditMstInsurance(RequestMstInsurance request)
-        {
-            try
-            {
-                var result = await _db.AddEditResponse
-                    .FromSqlInterpolated($@"
-            EXEC dbo.Sp_AddEditInsurance 
-                @InsuranceId = {request.InsuranceId},
-                @Rate = {request.Rate},
-                @EffectiveDate = {request.EffectiveDate},
-                @BranchId = {request.BranchId},
-                @SacCodeId = {request.SacCodeId},
-                @CreatedBy = {request.CreatedBy},
-                @UpdatedBy = {request.UpdatedBy}
-        ")
-                    .AsNoTracking()
-                    .ToListAsync();
+		public async Task<AddEditResponse> AddEditMstInsurance(RequestMstInsurance request)
+		{
+			try
+			{
+				var parameters = new[]
+                      {
+	                    new SqlParameter("@InsuranceId", (object?)request.InsuranceId ?? DBNull.Value),
+	                        new SqlParameter("@Rate", SqlDbType.Decimal)
+	                            {
+	                 	           Precision = 10,
+		                           Scale = 3,
+		                           Value = (object?)request.Rate ?? DBNull.Value
+                              	},
+	                        new SqlParameter("@EffectiveDate", (object?)request.EffectiveDate ?? DBNull.Value),
+	                        new SqlParameter("@BranchId", (object?)request.BranchId ?? DBNull.Value),
+                           	new SqlParameter("@SacCodeId", (object?)request.SacCodeId ?? DBNull.Value),
+                           	new SqlParameter("@CreatedBy", (object?)request.CreatedBy ?? DBNull.Value),
+	                        new SqlParameter("@UpdatedBy", (object?)request.UpdatedBy ?? DBNull.Value),
+                        };
 
-                var response = result.FirstOrDefault();
-                return response ?? new AddEditResponse { Response = "No response from procedure." };
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Failed to execute Sp_AddEditInsurance", ex);
-            }
 
-        }
+				var result = await _db.AddEditResponse
+					.FromSqlRaw("EXEC dbo.Sp_AddEditInsurance @InsuranceId, @Rate, @EffectiveDate, @BranchId, @SacCodeId, @CreatedBy, @UpdatedBy", parameters)
+					.AsNoTracking()
+					.ToListAsync();
 
-        public async Task<Response<List<MstInsurance>>> GetMstInsurance(int? page, int? size)
+				var response = result.FirstOrDefault();
+				return response ?? new AddEditResponse { Response = "No response from procedure." };
+			}
+			catch (Exception ex)
+			{
+				throw new ApplicationException("Failed to execute Sp_AddEditInsurance", ex);
+			}
+		}
+
+
+		public async Task<Response<List<MstInsurance>>> GetMstInsurance(int? page, int? size)
         {
             var response = new Response<List<MstInsurance>>();
 

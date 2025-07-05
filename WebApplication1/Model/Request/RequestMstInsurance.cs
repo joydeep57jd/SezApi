@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SezApi.Model.Request
 {
     public class RequestMstInsurance
     {
         public int InsuranceId { get; set; }
-        public decimal? Rate { get; set; }
+		[Column(TypeName = "decimal(10,3)")]
+		public decimal? Rate { get; set; }
         public DateTime? EffectiveDate { get; set; }
         public int? BranchId { get; set; }
         public int? SacCodeId { get; set; }
