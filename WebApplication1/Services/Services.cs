@@ -1684,7 +1684,7 @@ namespace SezApi.Services
         }
 
 
-        public async Task<Response<List<ResponseOBLContauner>>> GetOBLContainerList(int? page, int? size, string? containerNo, string? oblHblNo)
+        public async Task<Response<List<ResponseOBLContauner>>> GetOBLContainerList(int? page, int? size, string? containerNo, string? oblHblNo, string? AppNo)
         {
             var response = new Response<List<ResponseOBLContauner>>();
 
@@ -1695,16 +1695,19 @@ namespace SezApi.Services
                                 on obl.Id equals obldetails.OBLEntryId
                             join gateentry in _db.GetEntryList
                                on obl.ContainerCBTNo equals gateentry.ContainerNo
-                            join AppContainerDetails in _db.GetAppraisementContainerDetails
+							join AppContainerDetails in _db.GetAppraisementContainerDetails
                                 on obl.Id equals AppContainerDetails.OBLNoId
-                            join AppDoDetails in _db.GetAppraisementDoDetails
+							join AppraisementApplicationHeader in _db.CustomAppraisementApplicationHeaderList
+							   on AppContainerDetails.CustomAppraisementId equals AppraisementApplicationHeader.ID
+							join AppDoDetails in _db.GetAppraisementDoDetails
                                 on AppContainerDetails.CustomAppraisementId equals AppDoDetails.CustomAppraisementId
                                 into AppDoDetailsGroup
                             from AppDoDetails in AppDoDetailsGroup.DefaultIfEmpty()
                             where
                           (string.IsNullOrEmpty(containerNo) || gateentry.ContainerNo == containerNo) &&
-                          (string.IsNullOrEmpty(oblHblNo) || obldetails.OBL_HBL_No == oblHblNo)
-                            select new ResponseOBLContauner
+                          (string.IsNullOrEmpty(oblHblNo) || obldetails.OBL_HBL_No == oblHblNo) &&
+						  (string.IsNullOrEmpty(AppNo) || AppraisementApplicationHeader.AppraisementNo == AppNo)
+							select new ResponseOBLContauner
                             {
                                 ICDNo = gateentry.CFSNo,
                                 ContainerCBTNo = obl.ContainerCBTNo,
