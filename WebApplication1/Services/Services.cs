@@ -1964,7 +1964,7 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<ResponseCustomerHeaderForList>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size)
+        public async Task<Response<List<ResponseCustomerHeaderForList>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size,bool? isInvoiceCheck)
         {
             var response = new Response<List<ResponseCustomerHeaderForList>>();
 
