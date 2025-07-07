@@ -799,10 +799,10 @@ namespace SezApi.Controllers
             return Ok(response);
         }
         [HttpGet("GetOBLContainerList")]
-        public async Task<ActionResult<List<ResponseOBLContauner>>> GetOBLContainerList(int? page, int? size, string? containerNo, string? oblHblNo)
+        public async Task<ActionResult<List<ResponseOBLContauner>>> GetOBLContainerList(int? page, int? size, string? containerNo, string? oblHblNo,string? AppNo)
         {
 
-            var response = await _services.GetOBLContainerList( page,  size, containerNo, oblHblNo);
+            var response = await _services.GetOBLContainerList( page,  size, containerNo, oblHblNo, AppNo);
 
             if (response.Data == null || !response.Data.Any())
             {
