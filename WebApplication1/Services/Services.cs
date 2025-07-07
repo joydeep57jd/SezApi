@@ -2000,6 +2000,7 @@ namespace SezApi.Services
 			.Select(h => new ResponseCustomerHeaderForList
 			{
 				ID = h.ID,
+                AppraisementNo = h.AppraisementNo,
 				AppraisementDate = h.AppraisementDate,
 				ShippingLineId = h.ShippingLineId,
 				CHAId = h.CHAId,
