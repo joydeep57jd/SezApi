@@ -1964,7 +1964,7 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<CustomAppraisementApplicationHeader>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size)
+        public async Task<Response<List<CustomAppraisementApplicationHeader>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size, bool? isInvoiceCheck)
         {
             var response = new Response<List<CustomAppraisementApplicationHeader>>();
 
@@ -1977,7 +1977,16 @@ namespace SezApi.Services
                     query = query.Where(s => s.ID == id.Value);
                 }
 
-                var totalRecords = await query.CountAsync();
+				if (isInvoiceCheck == true)
+				{
+					var usedAppraisementNos = _db.GetYardInvoiceList    
+												  .Select(x => x.ApplicationId)
+												  .Distinct();
+
+					query = query.Where(x => !usedAppraisementNos.Contains(x.ID));
+				}
+
+				var totalRecords = await query.CountAsync();
 
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
                 {

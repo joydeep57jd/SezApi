@@ -909,10 +909,10 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetCustomAppraisementApplicationHeader")]
-        public async Task<ActionResult<List<CustomAppraisementApplicationHeader>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size)
+        public async Task<ActionResult<List<CustomAppraisementApplicationHeader>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size, bool? isInvoiceCheck)
         {
 
-            var response = await _services.GetCustomAppraisementApplicationHeader(id, page, size);
+            var response = await _services.GetCustomAppraisementApplicationHeader(id, page, size, isInvoiceCheck);
 
             if (response.Data == null || !response.Data.Any())
             {
