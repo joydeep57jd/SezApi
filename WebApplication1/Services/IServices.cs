@@ -5,7 +5,7 @@ using SezApi.Model.Response;
 
 namespace SezApi.Services
 {
-    public interface IServices 
+    public interface IServices
     {
         Task AddTest(test product);
         Task<AddEditResponse> AddMststorageCharge(RequestMststorageCharge mststorageCharge);
@@ -45,7 +45,7 @@ namespace SezApi.Services
         Task<Response<List<MstCommodity>>> GetMstCommodity(int? page, int? size);
         Task<Response<RegisterOfOutwardSupplyReportResponse>> GetRegisterOfOutwardSupplyReport(DateTime? FromDate, DateTime? ToDate, string InvoiceType);
 
-		Task<ResponsePort> AddEditPort(RequestPort request);
+        Task<ResponsePort> AddEditPort(RequestPort request);
         Task<Response<List<ResponseAddEditPort>>> GetPort(int? page, int? size);
         Task<Response<List<State>>> GetState(int? id);
         Task<AddEditResponse> AddEditGoDown(RequestGoDown request);
@@ -59,7 +59,7 @@ namespace SezApi.Services
         Task<AddEditResponse> RemoveOblEntryAdditionalDetails(int OBLEntryId);
         Task<AddEditResponse> RemoveEntries(int id);
         Task<AddEditResponse> AddEditHandlingCharges(RequestHandlingCharges request);
-         Task<Response<List<HandlingChargescs>>> GetAllHandlingCharges(int? page, int? size);
+        Task<Response<List<HandlingChargescs>>> GetAllHandlingCharges(int? page, int? size);
         Task<Response<List<ResponseOBLContauner>>> GetOBLContainerList(int? page, int? size, string? containerNo, string? oblHblNo);
         Task<AddEditResponse> AddEditOverTimeCharge(RequestOverTimeCharge request);
         Task<Response<List<OverTimeCharge>>> GetOverTimeCharge(int? id, int? page, int? size);
@@ -69,7 +69,7 @@ namespace SezApi.Services
         Task<AddEditResponse> AddEditCustomAppraisementApplicationHeader(RequestCustomAppraisementApplicationHeader request);
         Task<Response<ResponsehandlingCharges>> GetHandlingChargesCalc(string containerLoadConReqList, int partyId);
 
-		Task<Response<List<CustomAppraisementApplicationHeader>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size);
+        Task<Response<List<CustomAppraisementApplicationHeader>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size);
         Task<Response<List<AppraisementDoDetails>>> GetAppraisementDoDetails(int? id, int? page, int? size, int? CustAppId);
         Task<Response<List<AppraisementContainerDetails>>> GetAppraisementContainerDetails(int? id, int? page, int? size, int? CustAppId);
         Task<Response<List<ResponseOBLEntryWithDetailsDto>>> GetOBLEntriesWithDetails(int? id = null, string containerNo = null, int? page = null, int? size = null);
@@ -80,7 +80,7 @@ namespace SezApi.Services
         Task<Response<List<CashReceiptDtl>>> GetPaymentDetails(int? id, int? page, int? size, int? CashReceiptId);
         Task<Response<List<CashReceiptHdr>>> GetPaymentReceiptHeader(int? id, int? page, int? size);
         Task<Response<List<YardInvoiceCharges>>> GetYardInvoiceCharge(int? id, int? InoviceId, int? page, int? size);
-        Task<Response<List<ResponseYardInvoiceFlat>>> GetPaymentReceiptInvoiceDetails(int? id, string? PayeeName,int? payeeId, int? page, int? size);
+        Task<Response<List<ResponseYardInvoiceFlat>>> GetPaymentReceiptInvoiceDetails(int? id, string? PayeeName, int? payeeId, int? page, int? size);
         Task<Response<ResponseImportChargesInvoice>> GetImportChargesInvoice(string? InvoiceNo);
         Task<AddEditResponse> AddEditTransportationCharges(RequestTransportationCharges request);
 
@@ -106,23 +106,24 @@ namespace SezApi.Services
         Task<Response<List<CCINEntry>>> GetCCINEntry(int? id, int? page, int? size);
         Task<Response<List<LoadContainerRequestHeader>>> GetLoadContainerHeader(int? id, int? page, int? size);
         Task<Response<List<LoadContainerRequestDetails>>> GetLoadContainerDetails(int? id, int? page, int? size, int? LoaderHeaderId);
-		Task<AddEditResponse> AddEditDestuffingEntry(RequestDestuffingEntry request);
+        Task<AddEditResponse> AddEditDestuffingEntry(RequestDestuffingEntry request);
         Task<Response<List<ImpDestuffingEntryHdr>>> GetDestuffingEntryHdr(int? id, int? page, int? size);
         Task<Response<List<ImpDestuffingEntryDtl>>> GetDestuffingEntryDtl(int? id, int? DestuffingEntryId, int? page, int? size);
         Task<ResponseImportTransportChargesCalc> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId);
         Task<AddEditResponse> CreateLoadContainerRequest(RequestLoadContainerRequest request);
-		Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList();
+        Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList();
         Task<AddEditResponse> AddEditDeliveryApplication(RequestImpDeliveryApplication request);
         Task<Response<List<ImpDeliveryApplicationHdr>>> GetImpDeliveryApplicationHdr(int? id, int? page, int? size);
         Task<Response<List<ImpDeliveryApplicationDtl>>> GetImpDeliveryApplicationDtl(int? id, int? DeliveryId, int? page, int? size);
         Task<AddEditResponse> AddEditContainerStuffing(RequestContainerStuffing request);
         Task<Response<List<ContainerStuffingHeader>>> GetContainerStuffingHdr(int? id, int? page, int? size);
         Task<Response<List<ContainerStuffingDetails>>> GetContainerStuffingDtl(int? id, int? StuffingId, int? page, int? size);
-       Task<Response<List<ResponseStorageChargesCalc>>> GetImportStorageChargesCalc(string containerOBLList, int partyId, DateTime InvoiceDate);
+        Task<Response<List<ResponseStorageChargesCalc>>> GetImportStorageChargesCalc(string containerOBLList, int partyId, DateTime InvoiceDate);
         Task<Response<List<ResponseImportInsuaranceCharges>>> GetImportInsuranceChargesCalc(string containerOBLList, int partyId, DateTime InvoiceDate);
         Task<AddEditResponse> AddEditGodownInvoice(RequestGodownInvoice request);
         Task<Response<RegisterOfOutwardSupplyReportResponse>> GetRegisterOfOutwardSupplyReportInvoice(DateTime? FromDate, DateTime? ToDate, string InvoiceType);
         Task<Response<RegisterOfOutwardSupplyReportResponse>> GetRegisterOfOutwardSupplyReportCancel(DateTime? FromDate, DateTime? ToDate, string InvoiceType);
         Task<Response<List<ResponseChargeSummaryByInvoice>>> GetChargeSummaryByInvoiceResponse();
-	}
+        Task<Response<List<ResponseGetContainerlistByGetEntry>>> GetContainerlistByGetEntry();
+    }
 }

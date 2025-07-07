@@ -1687,5 +1687,21 @@ namespace SezApi.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-    }
+
+		[HttpGet("GetContainerlistByGetEntry")]
+		public async Task<IActionResult> GetContainerlistByGetEntry()
+		{
+			try
+			{
+				var response = await _services.GetContainerlistByGetEntry();
+				return Ok(response);
+			}
+
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
+
+	}
 }
