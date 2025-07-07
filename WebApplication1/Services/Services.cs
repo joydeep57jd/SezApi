@@ -1964,9 +1964,9 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<CustomAppraisementApplicationHeader>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size, bool? isInvoiceCheck)
+        public async Task<Response<List<ResponseCustomerHeaderForList>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size)
         {
-            var response = new Response<List<CustomAppraisementApplicationHeader>>();
+            var response = new Response<List<ResponseCustomerHeaderForList>>();
 
             try
             {
@@ -1994,15 +1994,40 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.ToListAsync();
+				// var result = await query.ToListAsync();
 
-                response.Data = result;
+				var result = await query
+			.Select(h => new ResponseCustomerHeaderForList
+			{
+				ID = h.ID,
+				AppraisementDate = h.AppraisementDate,
+				ShippingLineId = h.ShippingLineId,
+				CHAId = h.CHAId,
+				Vessel = h.Vessel,
+				Voyage = h.Voyage,
+				Rotation = h.Rotation,
+				DeliveryType = h.DeliveryType,
+				DOStatus = h.DOStatus,
+				AppraisementStatus = h.AppraisementStatus,
+				CreatedDate = h.CreatedDate,
+				CreatedBy = h.CreatedBy,
+				ModifiedDate = h.ModifiedDate,
+				ModifiedBy = h.ModifiedBy,
+				ExaminationPercentage = h.ExaminationPercentage,
+				ContainerCBTNo = _db.GetAppraisementContainerDetails
+									 .Where(c => c.CustomAppraisementId == h.ID)
+									 .Select(c => c.ContainerCBTNo)
+									 .FirstOrDefault()
+			})
+			.ToListAsync();
+
+				response.Data = result;
                 response.Status = true;
                 response.TotalCount = totalRecords;
             }
             catch (Exception ex)
             {
-                response.Data = new List<CustomAppraisementApplicationHeader>();
+                response.Data = new List<ResponseCustomerHeaderForList>();
                 response.Status = false;
                 response.TotalCount = 0;
                 response.Message = $"Error: {ex.Message}";
