@@ -7,4 +7,10 @@ namespace SezApi.Model.Response
 		[Key]
 		public string ContainerNo { get; set; }
 	}
+
+	public class ResponseGetContainerlistForLoadedContainerRequest
+	{
+		[Key]
+		public string ContainerNo { get; set; }
+	}
 }

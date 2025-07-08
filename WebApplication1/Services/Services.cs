@@ -4358,7 +4358,31 @@ namespace SezApi.Services
 			return response;
 		}
 
+		public async Task<Response<List<ResponseGetContainerlistForLoadedContainerRequest>>> GetContainerlistForLoadedContainerRequest()
+        {
+			var response = new Response<List<ResponseGetContainerlistForLoadedContainerRequest>>();
 
+			try
+			{
+				var results = await _db.ResponseGetContainerlistForLoadedContainerRequest
+					.FromSqlInterpolated($"EXEC dbo.GetContainerlistForLoadedContainerRequest")
+					.AsNoTracking()
+					.ToListAsync();
+
+				response.Data = results;
+				response.Status = true;
+				response.TotalCount = results.Count;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<ResponseGetContainerlistForLoadedContainerRequest>();
+				response.Status = false;
+				response.Message = $"Error: {ex.Message}";
+				response.TotalCount = 0;
+			}
+
+			return response;
+		}
 
 	}
 }
