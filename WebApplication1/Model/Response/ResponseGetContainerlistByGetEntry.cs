@@ -13,4 +13,12 @@ namespace SezApi.Model.Response
 		[Key]
 		public string ContainerNo { get; set; }
 	}
+	public class ResponseGetCLandRno
+	{
+		[Key]
+		public int? LoadContReqId { get; set; }
+		public int? LoadContReqDetlId { get; set; }
+		public string? LoadContReqNo { get; set; }		
+		public string? ContainerNo { get; set; }
+	}
 }

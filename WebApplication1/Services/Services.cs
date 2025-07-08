@@ -4384,5 +4384,41 @@ namespace SezApi.Services
 			return response;
 		}
 
+		public async Task<Response<List<ResponseGetCLandRno>>> GetCLandRNoForLoadContainerInvoice(string? RequestNo)
+        {
+			var response = new Response<List<ResponseGetCLandRno>>();
+
+			try
+			{
+				var query = from Lchdr in _db.LoadContainerRtHeader 
+							join LcD in _db.LoadContainerRDetails
+								on Lchdr.LoadContReqId equals LcD.LoadContReqId
+                            where (string.IsNullOrEmpty(RequestNo) || Lchdr.LoadContReqNo == RequestNo)
+							 && !_db.GetYardInvoiceList.Any(y => y.ApplicationId == LcD.LoadContReqId)
+							select new ResponseGetCLandRno
+							{
+								LoadContReqId = LcD.LoadContReqId,
+								LoadContReqDetlId = LcD.LoadContReqDetlId,
+								LoadContReqNo = Lchdr.LoadContReqNo,
+								ContainerNo = LcD.ContainerNo,
+							};
+
+				var totalRecords = await query.CountAsync();
+				var data = await query.ToListAsync();
+
+				response.Data = data;
+				response.Status = true;
+				response.TotalCount = totalRecords;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<ResponseGetCLandRno>();
+				response.Status = false;
+				response.TotalCount = 0;
+				response.Message = $"Error: {ex.Message}";
+			}
+
+			return response;
+		}
 	}
 }

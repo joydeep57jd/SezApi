@@ -126,5 +126,6 @@ namespace SezApi.Services
         Task<Response<List<ResponseChargeSummaryByInvoice>>> GetChargeSummaryByInvoiceResponse();
         Task<Response<List<ResponseGetContainerlistByGetEntry>>> GetContainerlistByGetEntry();
 		Task<Response<List<ResponseGetContainerlistForLoadedContainerRequest>>> GetContainerlistForLoadedContainerRequest();
+		Task<Response<List<ResponseGetCLandRno>>> GetCLandRNoForLoadContainerInvoice(string? RequestNo);
 	}
 }
