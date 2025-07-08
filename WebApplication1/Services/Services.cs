@@ -4394,7 +4394,7 @@ namespace SezApi.Services
 							join LcD in _db.LoadContainerRDetails
 								on Lchdr.LoadContReqId equals LcD.LoadContReqId
                             where (string.IsNullOrEmpty(RequestNo) || Lchdr.LoadContReqNo == RequestNo)
-							 && !_db.GetYardInvoiceList.Any(y => y.ApplicationId == LcD.LoadContReqId)
+							 && !_db.GetYardInvoiceList.Any(y => y.IsLoadContainerInvoice == true && y.ApplicationId == LcD.LoadContReqId)
 							select new ResponseGetCLandRno
 							{
 								LoadContReqId = LcD.LoadContReqId,
