@@ -1872,9 +1872,12 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.ToListAsync();
+				var data = (await query.ToListAsync())
+	            .Where(x => !string.IsNullOrWhiteSpace(x.ContainerCBTNo)) 
+	            .DistinctBy(x => x.ContainerCBTNo) 
+	            .ToList();
 
-                response.Data = data;
+				response.Data = data;
                 response.Status = true;
                 response.TotalCount = totalRecords;
             }
