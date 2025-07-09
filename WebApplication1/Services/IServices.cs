@@ -43,7 +43,7 @@ namespace SezApi.Services
         Task<Response<List<MstEximTraderMaster>>> GetMstEximTraderMaster(int? page, int? size);
         Task<AddEditResponse> AddEditMstCommodity(RequestMstCommodity request);
         Task<Response<List<MstCommodity>>> GetMstCommodity(int? page, int? size);
-        Task<Response<RegisterOfOutwardSupplyReportResponse>> GetRegisterOfOutwardSupplyReport(DateTime? FromDate, DateTime? ToDate, string InvoiceType);
+        Task<Response<List<RegisterOfOutwardSupplyReportResponse>>> GetRegisterOfOutwardSupplyReport(DateTime? FromDate, DateTime? ToDate, string InvoiceType);
 
         Task<ResponsePort> AddEditPort(RequestPort request);
         Task<Response<List<ResponseAddEditPort>>> GetPort(int? page, int? size);
@@ -121,8 +121,8 @@ namespace SezApi.Services
         Task<Response<List<ResponseStorageChargesCalc>>> GetImportStorageChargesCalc(string containerOBLList, int partyId, DateTime InvoiceDate);
         Task<Response<List<ResponseImportInsuaranceCharges>>> GetImportInsuranceChargesCalc(string containerOBLList, int partyId, DateTime InvoiceDate);
         Task<AddEditResponse> AddEditGodownInvoice(RequestGodownInvoice request);
-        Task<Response<RegisterOfOutwardSupplyReportResponse>> GetRegisterOfOutwardSupplyReportInvoice(DateTime? FromDate, DateTime? ToDate, string InvoiceType);
-        Task<Response<RegisterOfOutwardSupplyReportResponse>> GetRegisterOfOutwardSupplyReportCancel(DateTime? FromDate, DateTime? ToDate, string InvoiceType);
+        Task<Response<List<RegisterOfOutwardSupplyReportResponse>>> GetRegisterOfOutwardSupplyReportInvoice(DateTime? FromDate, DateTime? ToDate, string InvoiceType);
+        Task<Response<List<RegisterOfOutwardSupplyReportResponse>>> GetRegisterOfOutwardSupplyReportCancel(DateTime? FromDate, DateTime? ToDate, string InvoiceType);
         Task<Response<List<ResponseChargeSummaryByInvoice>>> GetChargeSummaryByInvoiceResponse();
         Task<Response<List<ResponseGetContainerlistByGetEntry>>> GetContainerlistByGetEntry();
 		Task<Response<List<ResponseGetContainerlistForLoadedContainerRequest>>> GetContainerlistForLoadedContainerRequest();

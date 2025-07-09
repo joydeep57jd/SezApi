@@ -4192,9 +4192,9 @@ namespace SezApi.Services
         }
 
 
-		public async Task<Response<RegisterOfOutwardSupplyReportResponse>> GetRegisterOfOutwardSupplyReport(DateTime? FromDate, DateTime? ToDate, string InvoiceType)
+		public async Task<Response<List<RegisterOfOutwardSupplyReportResponse>>> GetRegisterOfOutwardSupplyReport(DateTime? FromDate, DateTime? ToDate, string InvoiceType)
 		{
-			var response = new Response<RegisterOfOutwardSupplyReportResponse>();
+			var response = new Response<List<RegisterOfOutwardSupplyReportResponse>>();
 
 			try
 			{
@@ -4204,7 +4204,7 @@ namespace SezApi.Services
 					.AsNoTracking()
 					.ToListAsync();
 
-				var first = flatRows.FirstOrDefault();
+				var first = flatRows;
 				if (first == null)
 				{
 					response.Data = null;
@@ -4257,9 +4257,9 @@ namespace SezApi.Services
 			return response;
 		}
 
-        public async Task<Response<RegisterOfOutwardSupplyReportResponse>> GetRegisterOfOutwardSupplyReportInvoice(DateTime? FromDate, DateTime? ToDate, string InvoiceType)
+        public async Task<Response<List<RegisterOfOutwardSupplyReportResponse>>> GetRegisterOfOutwardSupplyReportInvoice(DateTime? FromDate, DateTime? ToDate, string InvoiceType)
         {
-            var response = new Response<RegisterOfOutwardSupplyReportResponse>();
+            var response = new Response<List<RegisterOfOutwardSupplyReportResponse>>();
 
             try
             {
@@ -4269,7 +4269,7 @@ namespace SezApi.Services
                     .AsNoTracking()
                     .ToListAsync();
 
-                var first = flatRows.FirstOrDefault();
+                var first = flatRows;
                 if (first == null)
                 {
                     response.Data = null;
@@ -4296,9 +4296,9 @@ namespace SezApi.Services
         }
 
 
-        public async Task<Response<RegisterOfOutwardSupplyReportResponse>> GetRegisterOfOutwardSupplyReportCancel(DateTime? FromDate, DateTime? ToDate, string InvoiceType)
+        public async Task<Response<List<RegisterOfOutwardSupplyReportResponse>>> GetRegisterOfOutwardSupplyReportCancel(DateTime? FromDate, DateTime? ToDate, string InvoiceType)
         {
-            var response = new Response<RegisterOfOutwardSupplyReportResponse>();
+            var response = new Response<List<RegisterOfOutwardSupplyReportResponse>>();
 
             try
             {
@@ -4308,7 +4308,7 @@ namespace SezApi.Services
                     .AsNoTracking()
                     .ToListAsync();
 
-                var first = flatRows.FirstOrDefault();
+                var first = flatRows;
                 if (first == null)
                 {
                     response.Data = null;
