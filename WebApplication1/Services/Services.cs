@@ -1755,9 +1755,12 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.ToListAsync();
+				var data = (await query.ToListAsync())
+	            .DistinctBy(x => new { x.ContainerCBTNo, x.OBL_HBL_No }) // requires .NET 6+
+	            .ToList();
 
-                response.Data = data;
+
+				response.Data = data;
                 response.Status = true;
                 response.TotalCount = totalRecords;
             }
