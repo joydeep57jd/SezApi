@@ -82,7 +82,7 @@ namespace SezApi.Services
             var response = new Response<List<mststoragecharge>>();
             try
             {
-                var result = await _db.mststoragecharge.ToListAsync();
+                var result = await _db.mststoragecharge.OrderByDescending(x => x.CreatedOn).ToListAsync();
                 response.Data = result;
                 response.Status = true;
             }
@@ -157,7 +157,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.ToListAsync();
+                var data = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -223,7 +223,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.ToListAsync();
+                var data = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -276,7 +276,7 @@ namespace SezApi.Services
 
             try
             {
-                var result = await _db.GetMstSac.ToListAsync();
+                var result = await _db.GetMstSac.OrderByDescending(x => x.CreatedOn).ToListAsync();
                 response.Data = result;
                 response.Status = true;
             }
@@ -325,7 +325,7 @@ namespace SezApi.Services
 
             try
             {
-                var result = await _db.GetMstEntryFee.ToListAsync();
+                var result = await _db.GetMstEntryFee.OrderByDescending(x => x.CreatedOn).ToListAsync();
                 response.Data = result;
                 response.Status = true;
             }
@@ -384,7 +384,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.ToListAsync();
+                var data = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -445,7 +445,7 @@ namespace SezApi.Services
 
             try
             {
-                var result = await _db.FSCTHCchargesList.ToListAsync();
+                var result = await _db.FSCTHCchargesList.OrderByDescending(x => x.CreatedOn).ToListAsync();
                 response.Data = result;
                 response.Status = true;
             }
@@ -492,7 +492,7 @@ namespace SezApi.Services
 
             try
             {
-                var result = await _db.GetReeferChargesList.ToListAsync();
+                var result = await _db.GetReeferChargesList.OrderByDescending(x => x.CreatedOn).ToListAsync();
                 response.Data = result;
                 response.Status = true;
             }
@@ -541,7 +541,7 @@ namespace SezApi.Services
 
             try
             {
-                var result = await _db.GetMovementChargesList.ToListAsync();
+                var result = await _db.GetMovementChargesList.OrderByDescending(x => x.CreatedDate).ToListAsync();
                 response.Data = result;
                 response.Status = true;
             }
@@ -687,7 +687,7 @@ namespace SezApi.Services
 
             try
             {
-                var result = await _db.GetMstGroundRent.ToListAsync();
+                var result = await _db.GetMstGroundRent.OrderByDescending(x => x.CreatedOn).ToListAsync();
                 response.Data = result;
                 response.Status = true;
             }
@@ -752,7 +752,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.ToListAsync();
+                var data = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -814,7 +814,7 @@ namespace SezApi.Services
 
             try
             {
-                var result = await _db.GetMstMiscellaneous.ToListAsync();
+                var result = await _db.GetMstMiscellaneous.OrderByDescending(x => x.CreatedOn).ToListAsync();
                 response.Data = result;
                 response.Status = true;
             }
@@ -878,7 +878,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.ToListAsync();
+                var data = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -997,7 +997,7 @@ namespace SezApi.Services
                                 StateName = state != null ? state.Name : null
                             };
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
 
                 var totalRecords = await query.CountAsync();
@@ -1008,7 +1008,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.ToListAsync();
+                var data = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -1103,7 +1103,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.ToListAsync();
+                var data = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -1298,7 +1298,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -1440,7 +1440,7 @@ namespace SezApi.Services
                 {
                     query = query.Where(x => x.IsLoadContainerInvoice == IsLoadContainerInvoice.Value);
                 }
-                var data = await query.ToListAsync();
+                var data = await query.OrderByDescending(x => x.CreatedAt).ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -1502,7 +1502,7 @@ namespace SezApi.Services
                 }
 
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -1624,7 +1624,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.ToListAsync();
+                var data = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -1693,7 +1693,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedDate).ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -1829,7 +1829,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedDate).ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -2052,7 +2052,7 @@ namespace SezApi.Services
 									 .Where(c => c.CustomAppraisementId == h.ID)
 									 .Select(c => c.ContainerCBTNo)
 									 .FirstOrDefault()
-			})
+			}).OrderByDescending(x => x.CreatedDate)
 			.ToListAsync();
 
 				response.Data = result;
@@ -2095,7 +2095,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedDate).ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -2137,7 +2137,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedDate).ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -2845,7 +2845,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -2916,7 +2916,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -2980,7 +2980,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3044,7 +3044,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3281,7 +3281,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3322,7 +3322,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3419,7 +3419,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3522,7 +3522,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3723,7 +3723,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3859,7 +3859,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.ToListAsync();
+                var result = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
