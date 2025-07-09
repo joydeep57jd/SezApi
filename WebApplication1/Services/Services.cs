@@ -4359,7 +4359,67 @@ namespace SezApi.Services
 			return response;
 		}
 
+		public async Task<Response<List<ResponseGetContainerlistForLoadedContainerRequest>>> GetContainerlistForLoadedContainerRequest()
+        {
+			var response = new Response<List<ResponseGetContainerlistForLoadedContainerRequest>>();
 
+			try
+			{
+				var results = await _db.ResponseGetContainerlistForLoadedContainerRequest
+					.FromSqlInterpolated($"EXEC dbo.GetContainerlistForLoadedContainerRequest")
+					.AsNoTracking()
+					.ToListAsync();
 
+				response.Data = results;
+				response.Status = true;
+				response.TotalCount = results.Count;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<ResponseGetContainerlistForLoadedContainerRequest>();
+				response.Status = false;
+				response.Message = $"Error: {ex.Message}";
+				response.TotalCount = 0;
+			}
+
+			return response;
+		}
+
+		public async Task<Response<List<ResponseGetCLandRno>>> GetCLandRNoForLoadContainerInvoice(string? RequestNo)
+        {
+			var response = new Response<List<ResponseGetCLandRno>>();
+
+			try
+			{
+				var query = from Lchdr in _db.LoadContainerRtHeader 
+							join LcD in _db.LoadContainerRDetails
+								on Lchdr.LoadContReqId equals LcD.LoadContReqId
+                            where (string.IsNullOrEmpty(RequestNo) || Lchdr.LoadContReqNo == RequestNo)
+							 && !_db.GetYardInvoiceList.Any(y => y.IsLoadContainerInvoice == true && y.Container == LcD.ContainerNo)
+							select new ResponseGetCLandRno
+							{
+								LoadContReqId = LcD.LoadContReqId,
+								LoadContReqDetlId = LcD.LoadContReqDetlId,
+								LoadContReqNo = Lchdr.LoadContReqNo,
+								ContainerNo = LcD.ContainerNo,
+							};
+
+				var totalRecords = await query.CountAsync();
+				var data = await query.ToListAsync();
+
+				response.Data = data;
+				response.Status = true;
+				response.TotalCount = totalRecords;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<ResponseGetCLandRno>();
+				response.Status = false;
+				response.TotalCount = 0;
+				response.Message = $"Error: {ex.Message}";
+			}
+
+			return response;
+		}
 	}
 }

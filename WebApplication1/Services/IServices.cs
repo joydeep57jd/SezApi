@@ -125,5 +125,7 @@ namespace SezApi.Services
         Task<Response<RegisterOfOutwardSupplyReportResponse>> GetRegisterOfOutwardSupplyReportCancel(DateTime? FromDate, DateTime? ToDate, string InvoiceType);
         Task<Response<List<ResponseChargeSummaryByInvoice>>> GetChargeSummaryByInvoiceResponse();
         Task<Response<List<ResponseGetContainerlistByGetEntry>>> GetContainerlistByGetEntry();
-    }
+		Task<Response<List<ResponseGetContainerlistForLoadedContainerRequest>>> GetContainerlistForLoadedContainerRequest();
+		Task<Response<List<ResponseGetCLandRno>>> GetCLandRNoForLoadContainerInvoice(string? RequestNo);
+	}
 }

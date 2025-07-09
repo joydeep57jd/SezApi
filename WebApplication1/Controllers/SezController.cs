@@ -1703,5 +1703,34 @@ namespace SezApi.Controllers
 			}
 		}
 
+		[HttpGet("GetContainerlistForLoadedContainerRequest")]
+		public async Task<IActionResult> GetContainerlistForLoadedContainerRequest()
+		{
+			try
+			{
+				var response = await _services.GetContainerlistForLoadedContainerRequest();
+				return Ok(response);
+			}
+
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
+
+		[HttpGet("GetContainerlistForLoadedContainerInvoice")]
+		public async Task<IActionResult> GetContainerlistForLoadContainerInvoice(string? RequestNo)
+		{
+			try
+			{
+				var response = await _services.GetCLandRNoForLoadContainerInvoice(RequestNo);
+				return Ok(response);
+			}
+
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
 	}
 }

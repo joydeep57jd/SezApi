@@ -120,6 +120,8 @@ namespace SezApi.Data
 		public DbSet<ResponseGetContainerlistByGetEntry> ResponseGetContainerlistByGetEntry { get; set; }
 		public DbSet<ResponseChargeSummaryByInvoice> ResponseChargeSummaryByInvoice { get; set; }
 
+		public DbSet<ResponseGetContainerlistForLoadedContainerRequest> ResponseGetContainerlistForLoadedContainerRequest { get; set; }
+
 	}
 }
 
