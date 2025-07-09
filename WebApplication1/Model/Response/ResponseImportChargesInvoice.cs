@@ -25,9 +25,10 @@ namespace SezApi.Model.Response
         public string PayerName { get; set; }
         public string Remarks { get; set; }
         public string PrintedBy { get; set; }
+		public DateTime  ArrivalDate { get; set; }
 
-        // Container Info
-        public string ICDNo { get; set; }
+		// Container Info
+		public string ICDNo { get; set; }
         public string ContainerCBTNo { get; set; }
         public string Size { get; set; }
         public bool Reefer { get; set; }
@@ -73,7 +74,8 @@ namespace SezApi.Model.Response
         public bool IsService { get; set; }
         public string PayerName { get; set; }
         public string Remarks { get; set; }
-        public string PrintedBy { get; set; }
+		public DateTime ArrivalDate { get; set; }
+		public string PrintedBy { get; set; }
         public List<ContainerChargeDto> ContainerCharges { get; set; }
         public List<ChargeDetailDto> Charges { get; set; }
     }

@@ -2643,6 +2643,7 @@ namespace SezApi.Services
                     IsService = first.IsService,
                     PayerName = first.PayerName,
                     Remarks = first.Remarks,
+                    ArrivalDate=first.ArrivalDate,
                     PrintedBy = first.PrintedBy,
 
                     // Group unique containers
