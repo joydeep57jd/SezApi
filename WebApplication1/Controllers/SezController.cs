@@ -739,7 +739,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetOblEntryAdditionalDetails")]
-        public async Task<ActionResult<List<OblEntryAdditionalDetails>>> GetOblEntryAdditionalDetails(int? id,int? OBLEntryId)
+        public async Task<ActionResult<List<ResponseOblEntryAdditionalDetails>>> GetOblEntryAdditionalDetails(int? id,int? OBLEntryId)
         {
 
             var response = await _services.GetOblEntryAdditionalDetails(id, OBLEntryId);

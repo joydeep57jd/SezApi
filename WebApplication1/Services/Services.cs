@@ -1457,15 +1457,42 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<OblEntryAdditionalDetails>>> GetOblEntryAdditionalDetails(int? id, int? OBLEntryId)
+        public async Task<Response<List<ResponseOblEntryAdditionalDetails>>> GetOblEntryAdditionalDetails(int? id, int? OBLEntryId)
         {
-            var response = new Response<List<OblEntryAdditionalDetails>>();
+            var response = new Response<List<ResponseOblEntryAdditionalDetails>>();
 
             try
             {
-                var query = _db.GetOblEntryAdditionalDetails.AsQueryable();
+				var query = from detail in _db.GetOblEntryAdditionalDetails
+							join obl in _db.GetOBLEntry
+								on detail.OBLEntryId equals obl.Id
+							select new ResponseOblEntryAdditionalDetails
+							{
+								ID = detail.ID,
+								AddID=detail.AddID,
+                                IcesContId= detail.IcesContId,
+                                OBL_HBL_No=detail.OBL_HBL_No,
+                                OBL_HBL_Date=detail.OBL_HBL_Date,
+                                SMTP_No=detail.SMTP_No,
+                                SMTP_Date=detail.SMTP_Date,
+                                Cargo_Desc=detail.Cargo_Desc,
+                                Commodity=detail.Commodity,
+                                Cargo_Type=detail.Cargo_Type,
+                                No_of_PKG=detail.No_of_PKG,
+                                PKG_Type=detail.PKG_Type,
+                                GR_WT_Kg=detail.GR_WT_Kg,
+                                Importer_Name=detail.Importer_Name,
+                                IGM_Importer_Name=detail.IGM_Importer_Name,
+                                IsProcessed=detail.IsProcessed,
+                                OBLEntryId=detail.OBLEntryId,
+                               CreatedBy=detail.CreatedBy,
+                               CreatedOn=detail.CreatedOn,
+                               UpdatedBy=detail.UpdatedBy,
+                               UpdatedOn=detail.UpdatedOn,						
+							 ContainerCBTNo = obl.ContainerCBTNo
+							};
 
-                if (id.HasValue)
+				if (id.HasValue)
                 {
                     query = query.Where(s => s.ID == id.Value);
                 }
@@ -1482,7 +1509,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
-                response.Data = new List<OblEntryAdditionalDetails>();
+                response.Data = new List<ResponseOblEntryAdditionalDetails>();
                 response.Status = false;
             }
 
