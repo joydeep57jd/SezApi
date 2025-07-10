@@ -3403,7 +3403,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.CCINEntryDetails.AsQueryable();
+                var query = _db.CCINEntryDetails.OrderByDescending(x => x.CCINId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -3419,7 +3419,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.CCINId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
