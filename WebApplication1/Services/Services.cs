@@ -4425,7 +4425,7 @@ namespace SezApi.Services
 
 			try
 			{
-				var query = from Lchdr in _db.LoadContainerRtHeader 
+				var query = (from Lchdr in _db.LoadContainerRtHeader 
 							join LcD in _db.LoadContainerRDetails
 								on Lchdr.LoadContReqId equals LcD.LoadContReqId
                             where (string.IsNullOrEmpty(RequestNo) || Lchdr.LoadContReqNo == RequestNo)
@@ -4436,7 +4436,14 @@ namespace SezApi.Services
 								LoadContReqDetlId = LcD.LoadContReqDetlId,
 								LoadContReqNo = Lchdr.LoadContReqNo,
 								ContainerNo = LcD.ContainerNo,
-							};
+							}).GroupBy(x => x.LoadContReqNo)
+		                 	.Select(g => new ResponseGetCLandRno
+			                   {
+			                  	LoadContReqNo = g.Key,
+				                LoadContReqId = g.First().LoadContReqId,
+				                LoadContReqDetlId = g.First().LoadContReqDetlId,
+			                 	ContainerNo = g.First().ContainerNo
+		                  	}); ;
 
 				var totalRecords = await query.CountAsync();
 				var data = await query.ToListAsync();
