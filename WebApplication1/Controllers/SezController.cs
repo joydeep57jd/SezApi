@@ -1747,5 +1747,19 @@ namespace SezApi.Controllers
 				return StatusCode(500, $"Internal server error: {ex.Message}");
 			}
 		}
+
+		[HttpGet("GetCCINEntryBySBNo")]
+		public async Task<IActionResult> GetCCINEntryBySBNo(int? id, int? page, int? size, string? SBNo)
+		{
+
+			var response = await _services.GetCCINEntryBySBNo(id, page, size, SBNo);
+
+			if (response.Data == null || !response.Data.Any())
+			{
+				return NotFound(new { message = "No entries found." });
+			}
+
+			return Ok(response);
+		}
 	}
 }

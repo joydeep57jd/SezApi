@@ -4482,5 +4482,48 @@ namespace SezApi.Services
 			return response;
 		}
 
+		public async Task<Response<List<CCINEntry>>> GetCCINEntryBySBNo(int? id, int? page, int? size, string? SBNo)
+		{
+			var response = new Response<List<CCINEntry>>();
+
+			try
+			{
+				var query = _db.CCINEntryDetails.AsQueryable();
+
+				if (!string.IsNullOrEmpty(SBNo))
+				{
+					query = query.Where(s => s.SBNo == SBNo);
+				}
+
+				var totalRecords = await query.CountAsync();
+
+				if (page.HasValue && page > 0 && size.HasValue && size > 0)
+				{
+					var skip = (page.Value - 1) * size.Value;
+					query = query.OrderByDescending(x => x.CreatedOn).Skip(skip).Take(size.Value);
+				}
+				else
+				{
+					query = query.OrderByDescending(x => x.CreatedOn);
+				}
+
+				var result = await query.ToListAsync();
+
+				response.Data = result;
+				response.Status = true;
+				response.TotalCount = totalRecords;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<CCINEntry>();
+				response.Status = false;
+				response.TotalCount = 0;
+				response.Message = $"Error: {ex.Message}";
+			}
+
+			return response;
+		}
+
+
 	}
 }

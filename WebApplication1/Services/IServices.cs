@@ -128,5 +128,6 @@ namespace SezApi.Services
 		Task<Response<List<ResponseGetContainerlistForLoadedContainerRequest>>> GetContainerlistForLoadedContainerRequest();
 		Task<Response<List<ResponseGetCLandRno>>> GetCLandRNoForLoadContainerInvoice(string? RequestNo);
         Task<Response<List<ResponseGetContainerlistByGetEntry>>> GetContainerlistByOBLEntry();
+        Task<Response<List<CCINEntry>>> GetCCINEntryBySBNo(int? id, int? page, int? size, string? SBNo);
 	}
 }
