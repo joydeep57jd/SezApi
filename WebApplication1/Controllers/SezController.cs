@@ -1795,5 +1795,12 @@ namespace SezApi.Controllers
 			);
 			return Ok(result);
 		}
+
+		[HttpGet("GetCompanyDetails")]
+		public async Task<IActionResult> GetCompanyDetails(int? companyId)
+		{
+			var result = await _services.GetComanyDetails(companyId);
+			return Ok(result);
+		}
 	}
 }

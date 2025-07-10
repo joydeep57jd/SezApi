@@ -125,6 +125,8 @@ namespace SezApi.Data
 		public DbSet<ResponseExportEntryFeeChargesResponse> ResponseExportEntryFeeChargesResponse { get; set; }
 		public DbSet<ResponseExportInsuranceChargesResponse> ResponseExportInsuranceChargesResponse { get; set; }
 
+		public DbSet<mstcompany> mstcompany { get; set; }
+
 	}
 }
 

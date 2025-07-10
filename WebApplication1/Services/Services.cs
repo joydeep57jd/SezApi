@@ -4631,5 +4631,36 @@ namespace SezApi.Services
 
 			return response;
 		}
+
+        public async Task<Response<List<mstcompany>>> GetComanyDetails(int? id)
+        {
+			var response = new Response<List<mstcompany>>();
+
+			try
+			{
+				var query = _db.mstcompany.AsQueryable();
+
+				if (id.HasValue)
+				{
+					query = query.Where(s => s.CompanyId == id.Value);
+				}
+
+				
+
+				var result = await query.ToListAsync();
+
+				response.Data = result;
+				response.Status = true;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<mstcompany>();
+				response.Status = false;
+				response.TotalCount = 0;
+				response.Message = $"Error: {ex.Message}";
+			}
+
+			return response;
+		}
 	}
 }
