@@ -1436,11 +1436,16 @@ namespace SezApi.Services
                     var skip = (page.Value - 1) * size.Value;
                     query = query.Skip(skip).Take(size.Value);
                 }
+
                 if (IsLoadContainerInvoice.HasValue)
                 {
                     query = query.Where(x => x.IsLoadContainerInvoice == IsLoadContainerInvoice.Value);
                 }
-                var data = await query.ToListAsync();
+                else
+                {
+					query = query.Where(x => x.IsLoadContainerInvoice == false || x.IsLoadContainerInvoice == null);
+				}
+				var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
