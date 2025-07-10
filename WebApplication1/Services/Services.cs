@@ -4438,13 +4438,15 @@ namespace SezApi.Services
 								LoadContReqDetlId = LcD.LoadContReqDetlId,
 								LoadContReqNo = Lchdr.LoadContReqNo,
 								ContainerNo = LcD.ContainerNo,
+								LoadContReqDate = Lchdr.LoadContReqDate
 							}).GroupBy(x => x.LoadContReqNo)
 		                 	.Select(g => new ResponseGetCLandRno
 			                   {
 			                  	LoadContReqNo = g.Key,
 				                LoadContReqId = g.First().LoadContReqId,
 				                LoadContReqDetlId = g.First().LoadContReqDetlId,
-			                 	ContainerNo = g.First().ContainerNo
+			                 	ContainerNo = g.First().ContainerNo,
+                                LoadContReqDate = g.First().LoadContReqDate,
 		                  	}); ;
 
 				var totalRecords = await query.CountAsync();

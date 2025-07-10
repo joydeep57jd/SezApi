@@ -20,5 +20,6 @@ namespace SezApi.Model.Response
 		public int? LoadContReqDetlId { get; set; }
 		public string? LoadContReqNo { get; set; }		
 		public string? ContainerNo { get; set; }
+		public DateTime? LoadContReqDate { get; set; }
 	}
 }
