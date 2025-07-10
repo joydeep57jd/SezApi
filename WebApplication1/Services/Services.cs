@@ -4573,6 +4573,56 @@ namespace SezApi.Services
 			return response;
 		}
 
+        public async Task<Response<List<ResponseExportEntryFeeChargesResponse>>> GetExportEntryFeeChargesResponse(string ContainerList, int PartyId)
+        {
+			var response = new Response<List<ResponseExportEntryFeeChargesResponse>>();
 
+			try
+			{
+				var results = await _db.ResponseExportEntryFeeChargesResponse
+				   .FromSqlInterpolated($"EXEC dbo.ExportEntryFeeCharges @ContainerList = {ContainerList}, @PartyId = {PartyId}")
+					.AsNoTracking()
+	                 .ToListAsync();
+
+				response.Data = results;
+				response.Status = true;
+				response.TotalCount = results.Count;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<ResponseExportEntryFeeChargesResponse>();
+				response.Status = false;
+				response.Message = $"Error: {ex.Message}";
+				response.TotalCount = 0;
+			}
+
+			return response;
+		}
+
+        public async Task<Response<List<ResponseExportInsuranceChargesResponse>>> GetExportInsuranceChargesCalc(string ContainerList, int PartyId, DateTime InvoiceDate)
+        {
+			var response = new Response<List<ResponseExportInsuranceChargesResponse>>();
+
+			try
+			{
+				var results = await _db.ResponseExportInsuranceChargesResponse
+				   .FromSqlInterpolated($"EXEC dbo.ExportInsuranceChargesCalc @ContainerList = {ContainerList}, @PartyId = {PartyId},@InvoiceDate = {InvoiceDate}")
+					.AsNoTracking()
+					 .ToListAsync();
+
+				response.Data = results;
+				response.Status = true;
+				response.TotalCount = results.Count;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<ResponseExportInsuranceChargesResponse>();
+				response.Status = false;
+				response.Message = $"Error: {ex.Message}";
+				response.TotalCount = 0;
+			}
+
+			return response;
+		}
 	}
 }
