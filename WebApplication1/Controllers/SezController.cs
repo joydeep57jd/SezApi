@@ -1761,5 +1761,18 @@ namespace SezApi.Controllers
 
 			return Ok(response);
 		}
+		[HttpGet("GetPackUQC")]
+		public async Task<IActionResult> GetPackUQC(int? id, int? page, int? size)
+		{
+
+			var response = await _services.GetPackUQC(id, page, size);
+
+			if (response.Data == null || !response.Data.Any())
+			{
+				return NotFound(new { message = "No entries found." });
+			}
+
+			return Ok(response);
+		}
 	}
 }

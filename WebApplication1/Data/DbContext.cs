@@ -119,7 +119,7 @@ namespace SezApi.Data
 		public DbSet<ResponseContainerStuffing> ResponseContainerStuffing { get; set; }
 		public DbSet<ResponseGetContainerlistByGetEntry> ResponseGetContainerlistByGetEntry { get; set; }
 		public DbSet<ResponseChargeSummaryByInvoice> ResponseChargeSummaryByInvoice { get; set; }
-
+		public DbSet<mstpackuqc> mstpackuqc { get; set; }
 		public DbSet<ResponseGetContainerlistForLoadedContainerRequest> ResponseGetContainerlistForLoadedContainerRequest { get; set; }
 
 	}

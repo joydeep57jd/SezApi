@@ -4525,5 +4525,44 @@ namespace SezApi.Services
 		}
 
 
+		public async Task<Response<List<mstpackuqc>>> GetPackUQC(int? id, int? page, int? size)
+		{
+			var response = new Response<List<mstpackuqc>>();
+
+			try
+			{
+				var query = _db.mstpackuqc.AsQueryable();
+
+				if (id.HasValue)
+				{
+					query = query.Where(s => s.Id == id.Value);
+				}
+
+				var totalRecords = await query.CountAsync();
+
+				if (page.HasValue && page > 0 && size.HasValue && size > 0)
+				{
+					var skip = (page.Value - 1) * size.Value;
+					query = query.Skip(skip).Take(size.Value);
+				}
+
+				var result = await query.OrderByDescending(x => x.Id).ToListAsync();
+
+				response.Data = result;
+				response.Status = true;
+				response.TotalCount = totalRecords;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<mstpackuqc>();
+				response.Status = false;
+				response.TotalCount = 0;
+				response.Message = $"Error: {ex.Message}";
+			}
+
+			return response;
+		}
+
+
 	}
 }
