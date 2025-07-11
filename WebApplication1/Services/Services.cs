@@ -4662,5 +4662,65 @@ namespace SezApi.Services
 
 			return response;
 		}
+
+        public async Task<Response<GatePassDetailsStructured>> GetGatePassDetailsStructured(string invoiceNo)
+        {
+			var response = new Response<GatePassDetailsStructured>();
+
+			try
+			{
+				// Run SP and get flat result
+				var spResults = await _db.GatePassDetailsResponse
+					.FromSqlInterpolated($"EXEC dbo.GatePassDetailsByInvoiceNo @InvoiceNo={invoiceNo}")
+					.ToListAsync();
+
+				if (spResults == null || spResults.Count == 0)
+				{
+					response.Data = null;
+					response.Status = false;
+					response.Message = "No data found for the given Invoice No.";
+					return response;
+				}
+
+				// Map header from first row
+				var first = spResults.First();
+
+				var dto = new GatePassDetailsStructured
+				{
+					InvoiceNo = first.InvoiceNo,
+					DeliveryDate = first.DeliveryDate,
+					ChaId = first.ChaId,
+					ImporterExporterId = first.ImporterExporterId,
+					ImporterExporterName = first.ImporterExporterName,
+					ShippingLineId = first.ShippingLineId,
+					ShippingLine = first.ShippingLine,
+					Remarks = first.Remarks,
+					ContainersDetails = spResults.Select(x => new GatePassContainerDto
+					{
+						ContainerNo = x.ContainerNo,
+						Size = x.Size,
+						CargoDescription = x.CargoDescription,
+						CargoType = x.CargoType,
+						VehichleNo = x.VehichleNo,
+						NoofPackages = x.NoofPackages,
+						GrossWeight = x.GrossWeight,
+						DLocation = x.DLocation,
+						PortId = x.PortId
+					}).ToList()
+				};
+
+				response.Data = dto;
+				response.Status = true;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.Data = null;
+				response.Status = false;
+				response.Message = $"Error: {ex.Message}";
+			}
+
+			return response;
+		}
 	}
 }

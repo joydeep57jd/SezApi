@@ -7,6 +7,7 @@ using SezApi.Model.DBModels;
 using SezApi.Model.Request;
 using SezApi.Model.Response;
 using SezApi.Services;
+using System.ComponentModel.Design;
 using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 namespace SezApi.Controllers
@@ -1800,6 +1801,13 @@ namespace SezApi.Controllers
 		public async Task<IActionResult> GetCompanyDetails(int? companyId)
 		{
 			var result = await _services.GetComanyDetails(companyId);
+			return Ok(result);
+		}
+
+		[HttpGet("GetGatePassDetailsStructured")]
+		public async Task<IActionResult> GetGatePassDetailsStructured(string invoiceNo)
+        {
+			var result = await _services.GetGatePassDetailsStructured(invoiceNo);
 			return Ok(result);
 		}
 	}

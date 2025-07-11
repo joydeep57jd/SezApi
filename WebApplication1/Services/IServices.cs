@@ -134,5 +134,7 @@ namespace SezApi.Services
 		Task<Response<List<ResponseExportInsuranceChargesResponse>>> GetExportInsuranceChargesCalc(string ContainerList, int PartyId, DateTime InvoiceDate);
 
 		Task<Response<List<mstcompany>>> GetComanyDetails(int? id);
+
+		Task<Response<GatePassDetailsStructured>> GetGatePassDetailsStructured(string invoiceNo);
 	}
 }

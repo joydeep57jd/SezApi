@@ -127,6 +127,8 @@ namespace SezApi.Data
 
 		public DbSet<mstcompany> mstcompany { get; set; }
 
+		public DbSet<GatePassDetailsFlat> GatePassDetailsResponse { get; set; }
+
 	}
 }
 
