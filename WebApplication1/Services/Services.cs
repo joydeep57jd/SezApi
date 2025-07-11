@@ -4716,7 +4716,12 @@ namespace SezApi.Services
 						NoofPackages = x.NoofPackages,
 						GrossWeight = x.GrossWeight,
 						DLocation = x.DLocation,
-						PortId = x.PortId
+						PortId = x.PortId,
+                        ExitIdDtls = x.ExitIdDtls,
+                        ExitidHeader = x.ExitidHeader,
+                        DepositorName = x.DepositorName,
+                        Reefer = x.Reefer,
+                        CfsCode = x.CfsCode
 					}).ToList()
 				};
 

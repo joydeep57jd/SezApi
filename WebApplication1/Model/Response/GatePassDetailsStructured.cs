@@ -29,6 +29,13 @@ namespace SezApi.Model.Response
 
 		public string? DLocation { get; set; }               // LCR.FinalDestinationLocation or ''
 		public int? PortId { get; set; }                    // OBLE.Port or 0
+
+		public int? ExitIdDtls { get; set; }                // LCRD.LoadContReqDetlId or OBLA.ID
+		public int? ExitidHeader { get; set; }              // LCR.LoadContReqId or OBLE.Id
+
+		public string? DepositorName { get; set; }          // Always '' from SP
+		public string? Reefer { get; set; }                 // LCRD.Reefer or ''
+		public string? CfsCode { get; set; }                // Always '' from SP
 	}
 
 	public class GatePassDetailsStructured
@@ -53,8 +60,14 @@ namespace SezApi.Model.Response
 		public string? VehichleNo { get; set; }  
 		public int? NoofPackages { get; set; }
 		public decimal? GrossWeight { get; set; }
-		public string DLocation { get; set; }    
+		public string? DLocation { get; set; }    
 		public int? PortId { get; set; }
+
+		public int? ExitIdDtls { get; set; }
+		public int? ExitidHeader { get; set; }
+		public string? DepositorName { get; set; }
+		public string? Reefer { get; set; }
+		public string? CfsCode { get; set; }
 	}
 
 }
