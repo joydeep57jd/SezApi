@@ -1774,5 +1774,33 @@ namespace SezApi.Controllers
 
 			return Ok(response);
 		}
+
+		[HttpGet("GetExportEntryFeeChargesResponse")]
+		public async Task<IActionResult> GetExportEntryFeeChargesResponse(string ContainerList,int PartyId)
+        {
+			var result = await _services.GetExportEntryFeeChargesResponse(
+				ContainerList,
+				PartyId
+			);
+			return Ok(result);
+		}
+
+		[HttpGet("GetExportInsuranceChargesCalc")]
+		public async Task<IActionResult> GetExportInsuranceChargesCalc(string ContainerList, int PartyId,DateTime InvoiceDate)
+		{
+			var result = await _services.GetExportInsuranceChargesCalc(
+				ContainerList,
+				PartyId,
+				InvoiceDate
+			);
+			return Ok(result);
+		}
+
+		[HttpGet("GetCompanyDetails")]
+		public async Task<IActionResult> GetCompanyDetails(int? companyId)
+		{
+			var result = await _services.GetComanyDetails(companyId);
+			return Ok(result);
+		}
 	}
 }

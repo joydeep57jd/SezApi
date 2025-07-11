@@ -144,7 +144,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetEntryList.AsQueryable();
+                var query = _db.GetEntryList.OrderByDescending(x => x.EntryId).AsQueryable();
                 if (!string.IsNullOrEmpty(ContainerNo))
                 {
                     query = query.Where(s => s.ContainerNo == ContainerNo);
@@ -157,7 +157,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.OrderByDescending(x => x.EntryId).ToListAsync();
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -213,7 +213,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetMstOperation.AsQueryable();
+                var query = _db.GetMstOperation.OrderByDescending(x => x.OperationId).AsQueryable();
 
                 var totalRecords = await query.CountAsync();
 
@@ -223,7 +223,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.OrderByDescending(x => x.OperationId).ToListAsync();
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -375,7 +375,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.HTChargesList.AsQueryable();
+                var query = _db.HTChargesList.OrderByDescending(x => x.HTChargesID).AsQueryable();
 
                 var totalRecords = await query.CountAsync();
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
@@ -384,7 +384,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.OrderByDescending(x => x.HTChargesID).ToListAsync();
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -742,7 +742,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetMstInsurance.AsQueryable();
+                var query = _db.GetMstInsurance.OrderByDescending(x => x.InsuranceId).AsQueryable();
 
                 var totalRecords = await query.CountAsync();
 
@@ -752,7 +752,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.OrderByDescending(x => x.InsuranceId).ToListAsync();
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -868,7 +868,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetMstRailFreightFees.AsQueryable();
+                var query = _db.GetMstRailFreightFees.OrderByDescending(x => x.RailFreightId).AsQueryable();
 
                 var totalRecords = await query.CountAsync();
 
@@ -878,7 +878,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.OrderByDescending(x => x.RailFreightId).ToListAsync();
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -901,7 +901,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetMstEximTraderMaster.AsQueryable();
+                var query = _db.GetMstEximTraderMaster.OrderByDescending(x => x.TraderId).AsQueryable();
 
                 //operation type wise filter
                 if (partyType is not null)
@@ -1000,7 +1000,7 @@ namespace SezApi.Services
                 var result = await query.OrderByDescending(x => x.PortId).ToListAsync();
 
 
-                var totalRecords = await query.CountAsync();
+                var totalRecords = await query.OrderByDescending(x => x.PortId).CountAsync();
 
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
                 {
@@ -1008,7 +1008,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.OrderByDescending(x => x.PortId).ToListAsync();
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -1032,7 +1032,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetMstEximTraderMaster.AsQueryable();
+                var query = _db.GetMstEximTraderMaster.OrderByDescending(x => x.TraderId).AsQueryable();
 
                 var totalRecords = await query.CountAsync();
 
@@ -1042,7 +1042,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.OrderByDescending(x => x.TraderId).ToListAsync();
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -1093,7 +1093,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetMstCommodity.AsQueryable();
+                var query = _db.GetMstCommodity.OrderByDescending(x => x.CommodityId).AsQueryable();
 
                 var totalRecords = await query.CountAsync();
 
@@ -1103,7 +1103,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.OrderByDescending(x => x.CommodityId).ToListAsync();
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -1125,14 +1125,14 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetState.AsQueryable();
+                var query = _db.GetState.OrderByDescending(x => x.Id).AsQueryable();
 
                 if (id.HasValue)
                 {
                     query = query.Where(s => s.CountryId == id.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.Id).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -1177,7 +1177,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetMstGoDown.AsQueryable();
+                var query = _db.GetMstGoDown.OrderByDescending(x => x.GodownId).AsQueryable();
 
                 var totalRecords = await query.CountAsync();
 
@@ -1187,7 +1187,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.OrderByDescending(x => x.GodownId).ToListAsync();
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -1283,7 +1283,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetOBLEntry.AsQueryable();
+                var query = _db.GetOBLEntry.OrderByDescending(x => x.Id).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -1298,7 +1298,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.Id).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -1321,7 +1321,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetCountryList.AsQueryable();
+                var query = _db.GetCountryList.OrderByDescending(x => x.Id).AsQueryable();
 
                 var totalRecords = await query.CountAsync();
 
@@ -1331,7 +1331,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.OrderByDescending(x => x.Id).ToListAsync();
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -1423,7 +1423,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetYardInvoiceList.AsQueryable();
+                var query = _db.GetYardInvoiceList.OrderByDescending(x => x.YardInvId).AsQueryable();
 
                 if (!string.IsNullOrEmpty(PayeeName))
                 {
@@ -1436,11 +1436,16 @@ namespace SezApi.Services
                     var skip = (page.Value - 1) * size.Value;
                     query = query.Skip(skip).Take(size.Value);
                 }
+
                 if (IsLoadContainerInvoice.HasValue)
                 {
                     query = query.Where(x => x.IsLoadContainerInvoice == IsLoadContainerInvoice.Value);
                 }
-                var data = await query.OrderByDescending(x => x.YardInvId).ToListAsync();
+                else
+                {
+					query = query.Where(x => x.IsLoadContainerInvoice == false || x.IsLoadContainerInvoice == null);
+				}
+				var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -1615,7 +1620,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetHandlinghargesList.AsQueryable();
+                var query = _db.GetHandlinghargesList.OrderByDescending(x => x.HandlingChargesID).AsQueryable();
 
                 var totalRecords = await query.CountAsync();
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
@@ -1624,7 +1629,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var data = await query.OrderByDescending(x => x.HandlingChargesID).ToListAsync();
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -1678,7 +1683,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetOverTimeCharge.AsQueryable();
+                var query = _db.GetOverTimeCharge.OrderByDescending(x => x.OverTimeChargeId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -1693,7 +1698,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.OverTimeChargeId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -1814,7 +1819,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetExaminationCharge.AsQueryable();
+                var query = _db.GetExaminationCharge.OrderByDescending(x => x.ExaminationChargeId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -1829,7 +1834,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.ExaminationChargeId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -2003,7 +2008,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.CustomAppraisementApplicationHeaderList.AsQueryable();
+                var query = _db.CustomAppraisementApplicationHeaderList.OrderByDescending(x => x.ID).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -2076,7 +2081,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetAppraisementDoDetails.AsQueryable();
+                var query = _db.GetAppraisementDoDetails.OrderByDescending(x => x.Id).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -2095,7 +2100,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.Id).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -2118,7 +2123,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetAppraisementContainerDetails.AsQueryable();
+                var query = _db.GetAppraisementContainerDetails.OrderByDescending(x => x.Id).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -2137,7 +2142,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.Id).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -2164,7 +2169,8 @@ namespace SezApi.Services
                             join details in _db.GetOblEntryAdditionalDetails
                                 on obl.Id equals details.OBLEntryId into joined
                             from detail in joined.DefaultIfEmpty()
-                            select new ResponseOBLEntryWithDetailsDto
+							orderby obl.Id descending
+							select new ResponseOBLEntryWithDetailsDto
                             {
                                 Id = obl.Id,
                                 ContainerCBTType = obl.ContainerCBTType,
@@ -2203,7 +2209,7 @@ namespace SezApi.Services
                     query = query.Where(x => x.ContainerCBTNo.Contains(containerNo));
                 }
 
-                var totalRecords = await query.CountAsync();
+                var totalRecords = await query.OrderByDescending(x => x.Id).CountAsync();
 
                 if (page.HasValue && size.HasValue && page > 0 && size > 0)
                 {
@@ -2211,7 +2217,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.Id).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -2391,7 +2397,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetCashReceiptInvDtls.AsQueryable();
+                var query = _db.GetCashReceiptInvDtls.OrderByDescending(x => x.InvoiceId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -2410,7 +2416,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.InvoiceId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -2434,7 +2440,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetCashReceiptDtl.AsQueryable();
+                var query = _db.GetCashReceiptDtl.OrderByDescending(x => x.CashReceiptDtlId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -2453,7 +2459,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.CashReceiptDtlId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -2514,7 +2520,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetYardInvoiceCharges.AsQueryable();
+                var query = _db.GetYardInvoiceCharges.OrderByDescending(x => x.YardInvoiceChargeId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -2533,7 +2539,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.YardInvoiceChargeId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -2563,7 +2569,8 @@ namespace SezApi.Services
                             where (!id.HasValue || inv.YardInvId == id.Value)
                                   && (string.IsNullOrEmpty(PayeeName) || inv.PayeeName == PayeeName)
                                   && (!payeeId.HasValue || inv.PayeeId == payeeId.Value)
-                            select new ResponseYardInvoiceFlat
+							orderby inv.YardInvId descending
+							select new ResponseYardInvoiceFlat
                             {
                                 // From InvoiceYard
                                 YardInvId = inv.YardInvId,
@@ -2612,7 +2619,7 @@ namespace SezApi.Services
                                 Total = ch.Total
                             };
 
-                var totalRecords = await query.CountAsync();
+                var totalRecords = await query.OrderByDescending(x => x.YardInvId).CountAsync();
 
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
                 {
@@ -2620,7 +2627,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.YardInvId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -2830,7 +2837,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetTransportationCharges.AsQueryable();
+                var query = _db.GetTransportationCharges.OrderByDescending(x => x.CreatedOn).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -2845,7 +2852,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -2901,7 +2908,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetStorageChargesGodown.AsQueryable();
+                var query = _db.GetStorageChargesGodown.OrderByDescending(x => x.StorageChargeID).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -2916,7 +2923,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.StorageChargeID).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -2965,7 +2972,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetRentOfficeSpaceCharges.AsQueryable();
+                var query = _db.GetRentOfficeSpaceCharges.OrderByDescending(x => x.CreatedOn).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -2980,7 +2987,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.CreatedOn).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3029,7 +3036,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetRentTableSpaceCharges.AsQueryable();
+                var query = _db.GetRentTableSpaceCharges.OrderByDescending(x => x.RentTableSpaceID).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -3044,7 +3051,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.RentTableSpaceID).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3185,7 +3192,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GatePassHeader.AsQueryable();
+                var query = _db.GatePassHeader.OrderByDescending(x => x.GatePassId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -3200,7 +3207,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.GatePassId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3223,7 +3230,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GatePassDetails.AsQueryable();
+                var query = _db.GatePassDetails.OrderByDescending(x => x.GatepassDtlId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -3243,7 +3250,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.GatepassDtlId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3266,7 +3273,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.EThroughGateHeader.AsQueryable();
+                var query = _db.EThroughGateHeader.OrderByDescending(x => x.ExitIdHeaderId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -3281,7 +3288,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.ExitIdHeaderId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3303,7 +3310,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.EThroughGateDetails.AsQueryable();
+                var query = _db.EThroughGateDetails.OrderByDescending(x => x.ExitIdDtls).AsQueryable();
                 if (GateExitHeaderId.HasValue)
                 {
                     query = query.Where(s => s.ExitIdHeader == GateExitHeaderId.Value);
@@ -3322,7 +3329,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.ExitIdDtls).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3514,7 +3521,7 @@ namespace SezApi.Services
                     query = query.Where(s => s.DestuffingEntryId == id.Value);
                 }
 
-                var totalRecords = await query.CountAsync();
+                var totalRecords = await query.OrderByDescending(x => x.DestuffingEntryId).CountAsync();
 
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
                 {
@@ -3522,7 +3529,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.DestuffingEntryId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3545,7 +3552,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.ResponseImpDestuffingEntryDtl.AsQueryable();
+                var query = _db.ResponseImpDestuffingEntryDtl.OrderByDescending(x => x.DestuffingEntryDtlId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -3564,7 +3571,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.DestuffingEntryDtlId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3708,7 +3715,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.LoadContainerRtHeader.AsQueryable();
+                var query = _db.LoadContainerRtHeader.OrderByDescending(x => x.LoadContReqId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -3723,7 +3730,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.LoadContReqId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3745,7 +3752,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.LoadContainerRDetails.AsQueryable();
+                var query = _db.LoadContainerRDetails.OrderByDescending(x => x.LoadContReqDetlId).AsQueryable();
                 if (LoaderHeaderId.HasValue)
                 {
                     query = query.Where(s => s.LoadContReqId == LoaderHeaderId.Value);
@@ -3764,7 +3771,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.LoadContReqDetlId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3844,7 +3851,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.RequestImpDeliveryApplicationHdr.AsQueryable();
+                var query = _db.RequestImpDeliveryApplicationHdr.OrderByDescending(x => x.DeliveryId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -3859,7 +3866,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x => x.DeliveryId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -3882,7 +3889,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.RequestImpDeliveryApplicationDtl.AsQueryable();
+                var query = _db.RequestImpDeliveryApplicationDtl.OrderByDescending(x => x.DeliveryDtlId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -3902,7 +3909,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x=>x.DeliveryDtlId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -4005,7 +4012,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.ContainerStuffingHeader.AsQueryable();
+                var query = _db.ContainerStuffingHeader.OrderByDescending(x => x.StuffingReqId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -4020,7 +4027,7 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                var result = await query.OrderByDescending(x=>x.StuffingReqId).ToListAsync();
+                var result = await query.ToListAsync();
 
                 response.Data = result;
                 response.Status = true;
@@ -4043,7 +4050,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.ContainerStuffingDetails.AsQueryable();
+                var query = _db.ContainerStuffingDetails.OrderByDescending(x=>x.StuffingDtlId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -4436,13 +4443,15 @@ namespace SezApi.Services
 								LoadContReqDetlId = LcD.LoadContReqDetlId,
 								LoadContReqNo = Lchdr.LoadContReqNo,
 								ContainerNo = LcD.ContainerNo,
+								LoadContReqDate = Lchdr.LoadContReqDate
 							}).GroupBy(x => x.LoadContReqNo)
 		                 	.Select(g => new ResponseGetCLandRno
 			                   {
 			                  	LoadContReqNo = g.Key,
 				                LoadContReqId = g.First().LoadContReqId,
 				                LoadContReqDetlId = g.First().LoadContReqDetlId,
-			                 	ContainerNo = g.First().ContainerNo
+			                 	ContainerNo = g.First().ContainerNo,
+                                LoadContReqDate = g.First().LoadContReqDate,
 		                  	}); ;
 
 				var totalRecords = await query.CountAsync();
@@ -4571,6 +4580,87 @@ namespace SezApi.Services
 			return response;
 		}
 
+        public async Task<Response<List<ResponseExportEntryFeeChargesResponse>>> GetExportEntryFeeChargesResponse(string ContainerList, int PartyId)
+        {
+			var response = new Response<List<ResponseExportEntryFeeChargesResponse>>();
 
+			try
+			{
+				var results = await _db.ResponseExportEntryFeeChargesResponse
+				   .FromSqlInterpolated($"EXEC dbo.ExportEntryFeeCharges @ContainerList = {ContainerList}, @PartyId = {PartyId}")
+					.AsNoTracking()
+	                 .ToListAsync();
+
+				response.Data = results;
+				response.Status = true;
+				response.TotalCount = results.Count;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<ResponseExportEntryFeeChargesResponse>();
+				response.Status = false;
+				response.Message = $"Error: {ex.Message}";
+				response.TotalCount = 0;
+			}
+
+			return response;
+		}
+
+        public async Task<Response<List<ResponseExportInsuranceChargesResponse>>> GetExportInsuranceChargesCalc(string ContainerList, int PartyId, DateTime InvoiceDate)
+        {
+			var response = new Response<List<ResponseExportInsuranceChargesResponse>>();
+
+			try
+			{
+				var results = await _db.ResponseExportInsuranceChargesResponse
+				   .FromSqlInterpolated($"EXEC dbo.ExportInsuranceChargesCalc @ContainerList = {ContainerList}, @PartyId = {PartyId},@InvoiceDate = {InvoiceDate}")
+					.AsNoTracking()
+					 .ToListAsync();
+
+				response.Data = results;
+				response.Status = true;
+				response.TotalCount = results.Count;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<ResponseExportInsuranceChargesResponse>();
+				response.Status = false;
+				response.Message = $"Error: {ex.Message}";
+				response.TotalCount = 0;
+			}
+
+			return response;
+		}
+
+        public async Task<Response<List<mstcompany>>> GetComanyDetails(int? id)
+        {
+			var response = new Response<List<mstcompany>>();
+
+			try
+			{
+				var query = _db.mstcompany.AsQueryable();
+
+				if (id.HasValue)
+				{
+					query = query.Where(s => s.CompanyId == id.Value);
+				}
+
+				
+
+				var result = await query.ToListAsync();
+
+				response.Data = result;
+				response.Status = true;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<mstcompany>();
+				response.Status = false;
+				response.TotalCount = 0;
+				response.Message = $"Error: {ex.Message}";
+			}
+
+			return response;
+		}
 	}
 }

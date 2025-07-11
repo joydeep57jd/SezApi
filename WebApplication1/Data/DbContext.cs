@@ -122,6 +122,11 @@ namespace SezApi.Data
 		public DbSet<mstpackuqc> mstpackuqc { get; set; }
 		public DbSet<ResponseGetContainerlistForLoadedContainerRequest> ResponseGetContainerlistForLoadedContainerRequest { get; set; }
 
+		public DbSet<ResponseExportEntryFeeChargesResponse> ResponseExportEntryFeeChargesResponse { get; set; }
+		public DbSet<ResponseExportInsuranceChargesResponse> ResponseExportInsuranceChargesResponse { get; set; }
+
+		public DbSet<mstcompany> mstcompany { get; set; }
+
 	}
 }
 

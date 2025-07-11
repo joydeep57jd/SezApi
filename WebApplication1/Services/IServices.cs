@@ -130,5 +130,9 @@ namespace SezApi.Services
         Task<Response<List<ResponseGetContainerlistByGetEntry>>> GetContainerlistByOBLEntry();
         Task<Response<List<CCINEntry>>> GetCCINEntryBySBNo(int? id, int? page, int? size, string? SBNo);
         Task<Response<List<mstpackuqc>>> GetPackUQC(int? id, int? page, int? size);
+		Task<Response<List<ResponseExportEntryFeeChargesResponse>>> GetExportEntryFeeChargesResponse(string ContainerList, int PartyId);
+		Task<Response<List<ResponseExportInsuranceChargesResponse>>> GetExportInsuranceChargesCalc(string ContainerList, int PartyId, DateTime InvoiceDate);
+
+		Task<Response<List<mstcompany>>> GetComanyDetails(int? id);
 	}
 }
