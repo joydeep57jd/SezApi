@@ -3091,18 +3091,29 @@ namespace SezApi.Services
 
                             select new ResponseGatePassGateOut
                             {
-                                GatePassNo = GPassHeader.GatePassNo,
+                                GatePassId = GPassHeader.GatePassId,
+                                GatepassDtlId = GPassDetails.GatepassDtlId,
+								GatePassNo = GPassHeader.GatePassNo,
                                 VehicleNo = GPassDetails != null ? GPassDetails.VehicleNo : null,
                                 Importer = GPassHeader.ImpExpName,
                                 ShipplingLine = GPassHeader.ShippingLineName,
                                 GatePassDateTime = GPassHeader.GatePssDate,
                                 ContainerNo = GPassDetails != null ? GPassDetails.ContainerNo : null,
-                                ContainerSize = GPassDetails != null ? GPassDetails.Size : null,
+                                size = GPassDetails != null ? GPassDetails.Size : null,
                                 CHAName = GPassHeader.ChaName,
                                 InvoiceNo = YardInv != null ? YardInv.InvoiceNo : null,
                                 GatePassValidity = GPassHeader.ExpDate,
-                                BoeNo = AppContDetails != null ? AppContDetails.BOENo : null
-                            };
+                                BoeNo = AppContDetails != null ? AppContDetails.BOENo : null,
+                                ElwbCargoWeight = GPassDetails.ElwbCargoWeight,
+                                ElwbTareWeight = GPassDetails.ElwbTareWeight,
+                                CargoDescription =GPassDetails.CargoDescription,
+                                CargeType = GPassDetails.CargeType,
+                                NoOfUnits =GPassDetails.NoOfUnits,
+                                Weight =GPassDetails.Weight,
+                                Location = GPassDetails.Location,
+                                PortOfDispatch = GPassDetails.PortOfDispatch,
+                                IsReefer =GPassDetails.IsReefer
+							};
 
 
 
