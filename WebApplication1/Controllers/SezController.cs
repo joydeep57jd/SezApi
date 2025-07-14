@@ -1810,6 +1810,5 @@ namespace SezApi.Controllers
 			var result = await _services.GetGatePassDetailsStructured(invoiceNo);
 			return Ok(result);
 		}
-
 	}
 }
