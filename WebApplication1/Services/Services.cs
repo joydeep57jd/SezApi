@@ -2649,6 +2649,13 @@ namespace SezApi.Services
         {
             var response = new Response<ResponseImportChargesInvoice>();
 
+            if (string.IsNullOrWhiteSpace(InvoiceNo))
+            {
+                response.Status = false;
+                response.Message = "Invoice number is required.";
+                return response;
+            }
+
             try
             {
                 var flatRows = await _db
@@ -2668,13 +2675,12 @@ namespace SezApi.Services
 
                 var result = new ResponseImportChargesInvoice
                 {
-                    // Header Info
                     CompanyName = first.CompanyName,
                     CompanyAddress = first.CompanyAddress,
                     EmailAddress = first.EmailAddress,
                     CWCGSTNO = first.CWCGSTNO,
                     InvNo = first.InvNo,
-                    InvDate = first.InvDate,
+                    InvDate = first.InvDate == new DateTime(1900, 1, 1) ? null : first.InvDate,
                     PartyName = first.PartyName,
                     PartyAddress = first.PartyAddress,
                     PartyGST = first.PartyGST,
@@ -2684,10 +2690,10 @@ namespace SezApi.Services
                     IsService = first.IsService,
                     PayerName = first.PayerName,
                     Remarks = first.Remarks,
-                    ArrivalDate=first.ArrivalDate,
+                    ArrivalDate = first.ArrivalDate == new DateTime(1900, 1, 1) ? null : first.ArrivalDate,
                     PrintedBy = first.PrintedBy,
 
-                    // Group unique containers
+                    // ✅ Grouped container with nested charges
                     ContainerCharges = flatRows
                         .GroupBy(x => x.ContainerCBTNo)
                         .Select(g => new ContainerChargeDto
@@ -2700,11 +2706,26 @@ namespace SezApi.Services
                             CargoType = g.First().CargoType,
                             NoOfPackage = g.First().NoOfPackage,
                             GrWt = g.First().GrWt,
-                            DoValidateDate = g.First().DoValidateDate
+                            DoValidateDate = g.First().DoValidateDate == new DateTime(1900, 1, 1) ? null : g.First().DoValidateDate,
+                            Charges = g.Select(r => new ChargeDetailDto
+                            {
+                                ChargeCode = r.ChargeCode,
+                                Descripton = r.Descripton,
+                                SACCode = r.SACCode,
+                                Rate = r.Rate,
+                                TaxableAmt = r.TaxableAmt,
+                                CGSTRate = r.CGSTRate,
+                                CGSTAmt = r.CGSTAmt,
+                                SGSTRate = r.SGSTRate,
+                                SGSTAmt = r.SGSTAmt,
+                                IGSTRate = r.IGSTRate,
+                                IGSTAmt = r.IGSTAmt,
+                                Total = r.Total
+                            }).ToList()
                         })
                         .ToList(),
 
-                    // All charges
+                    // ✅ Optional: Keep this only if flat list of all charges is needed globally
                     Charges = flatRows
                         .Select(r => new ChargeDetailDto
                         {
@@ -2738,6 +2759,7 @@ namespace SezApi.Services
 
             return response;
         }
+
 
         public async Task<AddEditResponse> CreateGatePassAsync(GatePassRequest request)
         {
