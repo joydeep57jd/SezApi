@@ -136,5 +136,7 @@ namespace SezApi.Services
 		Task<Response<List<mstcompany>>> GetComanyDetails(int? id);
 
 		Task<Response<GatePassDetailsStructured>> GetGatePassDetailsStructured(string invoiceNo);
-	}
+
+        Task<Response<List<DailyCashBookReportResponse>>> GetDailyCashBookReport(DateTime? fromDate, DateTime? toDate);
+    }
 }

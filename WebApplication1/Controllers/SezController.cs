@@ -1810,5 +1810,12 @@ namespace SezApi.Controllers
 			var result = await _services.GetGatePassDetailsStructured(invoiceNo);
 			return Ok(result);
 		}
-	}
+
+        [HttpGet("GetDailyCashBookReport")]
+        public async Task<IActionResult> GetDailyCashBookReport(DateTime? fromDate, DateTime? toDate)
+        {
+            var result = await _services.GetDailyCashBookReport(fromDate, toDate);
+            return Ok(result);
+        }
+    }
 }

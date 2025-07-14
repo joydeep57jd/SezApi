@@ -16,6 +16,7 @@ using System.Linq;
 using System.Xml;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static SezApi.Model.Response.ResponseYardInvoiceFlat;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace SezApi.Services
 {
     public class Services : IServices
@@ -4738,5 +4739,31 @@ namespace SezApi.Services
 
 			return response;
 		}
-	}
+
+        public async Task<Response<List<DailyCashBookReportResponse>>> GetDailyCashBookReport(DateTime? fromDate, DateTime? toDate)
+        {
+            var response = new Response<List<DailyCashBookReportResponse>>();
+
+            try
+            {
+                var results = await _db.DailyCashBookReport
+                    .FromSqlInterpolated($"EXEC dbo.DailyCashBookReport @FromDate = {fromDate}, @ToDate = {toDate}")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                response.Data = results;
+                response.Status = true;
+                response.TotalCount = results.Count;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<DailyCashBookReportResponse>();
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.TotalCount = 0;
+            }
+
+            return response;
+        }
+    }
 }
