@@ -100,47 +100,56 @@ namespace SezApi.Model.Request
             return xml.ToString();
         }
 
-      
 
-public static string ConvertToXmlLoadContainerRequestDetails(List<LoadContainerRequestDetails> details)
-	{
-		var xml = new XElement("LoadContainerRequestDetailsList",
-			details.Select(d =>
-				new XElement("LoadContainerRequestDetail",
-					new XElement("LoadContReqDetlId", d.LoadContReqDetlId),
-					new XElement("LoadContReqId", d.LoadContReqId),
-					new XElement("ExporterId", d.ExporterId),
-					new XElement("ShippingLineId", d.ShippingLineId),
-					new XElement("ContainerNo", d.ContainerNo),
-					new XElement("Size", d.Size),
-					new XElement("Reefer", d.Reefer),
-					new XElement("IsInsured", d.IsInsured),
-					new XElement("ShippingBillNo", d.ShippingBillNo),
-					new XElement("ShippingBillDate", d.ShippingBillDate?.ToString("yyyy-MM-dd")),
-					new XElement("CommodityId", d.CommodityId),
-					new XElement("CargoType", d.CargoType),
-					new XElement("CargoDescription", d.CargoDescription),
-					new XElement("GrossWt", d.GrossWt),
-					new XElement("NoOfUnits", d.NoOfUnits),
-					new XElement("FobValue", d.FobValue),
-					new XElement("PackUQCCode", d.PackUQCCode),
-					new XElement("PackUQCDesc", d.PackUQCDesc),
-					new XElement("SEZ", d.SEZ),
-					new XElement("SFSend", d.SFSend),
-					new XElement("EquipmentSealType", d.EquipmentSealType),
-					new XElement("EquipmentStatus", d.EquipmentStatus),
-					new XElement("EquipmentQUC", d.EquipmentQUC),
-					new XElement("PackageType", d.PackageType),
-					new XElement("ContLoadType", d.ContLoadType),
-					new XElement("CustomSeal", d.CustomSeal),
-					new XElement("PacketsFrom", d.packetsFrom),
-					new XElement("PacketsTo", d.packetsTo)
-				)
-			)
-		);
 
-		return xml.ToString();
-	}
+        public static string ConvertToXmlLoadContainerRequestDetails(List<LoadContainerRequestDetails> details)
+        {
+            var xml = new XElement("LoadContainerRequestDetailsList",
+                details.Select(d =>
+                {
+                    var element = new XElement("LoadContainerRequestDetail");
+
+                    void AddIfNotNull(string name, object? value)
+                    {
+                        if (value != null)
+                            element.Add(new XElement(name, value));
+                    }
+
+                    AddIfNotNull("LoadContReqDetlId", d.LoadContReqDetlId);
+                    AddIfNotNull("LoadContReqId", d.LoadContReqId);
+                    AddIfNotNull("ExporterId", d.ExporterId);
+                    AddIfNotNull("ShippingLineId", d.ShippingLineId);
+                    AddIfNotNull("ContainerNo", d.ContainerNo);
+                    AddIfNotNull("Size", d.Size);
+                    AddIfNotNull("Reefer", d.Reefer);
+                    AddIfNotNull("IsInsured", d.IsInsured);
+                    AddIfNotNull("ShippingBillNo", d.ShippingBillNo);
+                    AddIfNotNull("ShippingBillDate", d.ShippingBillDate?.ToString("yyyy-MM-dd"));
+                    AddIfNotNull("CommodityId", d.CommodityId);
+                    AddIfNotNull("CargoType", d.CargoType);
+                    AddIfNotNull("CargoDescription", d.CargoDescription);
+                    AddIfNotNull("GrossWt", d.GrossWt);
+                    AddIfNotNull("NoOfUnits", d.NoOfUnits);
+                    AddIfNotNull("FobValue", d.FobValue);
+                    AddIfNotNull("PackUQCCode", d.PackUQCCode);
+                    AddIfNotNull("PackUQCDesc", d.PackUQCDesc);
+                    AddIfNotNull("SEZ", d.SEZ);
+                    AddIfNotNull("SFSend", d.SFSend);
+                    AddIfNotNull("EquipmentSealType", d.EquipmentSealType);
+                    AddIfNotNull("EquipmentStatus", d.EquipmentStatus);
+                    AddIfNotNull("EquipmentQUC", d.EquipmentQUC);
+                    AddIfNotNull("PackageType", d.PackageType);
+                    AddIfNotNull("ContLoadType", d.ContLoadType);
+                    AddIfNotNull("CustomSeal", d.CustomSeal);
+                    AddIfNotNull("PacketsFrom", d.packetsFrom);
+                    AddIfNotNull("PacketsTo", d.packetsTo);
+
+                    return element;
+                })
+            );
+
+            return xml.ToString();
+        }
 
 
 
