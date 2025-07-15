@@ -1430,15 +1430,12 @@ namespace SezApi.Services
                 {
                     query = query.Where(x => x.PayeeName.Contains(PayeeName));
                 }
-                var totalRecords = await query.CountAsync();
+                
                 if (IsLoadContainerInvoice.HasValue)
                 {
                     query = query.Where(x => x.IsLoadContainerInvoice == IsLoadContainerInvoice.Value);
-                }else
-                {
-                    query = query.Where(x => x.IsLoadContainerInvoice == false || x.IsLoadContainerInvoice == null);
                 }
-
+                var totalRecords = await query.CountAsync();
 
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
                 {
@@ -2492,7 +2489,8 @@ namespace SezApi.Services
                     query = query.Where(s => s.CashReceiptId == id.Value);
                 }
 
-                var totalRecords = await query.CountAsync();
+                query = query.OrderByDescending(x => x.CashReceiptId);
+                var totalRecords = await query.OrderByDescending(x => x.CashReceiptId).CountAsync();
 
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
                 {
@@ -2572,7 +2570,9 @@ namespace SezApi.Services
                             where (!id.HasValue || inv.YardInvId == id.Value)
                                   && (string.IsNullOrEmpty(PayeeName) || inv.PayeeName == PayeeName)
                                   && (!payeeId.HasValue || inv.PayeeId == payeeId.Value)
-							orderby inv.YardInvId descending
+                                  && !_db.GetCashReceiptInvDtls
+                                      .Any(c => c.InvoiceId == inv.YardInvId)
+                            orderby inv.YardInvId descending
 							select new ResponseYardInvoiceFlat
                             {
                                 // From InvoiceYard
