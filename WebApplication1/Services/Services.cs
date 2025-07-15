@@ -2572,6 +2572,7 @@ namespace SezApi.Services
                                   && (!payeeId.HasValue || inv.PayeeId == payeeId.Value)
                                   && !_db.GetCashReceiptInvDtls
                                       .Any(c => c.InvoiceId == inv.YardInvId)
+                                  && (!string.IsNullOrEmpty(inv.InvoiceNo) && inv.InvoiceNo != "")
                             orderby inv.YardInvId descending
 							select new ResponseYardInvoiceFlat
                             {
