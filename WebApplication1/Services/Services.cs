@@ -1431,6 +1431,14 @@ namespace SezApi.Services
                     query = query.Where(x => x.PayeeName.Contains(PayeeName));
                 }
                 var totalRecords = await query.CountAsync();
+                if (IsLoadContainerInvoice.HasValue)
+                {
+                    query = query.Where(x => x.IsLoadContainerInvoice == IsLoadContainerInvoice.Value);
+                }else
+                {
+                    query = query.Where(x => x.IsLoadContainerInvoice == false || x.IsLoadContainerInvoice == null);
+                }
+
 
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
                 {
@@ -1438,14 +1446,8 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                if (IsLoadContainerInvoice.HasValue)
-                {
-                    query = query.Where(x => x.IsLoadContainerInvoice == IsLoadContainerInvoice.Value);
-                }
-                else
-                {
-					query = query.Where(x => x.IsLoadContainerInvoice == false || x.IsLoadContainerInvoice == null);
-				}
+                
+                
 				var data = await query.ToListAsync();
 
                 response.Data = data;
