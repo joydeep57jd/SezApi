@@ -3272,7 +3272,7 @@ namespace SezApi.Services
                 if(ForGateExit == true)
                 {
                     var usedForGateExit = _db.EThroughGateHeader
-                                                 .Select(x => x.GateExitNo)
+                                                 .Select(x => x.GatePassNo)
                                                  .Distinct();
 
                     query = query.Where(x => !usedForGateExit.Contains(x.GatePassNo));
