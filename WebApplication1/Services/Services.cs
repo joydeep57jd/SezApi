@@ -2408,7 +2408,7 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<CashReceiptInvDtls>>> GetInvoiceDetails(int? id, int? page, int? size, int? CashReceiptId)
+        public async Task<Response<List<CashReceiptInvDtls>>> GetInvoiceDetails(int? id, int? page, int? size, int? CashReceiptId, bool? ForGatePass)
         {
             var response = new Response<List<CashReceiptInvDtls>>();
 
@@ -2423,6 +2423,15 @@ namespace SezApi.Services
                 if (CashReceiptId.HasValue)
                 {
                     query = query.Where(s => s.CashReceiptId == CashReceiptId.Value);
+                }
+
+                if (ForGatePass == true)
+                {
+                    var usedForGatePass = _db.GatePassHeader
+                                                 .Select(x => x.InvoiceId)
+                                                 .Distinct();
+
+                    query = query.Where(x => !usedForGatePass.Contains(x.InvoiceId));
                 }
 
                 var totalRecords = await query.CountAsync();

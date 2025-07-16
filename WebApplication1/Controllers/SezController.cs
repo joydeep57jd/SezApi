@@ -984,10 +984,10 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetInvoiceDetails")]
-        public async Task<ActionResult<List<CashReceiptInvDtls>>> GetInvoiceDetails(int? id, int? page, int? size, int? CashReceiptId)
+        public async Task<ActionResult<List<CashReceiptInvDtls>>> GetInvoiceDetails(int? id, int? page, int? size, int? CashReceiptId, bool? ForGatePass)
         {
 
-            var response = await _services.GetInvoiceDetails(id, page, size, CashReceiptId);
+            var response = await _services.GetInvoiceDetails(id, page, size, CashReceiptId, ForGatePass);
 
             if (response.Data == null || !response.Data.Any())
             {
