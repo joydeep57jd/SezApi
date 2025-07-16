@@ -2433,6 +2433,13 @@ namespace SezApi.Services
                                                  .Distinct();
 
                     query = query.Where(x => !usedForGatePass.Contains(x.InvoiceId));
+
+                    var yardInvoice = _db.GetYardInvoiceList
+                                                 .Where(x => x.IsLoadContainerInvoice == false)
+                                                 .Select(x => x.InvoiceNo)                                                 
+                                                 .Distinct();
+
+                    query = query.Where(x => yardInvoice.Contains(x.InvoiceNo));
                 }
 
                 var totalRecords = await query.CountAsync();
