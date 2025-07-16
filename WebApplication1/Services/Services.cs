@@ -3240,7 +3240,7 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<GatePass>>> GetPassHeader(int? id, int? page, int? size)
+        public async Task<Response<List<GatePass>>> GetPassHeader(int? id, int? page, int? size,bool? ForGate)
         {
             var response = new Response<List<GatePass>>();
 
