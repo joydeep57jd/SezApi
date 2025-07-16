@@ -1011,7 +1011,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetOBLEntriesWithDetails")]
-        public async Task<IActionResult> GetOBLEntriesWithDetails(int? id = null, string containerNo = null, int? page = null, int? size = null)
+        public async Task<IActionResult> GetOBLEntriesWithDetails(int? id = null, string containerNo =null, int? page = null, int? size = null)
         {
             var response = await _services.GetOBLEntriesWithDetails(id, containerNo, page, size);
 
@@ -1248,10 +1248,10 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetPassHeader")]
-        public async Task<IActionResult> GetPassHeader(int? id, int? page, int? size)
+        public async Task<IActionResult> GetPassHeader(int? id, int? page, int? size, bool? ForGate)
         {
 
-            var response = await _services.GetPassHeader(id, page, size);
+            var response = await _services.GetPassHeader(id, page, size,ForGate);
 
             if (response.Data == null || !response.Data.Any())
             {
@@ -1419,11 +1419,11 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetGetInContainerList")]
-        public async Task<IActionResult> GetGetInContainerList()
+        public async Task<IActionResult> GetGetInContainerList(string? OperationName, string? DeliveryType)
         {
             try
             {
-                var response = await _services.GetGetInContainerList();
+                var response = await _services.GetGetInContainerList(OperationName,DeliveryType);
                 return Ok(response);
             }
 

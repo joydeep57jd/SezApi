@@ -3667,40 +3667,60 @@ namespace SezApi.Services
 
         }
 
-        public async Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList()
-        {
-            var response = new Response<List<ResponseGetinContainer>>();
+		public async Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList(string? OperationName, string? DeliveryType)
+		{
+			var response = new Response<List<ResponseGetinContainer>>();
 
-            try
-            {
-                var query = _db.GetEntryList.AsQueryable();
+			try
+			{
+				var query = _db.GetEntryList.AsQueryable();
 
-                var totalCount = await query.CountAsync();
+				
+				if (!string.IsNullOrEmpty(OperationName))
+				{
+					query = query.Where(x => x.OperationName == OperationName);
+				}
 
-                var data = await query
-                    .Select(x => new ResponseGetinContainer
-                    {
-                        ContainerNo = x.ContainerNo
-                    }).Distinct()
-                    .ToListAsync();
+				if (!string.IsNullOrEmpty(DeliveryType))
+				{
+					query = query.Where(x => x.DeliveryType == DeliveryType);
+				}
 
-                response.Data = data;
-                response.Status = true;
-                response.TotalCount = totalCount;
-            }
-            catch (Exception ex)
-            {
-                response.Data = new List<ResponseGetinContainer>();
-                response.Status = false;
-                response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
-            }
+				var totalCount = await query.CountAsync();
 
-            return response;
+				
+				var destuffedContainerNos = await _db.ResponseImpDestuffingEntryHdr
+					.Select(d => d.ContainerNo)
+					.ToListAsync();
 
-        }
+				
+				var data = await query
+					.Where(x => !destuffedContainerNos.Contains(x.ContainerNo))
+					.Select(x => new ResponseGetinContainer
+					{
+						ContainerNo = x.ContainerNo
+					})
+					.Distinct()
+					.ToListAsync();
 
-        public async Task<AddEditResponse> CreateLoadContainerRequest(RequestLoadContainerRequest request)
+				response.Data = data;
+				response.Status = true;
+				response.TotalCount = totalCount;
+			}
+			catch (Exception ex)
+			{
+				response.Data = new List<ResponseGetinContainer>();
+				response.Status = false;
+				response.TotalCount = 0;
+				response.Message = $"Error: {ex.Message}";
+			}
+
+			return response;
+		}
+
+
+
+		public async Task<AddEditResponse> CreateLoadContainerRequest(RequestLoadContainerRequest request)
         {
             var response = new AddEditResponse();
 

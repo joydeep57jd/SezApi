@@ -97,7 +97,7 @@ namespace SezApi.Services
         Task<Response<List<RentTableSpaceCharges>>> GetRentTableSpaceCharges(int? id, int? page, int? size);
         Task<AddEditResponse> CreateGatePassAsync(GatePassRequest request);
         Task<Response<List<ResponseGatePassGateOut>>> GetGatePassGateOut(int? GatePassDtlId);
-        Task<Response<List<GatePass>>> GetPassHeader(int? id, int? page, int? size);
+        Task<Response<List<GatePass>>> GetPassHeader(int? id, int? page, int? size, bool? ForGate);
         Task<Response<List<GatePassDtl>>> GetPassDetails(int? id, int? gatepassId, int? page, int? size);
         Task<Response<List<ExitThroughGateHeader>>> GetExitThroughHeader(int? id, int? page, int? size);
         Task<AddEditResponse> CreateExitThroughGate(RequestExitThroughGate request);
@@ -111,7 +111,7 @@ namespace SezApi.Services
         Task<Response<List<ImpDestuffingEntryDtl>>> GetDestuffingEntryDtl(int? id, int? DestuffingEntryId, int? page, int? size);
         Task<ResponseImportTransportChargesCalc> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId);
         Task<AddEditResponse> CreateLoadContainerRequest(RequestLoadContainerRequest request);
-        Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList();
+        Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList(string? OperationName, string? DeliveryType);
         Task<AddEditResponse> AddEditDeliveryApplication(RequestImpDeliveryApplication request);
         Task<Response<List<ImpDeliveryApplicationHdr>>> GetImpDeliveryApplicationHdr(int? id, int? page, int? size);
         Task<Response<List<ImpDeliveryApplicationDtl>>> GetImpDeliveryApplicationDtl(int? id, int? DeliveryId, int? page, int? size);
