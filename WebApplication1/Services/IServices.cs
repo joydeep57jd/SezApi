@@ -52,7 +52,7 @@ namespace SezApi.Services
         Task<Response<List<GoDown>>> GetMstGoDown(int? page, int? size);
         Task<Response<List<Country>>> GetCountry(int? page, int? size);
         Task<AddEditResponse> AddEditYardInvoice(RequestYardInvocie request);
-        Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice, bool? isCancelled);
+        Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice, bool? isCancelled, bool? forGetpass);
         Task<AddEditResponse> AddEditOBLEntry(RequestOBLEntry request);
         Task<Response<List<OBLEntry>>> GetOblEntry(int? id, int? page, int? size);
         Task<Response<List<ResponseOblEntryAdditionalDetails>>> GetOblEntryAdditionalDetails(int? id, int? OBLEntryId);

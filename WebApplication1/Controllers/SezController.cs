@@ -692,10 +692,10 @@ namespace SezApi.Controllers
             }
         }
         [HttpGet("GetYardInvoice")]
-        public async Task<ActionResult<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice, bool? isCancelled)
+        public async Task<ActionResult<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice, bool? isCancelled, bool? forGatepass)
         {
 
-            var response = await _services.GetYardInvoice(page, size, PayeeName, IsLoadContainerInvoice, isCancelled);
+            var response = await _services.GetYardInvoice(page, size, PayeeName, IsLoadContainerInvoice, isCancelled, forGatepass);
 
             if (response.Data == null || !response.Data.Any())
             {

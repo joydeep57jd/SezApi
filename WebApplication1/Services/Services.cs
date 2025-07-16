@@ -1419,7 +1419,7 @@ namespace SezApi.Services
         }
 
 
-        public async Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice,bool? isCancelled)
+        public async Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice,bool? isCancelled,bool? forGetpass)
         {
             var response = new Response<List<InvoiceYard>>();
 
@@ -1441,6 +1441,15 @@ namespace SezApi.Services
                 {
                     
                     query = query.Where(x => x.IsCancelled == isCancelled);
+                }
+
+                if(forGetpass == true)
+                {
+                    var usedGetpassInvoives = _db.GatePassHeader
+                                                  .Select(x => x.InvoiceId)
+                                                  .Distinct();
+
+                    query = query.Where(x => !usedGetpassInvoives.Contains(x.YardInvId));
                 }
 
                 var totalRecords = await query.CountAsync();
