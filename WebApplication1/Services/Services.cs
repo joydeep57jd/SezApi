@@ -3240,7 +3240,7 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<GatePass>>> GetPassHeader(int? id, int? page, int? size,bool? ForGate)
+        public async Task<Response<List<GatePass>>> GetPassHeader(int? id, int? page, int? size,bool? ForGateExit)
         {
             var response = new Response<List<GatePass>>();
 
@@ -3260,7 +3260,14 @@ namespace SezApi.Services
                     var skip = (page.Value - 1) * size.Value;
                     query = query.Skip(skip).Take(size.Value);
                 }
+                if(ForGateExit == true)
+                {
+                    var usedForGateExit = _db.EThroughGateHeader
+                                                 .Select(x => x.GateExitNo)
+                                                 .Distinct();
 
+                    query = query.Where(x => !usedForGateExit.Contains(x.GatePassNo));
+                }
                 var result = await query.ToListAsync();
 
                 response.Data = result;

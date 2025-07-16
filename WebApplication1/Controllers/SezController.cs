@@ -1248,10 +1248,10 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetPassHeader")]
-        public async Task<IActionResult> GetPassHeader(int? id, int? page, int? size)
+        public async Task<IActionResult> GetPassHeader(int? id, int? page, int? size, bool? ForGateExit)
         {
 
-            var response = await _services.GetPassHeader(id, page, size);
+            var response = await _services.GetPassHeader(id, page, size, ForGateExit);
 
             if (response.Data == null || !response.Data.Any())
             {
