@@ -1418,7 +1418,7 @@ namespace SezApi.Services
         }
 
 
-        public async Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice)
+        public async Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice,bool? isCancelled)
         {
             var response = new Response<List<InvoiceYard>>();
 
@@ -1435,6 +1435,13 @@ namespace SezApi.Services
                 {
                     query = query.Where(x => x.IsLoadContainerInvoice == IsLoadContainerInvoice.Value);
                 }
+
+                if (isCancelled.HasValue)
+                {
+                    
+                    query = query.Where(x => x.IsCancelled == isCancelled);
+                }
+
                 var totalRecords = await query.CountAsync();
 
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
@@ -4790,5 +4797,59 @@ namespace SezApi.Services
 
             return response;
         }
+
+        public async Task<AddEditResponse> CancelInvoiceAsync(RequestCanceLinvoice reqInv)
+        {
+            var response = new AddEditResponse();
+
+            using var transaction = await _db.Database.BeginTransactionAsync();
+
+            try
+            {
+                var invoice = await _db.GetYardInvoiceList
+                    .FirstOrDefaultAsync(i => i.YardInvId == reqInv.invId);
+
+                if (invoice == null)
+                {
+                    response.Response = "Invoice not found.";
+                    return response;
+                }
+
+                if (invoice.IsCancelled == true)
+                {
+                    response.Response = "Invoice is already cancelled.";
+                    return response;
+                }
+
+                invoice.IsCancelled = true;
+                invoice.CancelledDate = DateTime.Now;
+
+                var cancelInvoice = new CanceLinvoice
+                {
+                    invId = reqInv.invId,
+                    InvoiceNo = reqInv.InvoiceNo,
+                    Remarks = reqInv.Remarks,
+                    cancelReason = reqInv.cancelReason,
+                    CancelledDate = DateTime.Now,
+                    Amount = reqInv.Amount
+
+                };
+
+                _db.CancelInvoice.Add(cancelInvoice);
+
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                response.Response = "Invoice cancelled successfully.";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                response.Response = $"An error occurred while cancelling the invoice: {ex.Message}";
+                return response;
+            }
+        }
+
     }
 }

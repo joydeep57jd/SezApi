@@ -131,7 +131,7 @@ namespace SezApi.Data
 
         public DbSet<DailyCashBookReportResponse> DailyCashBookReport { get; set; }
 
-
+        public DbSet<CanceLinvoice> CancelInvoice { get; set; }
     }
 }
 

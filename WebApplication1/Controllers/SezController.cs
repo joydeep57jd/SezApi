@@ -692,10 +692,10 @@ namespace SezApi.Controllers
             }
         }
         [HttpGet("GetYardInvoice")]
-        public async Task<ActionResult<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice)
+        public async Task<ActionResult<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice, bool? isCancelled)
         {
 
-            var response = await _services.GetYardInvoice(page, size, PayeeName, IsLoadContainerInvoice);
+            var response = await _services.GetYardInvoice(page, size, PayeeName, IsLoadContainerInvoice, isCancelled);
 
             if (response.Data == null || !response.Data.Any())
             {
@@ -1817,5 +1817,13 @@ namespace SezApi.Controllers
             var result = await _services.GetDailyCashBookReport(fromDate, toDate);
             return Ok(result);
         }
+
+        [HttpPost("CancellInoive")]
+        public async Task<IActionResult> CancellInoive(RequestCanceLinvoice reqInv)
+        {
+            var result = await _services.CancelInvoiceAsync(reqInv);
+            return Ok(result);
+        }
+
     }
 }

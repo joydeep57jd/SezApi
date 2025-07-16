@@ -33,5 +33,7 @@ namespace SezApi.Model.DBModels
 		public string? Remarks { get; set; }
 		public int? MoveToId { get; set; }
 		public bool? IsLoadContainerInvoice { get; set; }
-	}
+        public bool? IsCancelled { get; set; } = false;
+        public DateTime? CancelledDate { get; set; }
+    }
 }
