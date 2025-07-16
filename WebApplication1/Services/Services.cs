@@ -4156,7 +4156,8 @@ namespace SezApi.Services
             @PaymentMode = {request.PaymentMode},
             @Remarks = {request.Remarks},
             @CreatedBy = {request.CreatedBy},
-            @UpdatedBy = {request.UpdatedBy}
+            @UpdatedBy = {request.UpdatedBy},
+            @IsImport = {request.IsImport}
                      ")
                .AsNoTracking()
               .ToListAsync();
@@ -4902,6 +4903,46 @@ namespace SezApi.Services
             catch (Exception ex)
             {
                 response.Data = new List<ResponseCanceLinvoice>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<Response<List<GodownInvoice>>> GetGodownInvoice(int? id, int? page, int? size)
+        {
+            var response = new Response<List<GodownInvoice>>();
+
+            try
+            {
+                var query = _db.GodownInvoice.AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.GodownInvId == id.Value);
+                }
+
+                query = query.OrderByDescending(x => x.GodownInvId);
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<GodownInvoice>();
                 response.Status = false;
                 response.TotalCount = 0;
                 response.Message = $"Error: {ex.Message}";

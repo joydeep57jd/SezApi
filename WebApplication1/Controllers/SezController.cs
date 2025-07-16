@@ -1832,5 +1832,12 @@ namespace SezApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetGodownInvoice")]
+        public async Task<IActionResult> GetGodownInvoice(int? id, int? page, int? size)
+        {
+            var result = await _services.GetGodownInvoice(id, page, size);
+            return Ok(result);
+        }
+
     }
 }
