@@ -9,6 +9,7 @@ using SezApi.Data;
 using SezApi.Model.DBModels;
 using SezApi.Model.Request;
 using SezApi.Model.Response;
+using System;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -3973,13 +3974,52 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<ImpDeliveryApplicationDtl>>> GetImpDeliveryApplicationDtl(int? id, int? DeliveryId, int? page, int? size)
+        public async Task<Response<List<ResponseImpDeliveryApplicationDtl>>> GetImpDeliveryApplicationDtl(int? id, int? DeliveryId, int? page, int? size)
         {
-            var response = new Response<List<ImpDeliveryApplicationDtl>>();
+            var response = new Response<List<ResponseImpDeliveryApplicationDtl>>();
 
             try
             {
-                var query = _db.RequestImpDeliveryApplicationDtl.OrderByDescending(x => x.DeliveryDtlId).AsQueryable();
+                var query = (
+                               from LcD in _db.RequestImpDeliveryApplicationDtl
+                               join oAd in _db.GetOblEntryAdditionalDetails
+                               on LcD.OBL equals oAd.OBL_HBL_No
+                               join obed in _db.GetOBLEntry
+                               on oAd.OBLEntryId equals obed.Id
+                                            select new ResponseImpDeliveryApplicationDtl
+                                  {
+                                   DeliveryDtlId = LcD.DeliveryDtlId,
+                                   DeliveryId = LcD.DeliveryId,
+                                   DestuffingEntryDtlId = LcD.DestuffingEntryDtlId,
+                                    LineNo = LcD.LineNo,
+                                   OBL = LcD.OBL,
+                                  CargoDescription = LcD.CargoDescription,
+                                  CommodityId = LcD.CommodityId,
+                                  NoOfPackages = LcD.NoOfPackages,
+                                  GrossWt = LcD.GrossWt,
+                                  SQM = LcD.SQM,
+                                  CUM = LcD.CUM,
+                                  CIF = LcD.CIF,
+                                  Duty = LcD.Duty,
+                                  DelNoOfPackages = LcD.DelNoOfPackages,
+                                  DelGrossWt = LcD.DelGrossWt,
+                                  DelSQM = LcD.DelSQM,
+                                  DelCUM = LcD.DelCUM,
+                                  DelCIF = LcD.DelCIF,
+                                  DelDuty = LcD.DelDuty,
+                                  BOE_NO = LcD.BOE_NO,
+                                  BOE_DATE = LcD.BOE_DATE,
+                                  ImporterId = LcD.ImporterId,
+                                  InvCancel = LcD.InvCancel,
+                                  ContainerNo = obed.ContainerCBTNo 
+                              }
+                          ).AsQueryable();
+
+
+
+
+
+                query = query.OrderByDescending(x => x.DeliveryDtlId);
 
                 if (id.HasValue)
                 {
@@ -4007,7 +4047,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
-                response.Data = new List<ImpDeliveryApplicationDtl>();
+                response.Data = new List<ResponseImpDeliveryApplicationDtl>();
                 response.Status = false;
                 response.TotalCount = 0;
                 response.Message = $"Error: {ex.Message}";
