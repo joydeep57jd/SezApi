@@ -12,6 +12,7 @@ using SezApi.Model.Response;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Xml;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -4851,14 +4852,30 @@ namespace SezApi.Services
             }
         }
 
-        public async Task<Response<List<CanceLinvoice>>> GetCancelInvoiceAsync(int? id, int? page, int? size, string? InvoiceNo)
+        public async Task<Response<List<ResponseCanceLinvoice>>> GetCancelInvoiceAsync(int? id, int? page, int? size, string? InvoiceNo)
         {
-            var response = new Response<List<CanceLinvoice>>();
+            var response = new Response<List<ResponseCanceLinvoice>>();
 
             try
             {
-                var query = _db.CancelInvoice.OrderByDescending(x => x.Id).AsQueryable();
-
+                var query = from invCan in _db.CancelInvoice
+                            join inv in _db.GetYardInvoiceList on invCan.invId equals inv.YardInvId into invGroup
+                            from inv in invGroup.DefaultIfEmpty()
+                            join Party in _db.GetMstEximTraderMaster on inv.PartyId equals Party.TraderId into mstPartyGroup
+                            from Party in mstPartyGroup.DefaultIfEmpty()
+                            select new ResponseCanceLinvoice
+                            {
+                                Id = invCan.Id,
+                                invId = invCan.invId,
+                                InvoiceNo = invCan.InvoiceNo,
+                                Remarks = invCan.Remarks,
+                                cancelReason = invCan.cancelReason,
+                                CancelledDate = invCan.CancelledDate,
+                                Amount = invCan.Amount != null ? invCan.Amount.ToString() : null,
+                                invoiceDate = inv.InvoiceDate,
+                                PartyName = Party.EximTraderName
+                            };
+                query = query.OrderByDescending(x => x.Id);
                 if (id.HasValue)
                 {
                     query = query.Where(s => s.Id == id.Value);
@@ -4867,9 +4884,6 @@ namespace SezApi.Services
                 {
                     query = query.Where(s => s.InvoiceNo == InvoiceNo);
                 }
-
-
-
 
                 var totalRecords = await query.CountAsync();
 
@@ -4887,7 +4901,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
-                response.Data = new List<CanceLinvoice>();
+                response.Data = new List<ResponseCanceLinvoice>();
                 response.Status = false;
                 response.TotalCount = 0;
                 response.Message = $"Error: {ex.Message}";
