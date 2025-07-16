@@ -4851,5 +4851,49 @@ namespace SezApi.Services
             }
         }
 
+        public async Task<Response<List<CanceLinvoice>>> GetCancelInvoiceAsync(int? id, int? page, int? size, string? InvoiceNo)
+        {
+            var response = new Response<List<CanceLinvoice>>();
+
+            try
+            {
+                var query = _db.CancelInvoice.OrderByDescending(x => x.Id).AsQueryable();
+
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.Id == id.Value);
+                }
+                if (!string.IsNullOrEmpty(InvoiceNo))
+                {
+                    query = query.Where(s => s.InvoiceNo == InvoiceNo);
+                }
+
+
+
+
+                var totalRecords = await query.CountAsync();
+
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new List<CanceLinvoice>();
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
     }
 }

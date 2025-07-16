@@ -140,5 +140,7 @@ namespace SezApi.Services
         Task<Response<List<DailyCashBookReportResponse>>> GetDailyCashBookReport(DateTime? fromDate, DateTime? toDate);
 
         Task<AddEditResponse> CancelInvoiceAsync(RequestCanceLinvoice reqInv);
+
+        Task<Response<List<CanceLinvoice>>> GetCancelInvoiceAsync(int? id, int? page, int? size, string? InvoiceNo);
     }
 }
