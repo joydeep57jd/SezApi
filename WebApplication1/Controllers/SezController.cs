@@ -1839,5 +1839,18 @@ namespace SezApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetGodownChargesReport")]
+        public async Task<IActionResult> GetGodownChargesReport(string? InvoiceNo)
+        {
+            var response = await _services.GetGodownChargesReport(InvoiceNo);
+
+            if (response.Data == null)
+            {
+                return NotFound(new { message = "No entries found." });
+            }
+
+            return Ok(response);
+        }
+
     }
 }

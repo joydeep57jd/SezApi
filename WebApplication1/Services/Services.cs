@@ -5042,5 +5042,121 @@ namespace SezApi.Services
 
             return response;
         }
+
+        public async Task<Response<ResponseImportChargesInvoice>> GetGodownChargesReport(string? InvoiceNo)
+        {
+            var response = new Response<ResponseImportChargesInvoice>();
+
+            if (string.IsNullOrWhiteSpace(InvoiceNo))
+            {
+                response.Status = false;
+                response.Message = "Invoice number is required.";
+                return response;
+            }
+
+            try
+            {
+                var flatRows = await _db
+                    .Set<FlatImportChargesRow>()
+                    .FromSqlInterpolated($"EXEC dbo.GoDownChargesReport {InvoiceNo}")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var first = flatRows.OrderByDescending(x => x.InvDate).FirstOrDefault();
+                if (first == null)
+                {
+                    response.Data = null;
+                    response.Status = false;
+                    response.Message = "No data found";
+                    return response;
+                }
+
+                var result = new ResponseImportChargesInvoice
+                {
+                    CompanyName = first.CompanyName,
+                    CompanyAddress = first.CompanyAddress,
+                    EmailAddress = first.EmailAddress,
+                    CWCGSTNO = first.CWCGSTNO,
+                    InvNo = first.InvNo,
+                    InvDate = first.InvDate == new DateTime(1900, 1, 1) ? null : first.InvDate,
+                    PartyName = first.PartyName,
+                    PartyAddress = first.PartyAddress,
+                    PartyGST = first.PartyGST,
+                    StateName = first.StateName,
+                    StateCode = first.StateCode,
+                    PlaceOfSupply = first.PlaceOfSupply,
+                    IsService = first.IsService,
+                    PayerName = first.PayerName,
+                    Remarks = first.Remarks,
+                    ArrivalDate = first.ArrivalDate == new DateTime(1900, 1, 1) ? null : first.ArrivalDate,
+                    PrintedBy = first.PrintedBy,
+
+                    // ✅ Grouped container with nested charges
+                    ContainerCharges = flatRows
+                        .GroupBy(x => x.ContainerCBTNo)
+                        .Select(g => new ContainerChargeDto
+                        {
+                            ICDNo = g.First().ICDNo,
+                            ContainerCBTNo = g.Key,
+                            Size = g.First().Size,
+                            Reefer = g.First().Reefer,
+                            OBLHBLNo = g.First().OBLHBLNo,
+                            CargoType = g.First().CargoType,
+                            NoOfPackage = g.First().NoOfPackage,
+                            GrWt = g.First().GrWt,
+                            DoValidateDate = g.First().DoValidateDate == new DateTime(1900, 1, 1) ? null : g.First().DoValidateDate,
+                            Charges = g.Select(r => new ChargeDetailDto
+                            {
+                                ChargeCode = r.ChargeCode,
+                                Descripton = r.Descripton,
+                                SACCode = r.SACCode,
+                                Rate = r.Rate,
+                                TaxableAmt = r.TaxableAmt,
+                                CGSTRate = r.CGSTRate,
+                                CGSTAmt = r.CGSTAmt,
+                                SGSTRate = r.SGSTRate,
+                                SGSTAmt = r.SGSTAmt,
+                                IGSTRate = r.IGSTRate,
+                                IGSTAmt = r.IGSTAmt,
+                                Total = r.Total
+                            }).ToList()
+                        })
+                        .ToList(),
+
+                    // ✅ Optional: Keep this only if flat list of all charges is needed globally
+                    Charges = flatRows
+                        .Select(r => new ChargeDetailDto
+                        {
+                            ChargeCode = r.ChargeCode,
+                            Descripton = r.Descripton,
+                            SACCode = r.SACCode,
+                            Rate = r.Rate,
+                            TaxableAmt = r.TaxableAmt,
+                            CGSTRate = r.CGSTRate,
+                            CGSTAmt = r.CGSTAmt,
+                            SGSTRate = r.SGSTRate,
+                            SGSTAmt = r.SGSTAmt,
+                            IGSTRate = r.IGSTRate,
+                            IGSTAmt = r.IGSTAmt,
+                            Total = r.Total
+                        })
+                        .ToList()
+                };
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = flatRows.Count;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.Data = null;
+                response.TotalCount = 0;
+            }
+
+            return response;
+        }
+
     }
 }
