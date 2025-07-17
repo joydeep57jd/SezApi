@@ -64,5 +64,14 @@ namespace SezApi.Model.DBModels
 
         [MaxLength(50)]
         public string? PartyCode { get; set; }
+
+        public bool? IsImporter { get; set; }
+        public bool? IsExporter { get; set; }
+        public bool? IsShipline { get; set; }
+        public bool? IsCHA { get; set; }
+        public bool? IsForWarder { get; set; }
+        public bool? IsRent { get; set; }
+        public bool? IsBidder { get; set; }
+
     }
 }
