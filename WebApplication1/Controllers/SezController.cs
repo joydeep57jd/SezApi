@@ -23,24 +23,6 @@ namespace SezApi.Controllers
             _services = services;
         }
 
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
-
-        [HttpPost("add-test")]
-        public async Task<IActionResult> AddTest(test product)
-        {
-            try
-            {
-               await _services.AddTest(product);
-                return Ok("Product added successfully");
-            }
-            catch
-            {
-                return StatusCode(500, "Internal server error");
-            }
-        }
 
         [HttpPost("AddEditMststorageCharge")]
         public async Task<IActionResult> AddEditMststorageCharge(RequestMststorageCharge request)
@@ -61,7 +43,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetMststorageCharge")]
-        public async Task<ActionResult<List<mststoragecharge>>> GetMststorageCharge()
+        public async Task<ActionResult> GetMststorageCharge()
         {
             var response = await _services.GetMststorageCharge();
 
@@ -93,7 +75,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetAllEntries")]
-        public async Task<ActionResult<List<GateEntry>>> GetAllEntries(int? page, int? size, string? ContainerNo)
+        public async Task<ActionResult> GetAllEntries(int? page, int? size, string? ContainerNo)
         {
 
             var response = await _services.GetAllEntries(page, size, ContainerNo);
@@ -125,7 +107,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetAllHTCharges")]
-        public async Task<ActionResult<List<HTCharges>>> GetAllHTCharges(int? page, int? size)
+        public async Task<ActionResult> GetAllHTCharges(int? page, int? size)
         {
 
             var response = await _services.GetAllHTEntries(page,size);
@@ -157,7 +139,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetAllFSCTHCCharges")]
-        public async Task<ActionResult<List<FSCTHCcharges>>> GetAllFSCTHCCharges()
+        public async Task<ActionResult> GetAllFSCTHCCharges()
         {
 
             var response = await _services.GetAllFSCTHCCharges();
@@ -189,7 +171,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetMstOperation")]
-        public async Task<ActionResult<List<GateEntry>>> GetMstOperation(int? page, int? size)
+        public async Task<ActionResult> GetMstOperation(int? page, int? size)
         {
 
             var response = await _services.GetMstOperation(page, size);
@@ -221,7 +203,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetMstSac")]
-        public async Task<ActionResult<List<MstSac>>> GetMstSac()
+        public async Task<ActionResult> GetMstSac()
         {
 
             var response = await _services.GetMstSac();
@@ -285,7 +267,7 @@ namespace SezApi.Controllers
             }
         }
         [HttpGet("GetAllReeferCharges")]
-        public async Task<ActionResult<List<ReeferCharges>>> GetAllReeferCharges()
+        public async Task<ActionResult> GetAllReeferCharges()
         {
 
             var response = await _services.GetAllReeferCharges();
@@ -317,7 +299,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetAllMovementCharges")]
-        public async Task<ActionResult<List<MovementCharge>>> GetAllMovementCharges()
+        public async Task<ActionResult> GetAllMovementCharges()
         {
 
             var response = await _services.GetAllMovementCharges();
@@ -350,7 +332,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetAllFumigationCharges")]
-        public async Task<ActionResult<List<FumigationCharge>>> GetAllFumigationCharges()
+        public async Task<ActionResult> GetAllFumigationCharges()
         {
 
             var response = await _services.GetAllFumigationCharges();
@@ -381,7 +363,7 @@ namespace SezApi.Controllers
             }
         }
         [HttpGet("GetAllRTChargesDtl")]
-        public async Task<ActionResult<List<RTRChargeDetails>>> GetAllRTChargesDtl()
+        public async Task<ActionResult> GetAllRTChargesDtl()
         {
 
             var response = await _services.GetAllRTChargesDtl();
@@ -416,7 +398,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetMstGroundRent")]
-        public async Task<ActionResult<List<MstGroundRent>>> GetMstGroundRent()
+        public async Task<ActionResult> GetMstGroundRent()
         {
 
             var response = await _services.GetMstGroundRent();
@@ -448,7 +430,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetMstInsurance")]
-        public async Task<ActionResult<List<MstInsurance>>> GetMstInsurance(int? page, int? size)
+        public async Task<ActionResult> GetMstInsurance(int? page, int? size)
         {
 
             var response = await _services.GetMstInsurance(page, size);
@@ -480,7 +462,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetMstMiscellaneouse")]
-        public async Task<ActionResult<List<MstInsurance>>> GetMstMiscellaneouse()
+        public async Task<ActionResult> GetMstMiscellaneouse()
         {
 
             var response = await _services.GetMstMiscellaneous();
@@ -512,7 +494,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetMstRailFreightFees")]
-        public async Task<ActionResult<List<MstInsurance>>> GetMstRailFreightFees(int? page, int? size)
+        public async Task<ActionResult> GetMstRailFreightFees(int? page, int? size)
         {
 
             var response = await _services.GetMstRailFreightFees(page, size);
@@ -526,7 +508,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetmstParty")]
-        public async Task<ActionResult<List<MstInsurance>>> GetmstParty(int? page, int? size, string? partyType)
+        public async Task<ActionResult> GetmstParty(int? page, int? size, string? partyType)
         {
 
             var response = await _services.GetMstParty(page, size, partyType);
@@ -540,7 +522,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetMstEximTraderMaster")]
-        public async Task<ActionResult<List<MstEximTraderMaster>>> GetMstEximTraderMaster(int? page, int? size)
+        public async Task<ActionResult> GetMstEximTraderMaster(int? page, int? size)
         {
 
             var response = await _services.GetMstEximTraderMaster(page, size);
@@ -572,7 +554,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetMstCommodity")]
-        public async Task<ActionResult<List<MstCommodity>>> GetMstCommodity(int? page, int? size)
+        public async Task<ActionResult> GetMstCommodity(int? page, int? size)
         {
 
             var response = await _services.GetMstCommodity(page, size);
@@ -603,7 +585,7 @@ namespace SezApi.Controllers
             }
         }
         [HttpGet("GetPort")]
-        public async Task<ActionResult<List<ResponseAddEditPort>>> GetPort(int? page, int? size)
+        public async Task<ActionResult> GetPort(int? page, int? size)
         {
 
             var response = await _services.GetPort(page, size);
@@ -617,7 +599,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetState")]
-        public async Task<ActionResult<List<State>>> GetState(int? id)
+        public async Task<ActionResult> GetState(int? id)
         {
 
             var response = await _services.GetState(id);
@@ -648,7 +630,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetMstGoDown")]
-        public async Task<ActionResult<List<GoDown>>> GetMstGoDown(int? page, int? size)
+        public async Task<ActionResult> GetMstGoDown(int? page, int? size)
         {
 
             var response = await _services.GetMstGoDown(page, size);
@@ -662,7 +644,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetCountry")]
-        public async Task<ActionResult<List<Country>>> GetCountry(int? page, int? size)
+        public async Task<ActionResult> GetCountry(int? page, int? size)
         {
 
             var response = await _services.GetCountry(page, size);
@@ -692,7 +674,7 @@ namespace SezApi.Controllers
             }
         }
         [HttpGet("GetYardInvoice")]
-        public async Task<ActionResult<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice, bool? isCancelled, bool? forGatepass)
+        public async Task<ActionResult> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice, bool? isCancelled, bool? forGatepass)
         {
 
             var response = await _services.GetYardInvoice(page, size, PayeeName, IsLoadContainerInvoice, isCancelled, forGatepass);
@@ -726,7 +708,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetOblEntry")]
-        public async Task<ActionResult<List<OBLEntry>>> GetOblEntry(int? id, int? page, int? size)
+        public async Task<ActionResult> GetOblEntry(int? id, int? page, int? size)
         {
 
             var response = await _services.GetOblEntry(id,page,size);
@@ -740,7 +722,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetOblEntryAdditionalDetails")]
-        public async Task<ActionResult<List<ResponseOblEntryAdditionalDetails>>> GetOblEntryAdditionalDetails(int? id,int? OBLEntryId)
+        public async Task<ActionResult> GetOblEntryAdditionalDetails(int? id,int? OBLEntryId)
         {
 
             var response = await _services.GetOblEntryAdditionalDetails(id, OBLEntryId);
@@ -787,7 +769,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetAllHandlingCharges")]
-        public async Task<ActionResult<List<HandlingChargescs>>> GetAllHandlingCharges(int? page, int? size)
+        public async Task<ActionResult> GetAllHandlingCharges(int? page, int? size)
         {
 
             var response = await _services.GetAllHandlingCharges(page, size);
@@ -800,7 +782,7 @@ namespace SezApi.Controllers
             return Ok(response);
         }
         [HttpGet("GetOBLContainerList")]
-        public async Task<ActionResult<List<ResponseOBLContauner>>> GetOBLContainerList(int? page, int? size, string? containerNo, string? oblHblNo,string? AppNo)
+        public async Task<ActionResult> GetOBLContainerList(int? page, int? size, string? containerNo, string? oblHblNo,string? AppNo)
         {
 
             var response = await _services.GetOBLContainerList( page,  size, containerNo, oblHblNo, AppNo);
@@ -832,7 +814,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetOverTimeCharge")]
-        public async Task<ActionResult<List<OverTimeCharge>>> GetOverTimeCharge(int? id, int? page, int? size)
+        public async Task<ActionResult> GetOverTimeCharge(int? id, int? page, int? size)
         {
 
             var response = await _services.GetOverTimeCharge(id, page, size);
@@ -864,7 +846,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetExaminationCharge")]
-        public async Task<ActionResult<List<ExaminationCharge>>> GetExaminationCharge(int? id, int? page, int? size)
+        public async Task<ActionResult> GetExaminationCharge(int? id, int? page, int? size)
         {
 
             var response = await _services.GetExaminationCharge(id, page, size);
@@ -878,7 +860,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetCbtContainerDetailsList")]
-        public async Task<ActionResult<List<ResponseCbcContainerList>>> GetCbtContainerDetailsList(int? page, int? size)
+        public async Task<ActionResult> GetCbtContainerDetailsList(int? page, int? size)
         {
 
             var response = await _services.GetCbtContainerDetailsList(page, size);
@@ -910,7 +892,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetCustomAppraisementApplicationHeader")]
-        public async Task<ActionResult<List<ResponseCustomerHeaderForList>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size,bool? isInvoiceCheck)
+        public async Task<ActionResult> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size,bool? isInvoiceCheck)
         {
 
             var response = await _services.GetCustomAppraisementApplicationHeader(id, page, size, isInvoiceCheck);
@@ -924,7 +906,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetAppraisementDoDetails")]
-        public async Task<ActionResult<List<AppraisementDoDetails>>> GetAppraisementDoDetails(int? id, int? page, int? size, int? CustAppId)
+        public async Task<ActionResult> GetAppraisementDoDetails(int? id, int? page, int? size, int? CustAppId)
         {
 
             var response = await _services.GetAppraisementDoDetails(id, page, size, CustAppId);
@@ -938,7 +920,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetAppraisementContainerDetails")]
-        public async Task<ActionResult<List<AppraisementDoDetails>>> GetAppraisementContainerDetails(int? id, int? page, int? size, int? CustAppId)
+        public async Task<ActionResult> GetAppraisementContainerDetails(int? id, int? page, int? size, int? CustAppId)
         {
 
             var response = await _services.GetAppraisementContainerDetails(id, page, size, CustAppId);
@@ -970,7 +952,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetPaymentReceiptHeader")]
-        public async Task<ActionResult<List<CashReceiptHdr>>> GetPaymentReceiptHeader(int? id, int? page, int? size)
+        public async Task<ActionResult> GetPaymentReceiptHeader(int? id, int? page, int? size)
         {
 
             var response = await _services.GetPaymentReceiptHeader(id, page, size);
@@ -984,7 +966,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetInvoiceDetails")]
-        public async Task<ActionResult<List<CashReceiptInvDtls>>> GetInvoiceDetails(int? id, int? page, int? size, int? CashReceiptId, bool? ForGatePass)
+        public async Task<ActionResult> GetInvoiceDetails(int? id, int? page, int? size, int? CashReceiptId, bool? ForGatePass)
         {
 
             var response = await _services.GetInvoiceDetails(id, page, size, CashReceiptId, ForGatePass);
@@ -998,7 +980,7 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetPaymentDetails")]
-        public async Task<ActionResult<List<CashReceiptDtl>>> GetPaymentDetails(int? id, int? page, int? size, int? CashReceiptId)
+        public async Task<ActionResult> GetPaymentDetails(int? id, int? page, int? size, int? CashReceiptId)
         {
             var response = await _services.GetPaymentDetails(id, page, size, CashReceiptId);
 

@@ -907,11 +907,18 @@ namespace SezApi.Services
                 var query = _db.GetMstEximTraderMaster.OrderByDescending(x => x.TraderId).AsQueryable();
 
                 //operation type wise filter
-                if (partyType is not null)
+                if (!string.IsNullOrEmpty(partyType))
                 {
-                    query = _db.GetMstEximTraderMaster
-                        .Where(x => x.OperationType.ToLower() == partyType.ToLower())
-                        .AsQueryable();
+                    switch (partyType.ToUpper())
+                    {
+                        case "IMPORTER": query = query.Where(x => x.IsImporter == true); break;
+                        case "EXPORTER": query = query.Where(x => x.IsExporter == true); break;
+                        case "SHIPPINGLINE": query = query.Where(x => x.IsShipline == true); break;
+                        case "CHA": query = query.Where(x => x.IsCHA == true); break;
+                        case "FORWARDER": query = query.Where(x => x.IsForWarder == true); break;
+                        case "RENT": query = query.Where(x => x.IsRent == true); break;
+                        case "BIDDER": query = query.Where(x => x.IsBidder == true); break;
+                    }
                 }
 
 
