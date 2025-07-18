@@ -1,46 +1,22 @@
-﻿
-using Azure.Core;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using SezApi.Data;
 using SezApi.Model.DBModels;
 using SezApi.Model.Request;
 using SezApi.Model.Response;
-using System;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Xml;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using static SezApi.Model.Response.ResponseYardInvoiceFlat;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace SezApi.Services
 {
     public class Services : IServices
     {
         private readonly SezApiDbContext _db;
-
-        public Services(SezApiDbContext db)
+        private readonly ILogger<Services> _logger;
+        public Services(SezApiDbContext db, ILogger<Services> logger)
         {
             _db = db;
+            _logger = logger;
         }
 
-        public async Task AddTest(test product)
-        {
-            try
-            {
-                _db.test.Add(product);
-                await _db.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-            }
-        }
 
         public async Task<AddEditResponse> AddMststorageCharge(RequestMststorageCharge request)
         {
@@ -74,6 +50,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Response = $"Error Occured {ex}";
             }
 
@@ -91,6 +68,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<mststoragecharge>();
                 response.Status = false;
                 response.Message = $"Error Occured {ex}";
@@ -136,7 +114,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
-
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEditGetEntry", ex);
             }
         }
@@ -168,6 +146,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<GateEntry>();
                 response.Status = false;
                 response.TotalCount = 0;
@@ -206,6 +185,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEditMstOperation", ex);
             }
         }
@@ -234,6 +214,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<MstOperation>();
                 response.Status = false;
                 response.TotalCount = 0;
@@ -269,6 +250,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEditMstOperation", ex);
             }
         }
@@ -285,6 +267,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<MstSac>();
                 response.Status = false;
             }
@@ -317,6 +300,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute SP_AddMstEntryFee", ex);
             }
 
@@ -334,6 +318,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<MstEntryFee>();
                 response.Status = false;
             }
@@ -368,6 +353,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEntryHTCharges", ex);
             }
         }
@@ -396,6 +382,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<HTCharges>();
                 response.Status = false;
             }
@@ -438,6 +425,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEntryHTCharges", ex);
             }
         }
@@ -454,6 +442,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<FSCTHCcharges>();
                 response.Status = false;
             }
@@ -485,6 +474,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEntryHTCharges", ex);
             }
         }
@@ -501,6 +491,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<ReeferCharges>();
                 response.Status = false;
             }
@@ -534,6 +525,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEntryHTCharges", ex);
             }
         }
@@ -550,6 +542,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<MovementCharge>();
                 response.Status = false;
             }
@@ -579,6 +572,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEntryHTCharges", ex);
             }
         }
@@ -594,6 +588,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<FumigationCharge>();
                 response.Status = false;
             }
@@ -625,6 +620,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEntryHTCharges", ex);
             }
         }
@@ -640,6 +636,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<RTRChargeDetails>();
                 response.Status = false;
             }
@@ -679,6 +676,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEditGroundRent", ex);
             }
 
@@ -696,6 +694,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<MstGroundRent>();
                 response.Status = false;
             }
@@ -734,7 +733,8 @@ namespace SezApi.Services
 			}
 			catch (Exception ex)
 			{
-				throw new ApplicationException("Failed to execute Sp_AddEditInsurance", ex);
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                throw new ApplicationException("Failed to execute Sp_AddEditInsurance", ex);
 			}
 		}
 
@@ -763,6 +763,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<MstInsurance>();
                 response.Status = false;
                 response.TotalCount = 0;
@@ -806,6 +807,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEditMiscellaneous", ex);
             }
 
@@ -823,6 +825,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<MstMiscellaneous>();
                 response.Status = false;
             }
@@ -860,6 +863,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEditRailFreightFees", ex);
             }
 
@@ -889,6 +893,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<MstRailFreightFees>();
                 response.Status = false;
                 response.TotalCount = 0;
@@ -948,7 +953,7 @@ namespace SezApi.Services
                 response.Data = new List<MstParty>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -978,6 +983,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute AddEditMstPort", ex);
             }
         }
@@ -1029,7 +1035,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseAddEditPort>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1063,7 +1069,7 @@ namespace SezApi.Services
                 response.Data = new List<MstEximTraderMaster>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1093,6 +1099,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute SP_AddMstCommodity", ex);
             }
 
@@ -1124,7 +1131,7 @@ namespace SezApi.Services
                 response.Data = new List<MstCommodity>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1149,6 +1156,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<State>();
                 response.Status = false;
             }
@@ -1176,6 +1184,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute AddOrUpdateGodown", ex);
             }
 
@@ -1208,7 +1217,7 @@ namespace SezApi.Services
                 response.Data = new List<GoDown>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1283,6 +1292,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Response = $"Error: {ex.Message}";
             }
             return response;
@@ -1319,7 +1329,7 @@ namespace SezApi.Services
                 response.Data = new List<OBLEntry>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1352,7 +1362,7 @@ namespace SezApi.Services
                 response.Data = new List<Country>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1422,6 +1432,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute AddEditYardInvoice", ex);
             }
         }
@@ -1481,7 +1492,7 @@ namespace SezApi.Services
                 response.Data = new List<InvoiceYard>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1539,6 +1550,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<ResponseOblEntryAdditionalDetails>();
                 response.Status = false;
             }
@@ -1570,6 +1582,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Response = $"Error: {ex.Message}";
             }
 
@@ -1600,6 +1613,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Response = $"Error: {ex.Message}";
             }
 
@@ -1635,6 +1649,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEntryHTCharges", ex);
             }
         }
@@ -1663,6 +1678,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<HandlingChargescs>();
                 response.Status = false;
             }
@@ -1697,6 +1713,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEditOverTimeCharge", ex);
             }
 
@@ -1734,7 +1751,7 @@ namespace SezApi.Services
                 response.Data = new List<OverTimeCharge>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1799,7 +1816,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseOBLContauner>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1833,6 +1850,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEditExaminationCharge", ex);
             }
 
@@ -1870,7 +1888,7 @@ namespace SezApi.Services
                 response.Data = new List<ExaminationCharge>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1916,7 +1934,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseCbcContainerList>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2022,6 +2040,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Response = $"Error: {ex.Message}";
             }
             return response;
@@ -2094,7 +2113,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseCustomerHeaderForList>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2136,7 +2155,7 @@ namespace SezApi.Services
                 response.Data = new List<AppraisementDoDetails>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2178,7 +2197,7 @@ namespace SezApi.Services
                 response.Data = new List<AppraisementContainerDetails>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2253,7 +2272,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseOBLEntryWithDetailsDto>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2281,7 +2300,7 @@ namespace SezApi.Services
             {
                 response.Data = new List<ResponseImportChargesCalc>();
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.TotalCount = 0;
             }
 
@@ -2301,6 +2320,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<ChargesTypes>();
                 response.Status = false;
             }
@@ -2411,6 +2431,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Response = $"Error: {ex.Message}";
             }
             return response;
@@ -2468,7 +2489,7 @@ namespace SezApi.Services
                 response.Data = new List<CashReceiptInvDtls>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2511,7 +2532,7 @@ namespace SezApi.Services
                 response.Data = new List<CashReceiptDtl>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2550,7 +2571,7 @@ namespace SezApi.Services
                 response.Data = new List<CashReceiptHdr>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2592,7 +2613,7 @@ namespace SezApi.Services
                 response.Data = new List<YardInvoiceCharges>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2682,7 +2703,7 @@ namespace SezApi.Services
             {
                 response.Data = new List<ResponseYardInvoiceFlat>();
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.TotalCount = 0;
             }
 
@@ -2796,7 +2817,7 @@ namespace SezApi.Services
             catch (Exception ex)
             {
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = null;
                 response.TotalCount = 0;
             }
@@ -2860,6 +2881,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 await transaction.RollbackAsync();
                 throw new Exception("An error occurred while saving GatePass.", ex);
             }
@@ -2894,6 +2916,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEditTransportationCharges", ex);
             }
         }
@@ -2930,7 +2953,7 @@ namespace SezApi.Services
                 response.Data = new List<TransportationCharges>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2965,6 +2988,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEditStorageChargesGodown", ex);
             }
         }
@@ -3001,7 +3025,7 @@ namespace SezApi.Services
                 response.Data = new List<StorageChargesGodown>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3029,6 +3053,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEditRentOfficeSpaceCharges", ex);
             }
         }
@@ -3065,7 +3090,7 @@ namespace SezApi.Services
                 response.Data = new List<RentOfficeSpaceCharges>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3093,6 +3118,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEditRentTableSpaceCharges", ex);
             }
 
@@ -3129,7 +3155,7 @@ namespace SezApi.Services
                 response.Data = new List<RentTableSpaceCharges>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3195,7 +3221,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseGatePassGateOut>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3259,6 +3285,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Response = $"Error: {ex.Message}";
             }
             return response;
@@ -3315,7 +3342,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseGatePass>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3358,7 +3385,7 @@ namespace SezApi.Services
                 response.Data = new List<GatePassDtl>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3396,7 +3423,7 @@ namespace SezApi.Services
                 response.Data = new List<ExitThroughGateHeader>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3437,7 +3464,7 @@ namespace SezApi.Services
                 response.Data = new List<ExitThroughGateDetails>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3497,6 +3524,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEditCCINEntry", ex);
             }
         }
@@ -3534,7 +3562,7 @@ namespace SezApi.Services
                 response.Data = new List<CCINEntry>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3600,6 +3628,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Response = $"Error: {ex.Message}";
             }
             return response;
@@ -3637,7 +3666,7 @@ namespace SezApi.Services
                 response.Data = new List<ImpDestuffingEntryHdr>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3679,7 +3708,7 @@ namespace SezApi.Services
                 response.Data = new List<ImpDestuffingEntryDtl>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3704,6 +3733,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute ImportTransportChargesCalc procedure", ex);
             }
 
@@ -3752,7 +3782,8 @@ namespace SezApi.Services
 			}
 			catch (Exception ex)
 			{
-				response.Data = new List<ResponseGetinContainer>();
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Data = new List<ResponseGetinContainer>();
 				response.Status = false;
 				response.TotalCount = 0;
 				response.Message = $"Error: {ex.Message}";
@@ -3819,6 +3850,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Response = $"Error: {ex.Message}";
             }
 
@@ -3858,7 +3890,7 @@ namespace SezApi.Services
                 response.Data = new List<LoadContainerRequestHeader>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3899,7 +3931,7 @@ namespace SezApi.Services
                 response.Data = new List<LoadContainerRequestDetails>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3955,6 +3987,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Response = $"Error: {ex.Message}";
             }
 
@@ -3994,7 +4027,7 @@ namespace SezApi.Services
                 response.Data = new List<ImpDeliveryApplicationHdr>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -4076,7 +4109,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseImpDeliveryApplicationDtl>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -4155,6 +4188,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Response = $"Error: {ex.Message}";
             }
 
@@ -4194,7 +4228,7 @@ namespace SezApi.Services
                 response.Data = new List<ContainerStuffingHeader>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -4237,7 +4271,7 @@ namespace SezApi.Services
                 response.Data = new List<ContainerStuffingDetails>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -4301,6 +4335,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute GodownInvoice", ex);
             }
         }
@@ -4325,7 +4360,7 @@ namespace SezApi.Services
             {
                 response.Data = new List<ResponseStorageChargesCalc>();
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.TotalCount = 0;
             }
 
@@ -4352,7 +4387,7 @@ namespace SezApi.Services
             {
                 response.Data = new List<ResponseImportInsuaranceCharges>();
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.TotalCount = 0;
             }
 
@@ -4381,7 +4416,7 @@ namespace SezApi.Services
             {
                 response.Data = new ResponsehandlingCharges();
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.TotalCount = 0;
             }
 
@@ -4418,7 +4453,8 @@ namespace SezApi.Services
 			}
 			catch (Exception ex)
 			{
-				response.Status = false;
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Status = false;
 				response.Message = $"Error: {ex.Message}";
 				response.Data = null;
 				response.TotalCount = 0;
@@ -4446,7 +4482,8 @@ namespace SezApi.Services
 			}
 			catch (Exception ex)
 			{
-				response.Data = new List<ResponseChargeSummaryByInvoice>();
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Data = new List<ResponseChargeSummaryByInvoice>();
 				response.Status = false;
 				response.Message = $"Error: {ex.Message}";
 				response.TotalCount = 0;
@@ -4484,8 +4521,9 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = null;
                 response.TotalCount = 0;
             }
@@ -4523,8 +4561,9 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = null;
                 response.TotalCount = 0;
             }
@@ -4548,7 +4587,8 @@ namespace SezApi.Services
 			}
 			catch (Exception ex)
 			{
-				response.Data = new List<ResponseGetContainerlistByGetEntry>();
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Data = new List<ResponseGetContainerlistByGetEntry>();
 				response.Status = false;
 				response.Message = $"Error: {ex.Message}";
 				response.TotalCount = 0;
@@ -4574,7 +4614,8 @@ namespace SezApi.Services
 			}
 			catch (Exception ex)
 			{
-				response.Data = new List<ResponseGetContainerlistForLoadedContainerRequest>();
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Data = new List<ResponseGetContainerlistForLoadedContainerRequest>();
 				response.Status = false;
 				response.Message = $"Error: {ex.Message}";
 				response.TotalCount = 0;
@@ -4620,7 +4661,8 @@ namespace SezApi.Services
 			}
 			catch (Exception ex)
 			{
-				response.Data = new List<ResponseGetCLandRno>();
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Data = new List<ResponseGetCLandRno>();
 				response.Status = false;
 				response.TotalCount = 0;
 				response.Message = $"Error: {ex.Message}";
@@ -4647,7 +4689,8 @@ namespace SezApi.Services
 			}
 			catch (Exception ex)
 			{
-				response.Data = new List<ResponseGetContainerlistByGetEntry>();
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Data = new List<ResponseGetContainerlistByGetEntry>();
 				response.Status = false;
 				response.Message = $"Error: {ex.Message}";
 				response.TotalCount = 0;
@@ -4689,7 +4732,8 @@ namespace SezApi.Services
 			}
 			catch (Exception ex)
 			{
-				response.Data = new List<CCINEntry>();
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Data = new List<CCINEntry>();
 				response.Status = false;
 				response.TotalCount = 0;
 				response.Message = $"Error: {ex.Message}";
@@ -4728,7 +4772,8 @@ namespace SezApi.Services
 			}
 			catch (Exception ex)
 			{
-				response.Data = new List<mstpackuqc>();
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Data = new List<mstpackuqc>();
 				response.Status = false;
 				response.TotalCount = 0;
 				response.Message = $"Error: {ex.Message}";
@@ -4754,7 +4799,8 @@ namespace SezApi.Services
 			}
 			catch (Exception ex)
 			{
-				response.Data = new List<ResponseExportEntryFeeChargesResponse>();
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Data = new List<ResponseExportEntryFeeChargesResponse>();
 				response.Status = false;
 				response.Message = $"Error: {ex.Message}";
 				response.TotalCount = 0;
@@ -4780,7 +4826,8 @@ namespace SezApi.Services
 			}
 			catch (Exception ex)
 			{
-				response.Data = new List<ResponseExportInsuranceChargesResponse>();
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Data = new List<ResponseExportInsuranceChargesResponse>();
 				response.Status = false;
 				response.Message = $"Error: {ex.Message}";
 				response.TotalCount = 0;
@@ -4811,7 +4858,8 @@ namespace SezApi.Services
 			}
 			catch (Exception ex)
 			{
-				response.Data = new List<mstcompany>();
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Data = new List<mstcompany>();
 				response.Status = false;
 				response.TotalCount = 0;
 				response.Message = $"Error: {ex.Message}";
@@ -4877,7 +4925,8 @@ namespace SezApi.Services
 			}
 			catch (Exception ex)
 			{
-				response.Data = null;
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Data = null;
 				response.Status = false;
 				response.Message = $"Error: {ex.Message}";
 			}
@@ -4902,9 +4951,10 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<DailyCashBookReportResponse>();
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.TotalCount = 0;
             }
 
@@ -4958,6 +5008,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 await transaction.RollbackAsync();
                 response.Response = $"An error occurred while cancelling the invoice: {ex.Message}";
                 return response;
@@ -5013,10 +5064,11 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<ResponseCanceLinvoice>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -5058,10 +5110,11 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<GodownInvoice>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -5174,8 +5227,9 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";
+                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = null;
                 response.TotalCount = 0;
             }

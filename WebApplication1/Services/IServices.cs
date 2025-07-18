@@ -7,7 +7,6 @@ namespace SezApi.Services
 {
     public interface IServices
     {
-        Task AddTest(test product);
         Task<AddEditResponse> AddMststorageCharge(RequestMststorageCharge mststorageCharge);
         Task<Response<List<mststoragecharge>>> GetMststorageCharge();
         Task<AddEditResponse> AddEditGetEntry(RequestGetEntry request);
