@@ -1834,5 +1834,20 @@ namespace SezApi.Controllers
             return Ok(response);
         }
 
+        [HttpGet("GetExGodownHandlingChargesCalc")]
+        public async Task<IActionResult> GetExGodownHandlingChargesCalc(string ContainerOBLList, int PartyId)
+        {
+            try
+            {
+                var response = await _services.GetExGodownHandlingChargesCalc(ContainerOBLList, PartyId);
+                return Ok(response);
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
     }
 }

@@ -144,5 +144,6 @@ namespace SezApi.Services
         Task<Response<List<ResponseCanceLinvoice>>> GetCancelInvoiceAsync(int? id, int? page, int? size, string? InvoiceNo);
         Task<Response<List<GodownInvoice>>> GetGodownInvoice(int? id, int? page, int? size, bool? isImport);
         Task<Response<ResponseImportChargesInvoice>> GetGodownChargesReport(string? InvoiceNo);
+        Task<Response<ResponsehandlingCharges>> GetExGodownHandlingChargesCalc(string containerLoadConReqList, int partyId);
     }
 }

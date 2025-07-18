@@ -4008,10 +4008,10 @@ namespace SezApi.Services
             {
                 var query = (
                                from LcD in _db.RequestImpDeliveryApplicationDtl
-                               join oAd in _db.GetOblEntryAdditionalDetails
-                               on LcD.OBL equals oAd.OBL_HBL_No
-                               join obed in _db.GetOBLEntry
-                               on oAd.OBLEntryId equals obed.Id
+                               //join oAd in _db.GetOblEntryAdditionalDetails
+                               //on LcD.OBL equals oAd.OBL_HBL_No
+                               //join obed in _db.GetOBLEntry
+                               //on oAd.OBLEntryId equals obed.Id
                                             select new ResponseImpDeliveryApplicationDtl
                                   {
                                    DeliveryDtlId = LcD.DeliveryDtlId,
@@ -4037,7 +4037,7 @@ namespace SezApi.Services
                                   BOE_DATE = LcD.BOE_DATE,
                                   ImporterId = LcD.ImporterId,
                                   InvCancel = LcD.InvCancel,
-                                  ContainerNo = obed.ContainerCBTNo 
+                                  //ContainerNo = obed.ContainerCBTNo 
                               }
                           ).AsQueryable();
 
@@ -5177,6 +5177,36 @@ namespace SezApi.Services
                 response.Status = false;
                 response.Message = $"Error: {ex.Message}";
                 response.Data = null;
+                response.TotalCount = 0;
+            }
+
+            return response;
+        }
+
+
+        public async Task<Response<ResponsehandlingCharges>> GetExGodownHandlingChargesCalc(string containerLoadConReqList, int partyId)
+        {
+            var response = new Response<ResponsehandlingCharges>();
+
+            try
+            {
+                var results = await _db
+                    .Set<ResponsehandlingCharges>()
+                    .FromSqlInterpolated($"EXEC dbo.ExGodownHandlingChargesCalc {containerLoadConReqList}, {partyId}")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var result = results.FirstOrDefault() ?? new ResponsehandlingCharges();
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = 1;
+            }
+            catch (Exception ex)
+            {
+                response.Data = new ResponsehandlingCharges();
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
                 response.TotalCount = 0;
             }
 
