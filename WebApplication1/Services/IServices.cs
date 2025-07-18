@@ -142,7 +142,7 @@ namespace SezApi.Services
         Task<AddEditResponse> CancelInvoiceAsync(RequestCanceLinvoice reqInv);
 
         Task<Response<List<ResponseCanceLinvoice>>> GetCancelInvoiceAsync(int? id, int? page, int? size, string? InvoiceNo);
-        Task<Response<List<GodownInvoice>>> GetGodownInvoice(int? id, int? page, int? size);
+        Task<Response<List<GodownInvoice>>> GetGodownInvoice(int? id, int? page, int? size, bool? isImport);
         Task<Response<ResponseImportChargesInvoice>> GetGodownChargesReport(string? InvoiceNo);
     }
 }

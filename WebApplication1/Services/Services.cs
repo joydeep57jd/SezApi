@@ -5022,7 +5022,7 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<GodownInvoice>>> GetGodownInvoice(int? id, int? page, int? size)
+        public async Task<Response<List<GodownInvoice>>> GetGodownInvoice(int? id, int? page, int? size, bool? isImport)
         {
             var response = new Response<List<GodownInvoice>>();
 
@@ -5033,6 +5033,11 @@ namespace SezApi.Services
                 if (id.HasValue)
                 {
                     query = query.Where(s => s.GodownInvId == id.Value);
+                }
+
+                if (isImport.HasValue)
+                {
+                    query = query.Where(s => s.IsImport == isImport.Value);
                 }
 
                 query = query.OrderByDescending(x => x.GodownInvId);
@@ -5061,6 +5066,7 @@ namespace SezApi.Services
 
             return response;
         }
+
 
         public async Task<Response<ResponseImportChargesInvoice>> GetGodownChargesReport(string? InvoiceNo)
         {

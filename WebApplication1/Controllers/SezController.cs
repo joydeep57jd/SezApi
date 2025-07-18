@@ -1815,9 +1815,9 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetGodownInvoice")]
-        public async Task<IActionResult> GetGodownInvoice(int? id, int? page, int? size)
+        public async Task<IActionResult> GetGodownInvoice(int? id, int? page, int? size, bool? isImport)
         {
-            var result = await _services.GetGodownInvoice(id, page, size);
+            var result = await _services.GetGodownInvoice(id, page, size,isImport);
             return Ok(result);
         }
 
