@@ -3264,13 +3264,25 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<GatePass>>> GetPassHeader(int? id, int? page, int? size,bool? ForGateExit)
+        public async Task<Response<List<ResponseGatePass>>> GetPassHeader(int? id, int? page, int? size,bool? ForGateExit)
         {
-            var response = new Response<List<GatePass>>();
+            var response = new Response<List<ResponseGatePass>>();
 
             try
             {
-                var query = _db.GatePassHeader.OrderByDescending(x => x.GatePassId).AsQueryable();
+                var query = from gp in _db.GatePassHeader
+                            join yi in _db.GetYardInvoiceList
+                                on gp.InvoiceId equals yi.YardInvId into gj
+                            from yardInvoice in gj.DefaultIfEmpty()
+                            orderby gp.GatePassId descending
+                            select new ResponseGatePass
+                            {
+                                
+                                GatePassId = gp.GatePassId,
+                                GatePassNo = gp.GatePassNo,
+                                InvoiceNo=yardInvoice.InvoiceNo     
+                          
+                            };
 
                 if (id.HasValue)
                 {
@@ -3300,7 +3312,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
-                response.Data = new List<GatePass>();
+                response.Data = new List<ResponseGatePass>();
                 response.Status = false;
                 response.TotalCount = 0;
                 response.Message = $"Error: {ex.Message}";
