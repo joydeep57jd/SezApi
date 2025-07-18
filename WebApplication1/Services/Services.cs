@@ -5238,7 +5238,7 @@ namespace SezApi.Services
         }
 
 
-        public async Task<Response<ResponsehandlingCharges>> GetExGodownHandlingChargesCalc(string containerLoadConReqList, int partyId)
+        public async Task<Response<ResponsehandlingCharges>> GetExGodownHandlingChargesCalc(string ContainerShLineList, int partyId)
         {
             var response = new Response<ResponsehandlingCharges>();
 
@@ -5246,7 +5246,7 @@ namespace SezApi.Services
             {
                 var results = await _db
                     .Set<ResponsehandlingCharges>()
-                    .FromSqlInterpolated($"EXEC dbo.ExGodownHandlingChargesCalc {containerLoadConReqList}, {partyId}")
+                    .FromSqlInterpolated($"EXEC dbo.ExGodownHandlingChargesCalc {ContainerShLineList}, {partyId}")
                     .AsNoTracking()
                     .ToListAsync();
 

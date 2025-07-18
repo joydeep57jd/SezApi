@@ -1835,11 +1835,11 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetExGodownHandlingChargesCalc")]
-        public async Task<IActionResult> GetExGodownHandlingChargesCalc(string ContainerOBLList, int PartyId)
+        public async Task<IActionResult> GetExGodownHandlingChargesCalc(string ContainerShLineList, int PartyId)
         {
             try
             {
-                var response = await _services.GetExGodownHandlingChargesCalc(ContainerOBLList, PartyId);
+                var response = await _services.GetExGodownHandlingChargesCalc(ContainerShLineList, PartyId);
                 return Ok(response);
             }
 
