@@ -1529,10 +1529,10 @@ namespace SezApi.Controllers
 		}
 
 		[HttpGet("GetContainerStuffingHdr")]
-		public async Task<IActionResult> GetContainerStuffingHdr(int? id, int? page, int? size)
+		public async Task<IActionResult> GetContainerStuffingHdr(int? id, int? page, int? size, bool? isInvoice)
 		{
 
-			var response = await _services.GetContainerStuffingHdr(id, page, size);
+			var response = await _services.GetContainerStuffingHdr(id, page, size,isInvoice);
 
 			if (response.Data == null || !response.Data.Any())
 			{

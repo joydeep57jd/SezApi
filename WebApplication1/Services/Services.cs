@@ -5,6 +5,7 @@ using SezApi.Model.DBModels;
 using SezApi.Model.Request;
 using SezApi.Model.Response;
 using System.Data;
+using System.Linq;
 namespace SezApi.Services
 {
     public class Services : IServices
@@ -4041,11 +4042,11 @@ namespace SezApi.Services
             {
                 var query = (
                                from LcD in _db.RequestImpDeliveryApplicationDtl
-                               //join oAd in _db.GetOblEntryAdditionalDetails
-                               //on LcD.OBL equals oAd.OBL_HBL_No
-                               //join obed in _db.GetOBLEntry
-                               //on oAd.OBLEntryId equals obed.Id
-                                            select new ResponseImpDeliveryApplicationDtl
+                                   join DED in _db.ResponseImpDestuffingEntryDtl
+                                   on LcD.DestuffingEntryDtlId equals DED.DestuffingEntryDtlId
+                                   join DEA in _db.ResponseImpDestuffingEntryHdr
+                                   on DED.DestuffingEntryId equals DEA.DestuffingEntryId
+                               select new ResponseImpDeliveryApplicationDtl
                                   {
                                    DeliveryDtlId = LcD.DeliveryDtlId,
                                    DeliveryId = LcD.DeliveryId,
@@ -4070,7 +4071,7 @@ namespace SezApi.Services
                                   BOE_DATE = LcD.BOE_DATE,
                                   ImporterId = LcD.ImporterId,
                                   InvCancel = LcD.InvCancel,
-                                  //ContainerNo = obed.ContainerCBTNo 
+                                  ContainerNo = DEA.ContainerNo 
                               }
                           ).AsQueryable();
 
@@ -4196,7 +4197,7 @@ namespace SezApi.Services
         }
 
 
-        public async Task<Response<List<ContainerStuffingHeader>>> GetContainerStuffingHdr(int? id, int? page, int? size)
+        public async Task<Response<List<ContainerStuffingHeader>>> GetContainerStuffingHdr(int? id, int? page, int? size, bool? isInvoice)
         {
             var response = new Response<List<ContainerStuffingHeader>>();
 
@@ -4207,6 +4208,13 @@ namespace SezApi.Services
                 if (id.HasValue)
                 {
                     query = query.Where(s => s.StuffingReqId == id.Value);
+                }
+                if (isInvoice.HasValue && isInvoice.Value == true)
+                {
+                    var existingStuffingReqNos = _db.GodownInvoice
+                        .Select(g => g.ApplicationNo);
+
+                    query = query.Where(c => !existingStuffingReqNos.Contains(c.StuffingReqNo));
                 }
 
                 var totalRecords = await query.CountAsync();
