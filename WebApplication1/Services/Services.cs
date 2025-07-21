@@ -3996,7 +3996,7 @@ namespace SezApi.Services
 
         }
 
-        public async Task<Response<List<ImpDeliveryApplicationHdr>>> GetImpDeliveryApplicationHdr(int? id, int? page, int? size)
+        public async Task<Response<List<ImpDeliveryApplicationHdr>>> GetImpDeliveryApplicationHdr(int? id, int? page, int? size, bool? isInvoiceCheck)
         {
             var response = new Response<List<ImpDeliveryApplicationHdr>>();
 
@@ -4007,6 +4007,13 @@ namespace SezApi.Services
                 if (id.HasValue)
                 {
                     query = query.Where(s => s.DeliveryId == id.Value);
+                }
+                if (isInvoiceCheck.HasValue && isInvoiceCheck.Value == true)
+                {
+                    var existingStuffingReqNos = _db.GodownInvoice
+                        .Select(g => g.ApplicationNo);
+
+                    query = query.Where(c => !existingStuffingReqNos.Contains(c.DeliveryNo));
                 }
 
                 var totalRecords = await query.CountAsync();

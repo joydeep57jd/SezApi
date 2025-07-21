@@ -1482,10 +1482,10 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetImpDeliveryApplicationHdr")]
-        public async Task<IActionResult> GetImpDeliveryApplicationHdr(int? id,int? page, int? size)
+        public async Task<IActionResult> GetImpDeliveryApplicationHdr(int? id,int? page, int? size, bool? isInvoiceCheck)
         {
 
-            var response = await _services.GetImpDeliveryApplicationHdr(id, page, size);
+            var response = await _services.GetImpDeliveryApplicationHdr(id, page, size,isInvoiceCheck);
 
             if (response.Data == null || !response.Data.Any())
             {

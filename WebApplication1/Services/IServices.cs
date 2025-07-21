@@ -112,7 +112,7 @@ namespace SezApi.Services
         Task<AddEditResponse> CreateLoadContainerRequest(RequestLoadContainerRequest request);
         Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList(string? OperationName, string? DeliveryType);
         Task<AddEditResponse> AddEditDeliveryApplication(RequestImpDeliveryApplication request);
-        Task<Response<List<ImpDeliveryApplicationHdr>>> GetImpDeliveryApplicationHdr(int? id, int? page, int? size);
+        Task<Response<List<ImpDeliveryApplicationHdr>>> GetImpDeliveryApplicationHdr(int? id, int? page, int? size, bool? isInvoiceCheck);
         Task<Response<List<ResponseImpDeliveryApplicationDtl>>> GetImpDeliveryApplicationDtl(int? id, int? DeliveryId, int? page, int? size);
         Task<AddEditResponse> AddEditContainerStuffing(RequestContainerStuffing request);
         Task<Response<List<ContainerStuffingHeader>>> GetContainerStuffingHdr(int? id, int? page, int? size, bool? isInvoice);
