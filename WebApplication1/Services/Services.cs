@@ -3641,7 +3641,7 @@ namespace SezApi.Services
             try
             {
                 var query = _db.ResponseImpDestuffingEntryHdr.AsQueryable();
-
+                query = query.OrderByDescending(x => x.DestuffingEntryId);
                 if (id.HasValue)
                 {
                     query = query.Where(s => s.DestuffingEntryId == id.Value);
