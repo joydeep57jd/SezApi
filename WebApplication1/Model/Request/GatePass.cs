@@ -18,6 +18,7 @@ namespace SezApi.Model.Request
         public string? ShippingLineName { get; set; }
         public string? Remarks { get; set; }
         public int? InvoiceId { get; set; }
+        public string? InvoiceNo { get; set; }
         public int? BranchId { get; set; }
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }

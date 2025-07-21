@@ -2458,10 +2458,10 @@ namespace SezApi.Services
                 if (ForGatePass == true)
                 {
                     var usedForGatePass = _db.GatePassHeader
-                                                 .Select(x => x.InvoiceId)
+                                                 .Select(x => x.InvoiceNo)
                                                  .Distinct();
 
-                    query = query.Where(x => !usedForGatePass.Contains(x.InvoiceId));
+                    query = query.Where(x => !usedForGatePass.Contains(x.InvoiceNo));
 
                     //var yardInvoice = _db.GetYardInvoiceList
                     //                             .Select(x => x.InvoiceNo)                                                 
@@ -2852,6 +2852,7 @@ namespace SezApi.Services
                 @ShippingLineName = {request.GatePass.ShippingLineName},
                 @Remarks = {request.GatePass.Remarks},
                 @InvoiceId = {request.GatePass.InvoiceId},
+                @InvoiceNo = {request.GatePass.InvoiceNo},
                 @BranchId = {request.GatePass.BranchId},
                 @CreatedBy = {request.GatePass.CreatedBy},
                 @DepartureDate = {request.GatePass.DepartureDate},
@@ -3298,16 +3299,13 @@ namespace SezApi.Services
             try
             {
                 var query = from gp in _db.GatePassHeader
-                            join yi in _db.GetYardInvoiceList
-                                on gp.InvoiceId equals yi.YardInvId into gj
-                            from yardInvoice in gj.DefaultIfEmpty()
                             orderby gp.GatePassId descending
                             select new ResponseGatePass
                             {
                                 
                                 GatePassId = gp.GatePassId,
                                 GatePassNo = gp.GatePassNo,
-                                InvoiceNo=yardInvoice.InvoiceNo     
+                                InvoiceNo=gp.InvoiceNo     
                           
                             };
 

@@ -29,7 +29,7 @@ namespace SezApi.Model.Response
         public int? MsgFlag { get; set; }
         public string? FileName { get; set; }
         public int? FileCode { get; set; }
-        public string InvoiceNo { get; set; }
+        public string? InvoiceNo { get; set; }
         public int InvId { get; set; }
     }
    
