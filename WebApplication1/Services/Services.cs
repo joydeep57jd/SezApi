@@ -4209,40 +4209,55 @@ namespace SezApi.Services
 
             try
             {
+                // Logging input parameters
+                _logger.LogInformation("GetContainerStuffingHdr called with id={Id}, page={Page}, size={Size}, isInvoice={IsInvoice}", id, page, size, isInvoice);
+
                 var query = _db.ContainerStuffingHeader.OrderByDescending(x => x.StuffingReqId).AsQueryable();
 
+                // Apply ID filter
                 if (id.HasValue)
                 {
                     query = query.Where(s => s.StuffingReqId == id.Value);
                 }
-                if (isInvoice.HasValue && isInvoice.Value == true)
+
+                // Apply invoice exclusion filter
+                if (isInvoice.HasValue && isInvoice.Value)
                 {
-                    var existingStuffingReqNos = _db.GodownInvoice
-                        .Select(g => g.ApplicationNo);
+                    var existingStuffingReqNos = await _db.GodownInvoice
+                        .Select(g => g.ApplicationNo)
+                        .ToListAsync();
 
                     query = query.Where(c => !existingStuffingReqNos.Contains(c.StuffingReqNo));
                 }
 
+                // Count total filtered records before pagination
                 var totalRecords = await query.CountAsync();
 
-                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                // Apply pagination only if both page and size are valid
+                if (page.HasValue && size.HasValue && page.Value > 0 && size.Value > 0)
                 {
                     var skip = (page.Value - 1) * size.Value;
                     query = query.Skip(skip).Take(size.Value);
                 }
 
+                // Execute the query
                 var result = await query.ToListAsync();
 
+                // Return result
                 response.Data = result;
                 response.Status = true;
                 response.TotalCount = totalRecords;
+
+                _logger.LogInformation("GetContainerStuffingHdr successful. TotalRecords={TotalRecords}, ReturnedCount={ReturnedCount}", totalRecords, result.Count);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in GetContainerStuffingHdr. StackTrace: {StackTrace}", ex.StackTrace);
+
                 response.Data = new List<ContainerStuffingHeader>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}";
             }
 
             return response;
