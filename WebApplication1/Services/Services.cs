@@ -2464,7 +2464,6 @@ namespace SezApi.Services
                     query = query.Where(x => !usedForGatePass.Contains(x.InvoiceId));
 
                     var yardInvoice = _db.GetYardInvoiceList
-                                                 .Where(x => x.IsLoadContainerInvoice == false)
                                                  .Select(x => x.InvoiceNo)                                                 
                                                  .Distinct();
 
