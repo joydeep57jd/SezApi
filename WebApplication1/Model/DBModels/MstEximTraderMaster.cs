@@ -10,7 +10,7 @@ namespace SezApi.Model.DBModels
         public int TraderId { get; set; }
 
         [MaxLength(50)]
-        public string OperationType { get; set; }
+        public string? OperationType { get; set; }
 
         [MaxLength(255)]
         public string? EximTraderName { get; set; }
