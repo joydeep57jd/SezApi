@@ -13,4 +13,26 @@
         public string CountryName { get; set; } 
         public string StateName { get; set; } 
     }
+    public class ResponseInvoiceByPayee
+    {
+        public YardInvoiceSummary? YardInvoice { get; set; }
+        public GodownInvoiceSummary? GodownInvoice { get; set; }
+    }
+
+    public class YardInvoiceSummary
+    {
+        public int YardInvId { get; set; }
+        public string InvoiceNo { get; set; }
+        public DateTime? InvoiceDate { get; set; }
+        public decimal TotalAmount { get; set; }
+    }
+
+    public class GodownInvoiceSummary
+    {
+        public int GodownInvId { get; set; }
+        public string InvoiceNo { get; set; }
+        public DateTime? InvoiceDate { get; set; }
+        public decimal TotalAmount { get; set; }
+    }
+
 }

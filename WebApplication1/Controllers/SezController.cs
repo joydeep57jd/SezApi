@@ -1849,5 +1849,21 @@ namespace SezApi.Controllers
             }
         }
 
+          [HttpGet("GetPaymentInvoiceDetailsByPayee")]
+        public async Task<IActionResult> GetPaymentInvoiceDetailsByPayee(string? PayeeName, int? payeeId)
+        {
+            try
+            {
+                var response = await _services.GetPaymentInvoiceDetailsByPayee(PayeeName,payeeId);
+                return Ok(response);
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
     }
 }

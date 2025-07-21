@@ -5296,5 +5296,72 @@ namespace SezApi.Services
             return response;
         }
 
+        public async Task<Response<ResponseInvoiceByPayee>> GetPaymentInvoiceDetailsByPayee(string? PayeeName, int? payeeId)
+        {
+            var response = new Response<ResponseInvoiceByPayee>();
+            var result = new ResponseInvoiceByPayee();
+
+            try
+            {
+                                            // Get Yard Invoice with one charge
+                                            var yardInvoice = await (
+                                from inv in _db.GetYardInvoiceList
+                                join ch in _db.GetYardInvoiceCharges
+                                    on inv.YardInvId equals ch.InoviceId into chargeGroup
+                                from ch in chargeGroup.DefaultIfEmpty() // LEFT JOIN
+                                where (string.IsNullOrEmpty(PayeeName) || inv.PayeeName == PayeeName)
+                                      && (!payeeId.HasValue || inv.PayeeId == payeeId.Value)
+                                      && !_db.GetCashReceiptInvDtls.Any(c => c.InvoiceId == inv.YardInvId)
+                                      && !string.IsNullOrEmpty(inv.InvoiceNo)
+                                orderby inv.InvoiceDate descending
+    select new YardInvoiceSummary
+                                         {
+                                             YardInvId = inv.YardInvId,
+                                             InvoiceNo = inv.InvoiceNo,
+                                             InvoiceDate = inv.InvoiceDate,
+                                             TotalAmount = ch.Total ?? 0
+                                         }).FirstOrDefaultAsync();
+
+                if (yardInvoice != null)
+                    result.YardInvoice = yardInvoice;
+
+                // Get Godown Invoice with one charge
+                                        var godownInvoice = await (
+                            from inv in _db.GodownInvoice
+                            join ch in _db.GetGodownInvoiceCharges
+                                on inv.GodownInvId equals ch.InvoiceId into chargeGroup
+                            from ch in chargeGroup.DefaultIfEmpty() // LEFT JOIN
+                            where (string.IsNullOrEmpty(PayeeName) || inv.PayeeName == PayeeName)
+                                  && (!payeeId.HasValue || inv.PayeeId == payeeId.Value)
+                            orderby inv.InvoiceDate descending
+                            select new GodownInvoiceSummary
+                                           {
+                                               GodownInvId = inv.GodownInvId,
+                                               InvoiceNo = inv.InvoiceNo,
+                                               InvoiceDate = inv.InvoiceDate,
+                                               TotalAmount = ch.Total ?? 0
+                                           }).FirstOrDefaultAsync();
+
+                if (godownInvoice != null)
+                    result.GodownInvoice = godownInvoice;
+
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = (result.YardInvoice != null ? 1 : 0) + (result.GodownInvoice != null ? 1 : 0);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error in GetPaymentInvoiceDetailsByPayee: {Message}, Stack: {StackTrace}", ex.Message, ex.StackTrace);
+                response.Data = new ResponseInvoiceByPayee();
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.TotalCount = 0;
+            }
+
+            return response;
+        }
+
+
+
     }
 }

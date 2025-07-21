@@ -134,6 +134,8 @@ namespace SezApi.Data
         public DbSet<CanceLinvoice> CancelInvoice { get; set; }
 
         public DbSet<GodownInvoice> GodownInvoice { get; set; }
+        public DbSet<GodownInvoiceChargescs> GetGodownInvoiceCharges { get; set; }
+        
     }
 }
 
