@@ -13,7 +13,7 @@ namespace SezApi.Model.Response
 		public decimal? EntryCGSTAmount { get; set; }         
 		public decimal? EntrySGSTAmount { get; set; }        
 		public decimal? EntryIGSTAmount { get; set; }     
-	//	public decimal? TotalEntryAmt { get; set; }
+		public decimal? TotalEntryAmt { get; set; }
 	}
 
 	public class ResponseExportInsuranceChargesResponse
