@@ -15,8 +15,8 @@
     }
     public class ResponseInvoiceByPayee
     {
-        public YardInvoiceSummary? YardInvoice { get; set; }
-        public GodownInvoiceSummary? GodownInvoice { get; set; }
+        public List<YardInvoiceSummary> YardInvoice { get; set; }
+        public List<GodownInvoiceSummary> GodownInvoice { get; set; }
     }
 
     public class YardInvoiceSummary

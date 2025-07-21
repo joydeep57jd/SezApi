@@ -5320,7 +5320,7 @@ namespace SezApi.Services
                                              InvoiceNo = inv.InvoiceNo,
                                              InvoiceDate = inv.InvoiceDate,
                                              TotalAmount = ch.Total ?? 0
-                                         }).FirstOrDefaultAsync();
+                                         }).ToListAsync();
 
                 if (yardInvoice != null)
                     result.YardInvoice = yardInvoice;
@@ -5333,6 +5333,7 @@ namespace SezApi.Services
                             from ch in chargeGroup.DefaultIfEmpty() // LEFT JOIN
                             where (string.IsNullOrEmpty(PayeeName) || inv.PayeeName == PayeeName)
                                   && (!payeeId.HasValue || inv.PayeeId == payeeId.Value)
+                                    && !_db.GetCashReceiptInvDtls.Any(c => c.InvoiceNo == inv.InvoiceNo)
                             orderby inv.InvoiceDate descending
                             select new GodownInvoiceSummary
                                            {
@@ -5340,7 +5341,7 @@ namespace SezApi.Services
                                                InvoiceNo = inv.InvoiceNo,
                                                InvoiceDate = inv.InvoiceDate,
                                                TotalAmount = ch.Total ?? 0
-                                           }).FirstOrDefaultAsync();
+                                           }).ToListAsync();
 
                 if (godownInvoice != null)
                     result.GodownInvoice = godownInvoice;
