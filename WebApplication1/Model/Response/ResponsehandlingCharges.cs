@@ -5,7 +5,8 @@ namespace SezApi.Model.Response
 {
 	public class ResponsehandlingCharges
 	{
-		public string? ChargeName { get; set; }
+        public string? ValueType { get; set; }
+        public string? ChargeName { get; set; }
 		public decimal? TotalValue { get; set; }
 		public string? SacCode { get; set; }
 		public decimal? CGST { get; set; }
