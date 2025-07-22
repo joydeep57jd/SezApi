@@ -31,6 +31,8 @@ namespace SezApi.Model.Response
         public int? FileCode { get; set; }
         public string? InvoiceNo { get; set; }
         public int InvId { get; set; }
+        public string CompanyName { get; set; }
+        public string BOENo { get; set; }
     }
    
 }

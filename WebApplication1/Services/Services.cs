@@ -3292,13 +3292,38 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<GatePass>>> GetPassHeader(int? id, int? page, int? size,bool? ForGateExit)
+        public async Task<Response<List<ResponseGatePass>>> GetPassHeader(int? id, int? page, int? size,bool? ForGateExit)
         {
-            var response = new Response<List<GatePass>>();
+            var response = new Response<List<ResponseGatePass>>();
 
             try
             {
-                var query = _db.GatePassHeader.OrderByDescending(x=>x.GatePassId).AsQueryable();
+                var companyname = await _db.mstcompany
+                   .Where(c => c.CompanyId == 1)
+                  .Select(c => c.CompanyName)
+                  .FirstOrDefaultAsync();
+                var query = from gp in _db.GatePassHeader
+                            join yi in _db.GetYardInvoiceList
+                                on gp.InvoiceId equals yi.YardInvId into gj
+                            from yardInvoice in gj.DefaultIfEmpty()
+                            join gd in _db.GatePassDetails
+                            on gp.GatePassId equals gd.GatepassId
+                            join dh in _db.ResponseImpDestuffingEntryHdr
+                            on gd.ContainerNo equals dh.ContainerNo
+                            join dd in _db.ResponseImpDestuffingEntryDtl
+                           on dh.DestuffingEntryId equals dd.DestuffingEntryId
+                            orderby gp.GatePassId descending
+                            select new ResponseGatePass
+                            {
+
+                                GatePassId = gp.GatePassId,
+                                GatePassNo = gp.GatePassNo,
+                                InvoiceNo = yardInvoice.InvoiceNo,
+                                ExpDate = gp.ExpDate,
+                                CompanyName = companyname,
+                                BOENo = dd.BOENo
+
+                            };
 
                 if (id.HasValue)
                 {
@@ -3328,7 +3353,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
-                response.Data = new List<GatePass>();
+                response.Data = new List<ResponseGatePass>();
                 response.Status = false;
                 response.TotalCount = 0;
                 response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
