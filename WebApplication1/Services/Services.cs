@@ -1049,7 +1049,45 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.GetMstEximTraderMaster.OrderByDescending(x => x.TraderId).AsQueryable();
+                var query = from trader in _db.GetMstEximTraderMaster
+                            join state in _db.GetState on trader.StateId equals state.Id
+                            join country in _db.GetCountryList on trader.CountryId equals country.Id
+                            orderby trader.TraderId descending
+                            select new MstEximTraderMaster
+                            {
+
+                                TraderId = trader.TraderId,
+                                OperationType = trader.OperationType,
+                                EximTraderName = trader.EximTraderName,
+                                EximTraderAlias = trader.EximTraderAlias,
+                                Address = trader.Address,
+                                CityName = trader.CityName,
+                                Pincode = trader.Pincode,
+                                PhoneNo = trader.PhoneNo,
+                                FaxNo = trader.FaxNo,
+                                ContactPerson = trader.ContactPerson,
+                                EmailId = trader.EmailId,
+                                MobileNo = trader.MobileNo,
+                                PAN = trader.PAN,
+                                AadhaarNo = trader.AadhaarNo,
+                                GSTNo = trader.GSTNo,
+                                TAN = trader.TAN,
+                                SapCustomerNo = trader.SapCustomerNo,
+                                PartyCode = trader.PartyCode,
+                                IsImporter = trader.IsImporter,
+                                IsExporter = trader.IsExporter,
+                                IsShipline = trader.IsShipline,
+                                IsCHA = trader.IsCHA,
+                                IsForWarder = trader.IsForWarder,
+                                IsRent = trader.IsRent,
+                                IsBidder = trader.IsBidder,
+                                CountryId = trader.CountryId,
+                                StateId = trader.StateId,
+                                CountryName = country.Name,
+                                StateName = state.Name
+                            };
+
+
 
                 var totalRecords = await query.CountAsync();
 

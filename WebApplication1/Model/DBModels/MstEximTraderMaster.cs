@@ -72,6 +72,8 @@ namespace SezApi.Model.DBModels
         public bool? IsForWarder { get; set; }
         public bool? IsRent { get; set; }
         public bool? IsBidder { get; set; }
+        public int CountryId { get; set; }
+        public int StateId { get; set; }
 
     }
 }
