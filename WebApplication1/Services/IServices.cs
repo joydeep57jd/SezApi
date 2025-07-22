@@ -96,7 +96,7 @@ namespace SezApi.Services
         Task<Response<List<RentTableSpaceCharges>>> GetRentTableSpaceCharges(int? id, int? page, int? size);
         Task<AddEditResponse> CreateGatePassAsync(GatePassRequest request);
         Task<Response<List<ResponseGatePassGateOut>>> GetGatePassGateOut(int? GatePassDtlId);
-        Task<Response<List<ResponseGatePass>>> GetPassHeader(int? id, int? page, int? size, bool? ForGateExit);
+        Task<Response<List<GatePass>>> GetPassHeader(int? id, int? page, int? size, bool? ForGateExit);
         Task<Response<List<GatePassDtl>>> GetPassDetails(int? id, int? gatepassId, int? page, int? size);
         Task<Response<List<ExitThroughGateHeader>>> GetExitThroughHeader(int? id, int? page, int? size);
         Task<AddEditResponse> CreateExitThroughGate(RequestExitThroughGate request);
@@ -145,5 +145,7 @@ namespace SezApi.Services
         Task<Response<ResponseImportChargesInvoice>> GetGodownChargesReport(string? InvoiceNo);
         Task<Response<ResponsehandlingCharges>> GetExGodownHandlingChargesCalc(string ContainerShLineList, int partyId);
         Task<Response<ResponseInvoiceByPayee>> GetPaymentInvoiceDetailsByPayee(string? PayeeName, int? payeeId);
+
+        Task<Response<ResponseChargesRateSac>> GetChargesRateBySacCode(string? chargeType, string? SacCode, string isImport = "import", bool ishigh = false);
     }
 }

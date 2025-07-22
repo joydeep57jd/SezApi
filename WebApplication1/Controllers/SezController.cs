@@ -1864,6 +1864,21 @@ namespace SezApi.Controllers
             }
         }
 
+        [HttpGet("GetChargesRateBySacCode")]
+        public async Task<IActionResult> GetChargesRateBySacCode(string? chargeType, string? SacCode, string isImport = "import", bool ishigh = false)
+        {
+            try
+            {
+                var response = await _services.GetChargesRateBySacCode(chargeType, SacCode, isImport, ishigh);
+                return Ok(response);
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
 
     }
 }

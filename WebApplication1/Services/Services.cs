@@ -3292,22 +3292,13 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<ResponseGatePass>>> GetPassHeader(int? id, int? page, int? size,bool? ForGateExit)
+        public async Task<Response<List<GatePass>>> GetPassHeader(int? id, int? page, int? size,bool? ForGateExit)
         {
-            var response = new Response<List<ResponseGatePass>>();
+            var response = new Response<List<GatePass>>();
 
             try
             {
-                var query = from gp in _db.GatePassHeader
-                            orderby gp.GatePassId descending
-                            select new ResponseGatePass
-                            {
-                                
-                                GatePassId = gp.GatePassId,
-                                GatePassNo = gp.GatePassNo,
-                                InvoiceNo=gp.InvoiceNo     
-                          
-                            };
+                var query = _db.GatePassHeader.OrderByDescending(x=>x.GatePassId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -3337,7 +3328,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
-                response.Data = new List<ResponseGatePass>();
+                response.Data = new List<GatePass>();
                 response.Status = false;
                 response.TotalCount = 0;
                 response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
@@ -4927,7 +4918,7 @@ namespace SezApi.Services
 					ShippingLineId = first.ShippingLineId,
 					ShippingLine = first.ShippingLine,
 					Remarks = first.Remarks,
-					ContainersDetails = spResults.Select(x => new GatePassContainerDto
+					ContainersDetails = spResults.GroupBy(x => x.ContainerNo).Select(g => g.First()).Select(x => new GatePassContainerDto
 					{
 						ContainerNo = x.ContainerNo,
 						Size = x.Size,
@@ -5360,7 +5351,75 @@ namespace SezApi.Services
             return response;
         }
 
+        public async Task<Response<ResponseChargesRateSac>> GetChargesRateBySacCode(string? chargeType, string? SacCode, string isImport = "import", bool ishigh = false)
+        {
+            var response = new Response<ResponseChargesRateSac>();
+            try
+            {
+                int valueId = ishigh ? 1 : 2;
+                var sacid = _db.GetMstSac
+                               .Where(x => x.SacCode == SacCode)
+                               .Select(x => x.SacId)
+                               .FirstOrDefault();
 
+                if (sacid == 0)
+                {
+                    response.Status = false;
+                    response.Message = "Invalid SAC code.";
+                    return response;
+                }
+
+                decimal? rate = chargeType?.ToUpper() switch
+                {
+                    "ENT" => _db.GetMstEntryFee
+                                .Where(x => x.SacCodeId == sacid && x.OperationType.ToLower() == isImport.ToLower())
+                                .Select(x => x.RatePerPacket)
+                                .FirstOrDefault(),
+
+                    "EXM" => _db.GetExaminationCharge
+                                .Where(x => x.SACCodeId == sacid && x.ExaminationFor.ToLower() == isImport.ToLower())
+                                .Select(x => x.RatePerPacket)
+                                .FirstOrDefault(),
+
+                    "TRP" => _db.GetTransportationCharges
+                                .Where(x => x.SacCodeId == sacid && x.ApplicableForName.ToLower() == isImport.ToLower() && x.ValueId == valueId)
+                                .Select(x => x.Rate)
+                                .FirstOrDefault(),
+
+                    "INS" => _db.GetMstInsurance
+                                .Where(x => x.SacCodeId == sacid)
+                                .OrderByDescending(x => x.EffectiveDate)
+                                .Select(x => x.Rate)
+                                .FirstOrDefault(),
+
+                    "HAN" => _db.GetHandlinghargesList
+                                .Where(x => x.SacCodeId == sacid && x.BasisId == valueId)
+                                .Select(x => x.Rate)
+                                .FirstOrDefault(),
+
+                    "STO" => _db.GetStorageChargesGodown
+                                .Where(x => x.SacCodeId == sacid && x.BasisId == valueId)
+                                .Select(x => x.RatePerSqmMonth)
+                                .FirstOrDefault(),
+
+                    _ => null
+                };
+
+                response.Data = new ResponseChargesRateSac
+                {
+                    Rate = rate
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error in GetChargesRateBySacCode: {Message}, Stack: {StackTrace}", ex.Message, ex.StackTrace);
+                response.Status = false;
+                response.Message = $"Unexpected error occurred: {ex.Message}";
+                response.Data = new ResponseChargesRateSac();
+            }
+
+            return response;
+        }
 
     }
 }
