@@ -1050,12 +1050,13 @@ namespace SezApi.Services
             try
             {
                 var query = from trader in _db.GetMstEximTraderMaster
-                            join state in _db.GetState on trader.StateId equals state.Id
-                            join country in _db.GetCountryList on trader.CountryId equals country.Id
+                            join state in _db.GetState on trader.StateId equals state.Id into stateGroup
+                            from state in stateGroup.DefaultIfEmpty() 
+                            join country in _db.GetCountryList on trader.CountryId equals country.Id into countryGroup
+                            from country in countryGroup.DefaultIfEmpty() 
                             orderby trader.TraderId descending
                             select new MstEximTraderMaster
                             {
-
                                 TraderId = trader.TraderId,
                                 OperationType = trader.OperationType,
                                 EximTraderName = trader.EximTraderName,
@@ -1083,10 +1084,9 @@ namespace SezApi.Services
                                 IsBidder = trader.IsBidder,
                                 CountryId = trader.CountryId,
                                 StateId = trader.StateId,
-                                CountryName = country.Name,
-                                StateName = state.Name
+                                CountryName = country != null ? country.Name : null,
+                                StateName = state != null ? state.Name : null
                             };
-
 
 
                 var totalRecords = await query.CountAsync();
@@ -3337,30 +3337,36 @@ namespace SezApi.Services
             try
             {
                 var companyname = await _db.mstcompany
-                   .Where(c => c.CompanyId == 1)
-                  .Select(c => c.CompanyName)
-                  .FirstOrDefaultAsync();
+    .Where(c => c.CompanyId == 1)
+    .Select(c => c.CompanyName)
+    .FirstOrDefaultAsync();
+
                 var query = from gp in _db.GatePassHeader
                             join yi in _db.GetYardInvoiceList
                                 on gp.InvoiceId equals yi.YardInvId into gj
                             from yardInvoice in gj.DefaultIfEmpty()
+
                             join gd in _db.GatePassDetails
-                            on gp.GatePassId equals gd.GatepassId
+                                on gp.GatePassId equals gd.GatepassId into gdetails
+                            from gateDetail in gdetails.DefaultIfEmpty()
+
                             join dh in _db.ResponseImpDestuffingEntryHdr
-                            on gd.ContainerNo equals dh.ContainerNo
+                                on gateDetail.ContainerNo equals dh.ContainerNo into dhdr
+                            from destuffHdr in dhdr.DefaultIfEmpty()
+
                             join dd in _db.ResponseImpDestuffingEntryDtl
-                           on dh.DestuffingEntryId equals dd.DestuffingEntryId
+                                on destuffHdr.DestuffingEntryId equals dd.DestuffingEntryId into ddtl
+                            from destuffDtl in ddtl.DefaultIfEmpty()
+
                             orderby gp.GatePassId descending
                             select new ResponseGatePass
                             {
-
                                 GatePassId = gp.GatePassId,
                                 GatePassNo = gp.GatePassNo,
                                 InvoiceNo = yardInvoice.InvoiceNo,
                                 ExpDate = gp.ExpDate,
                                 CompanyName = companyname,
-                                BOENo = dd.BOENo
-
+                                BOENo = destuffDtl.BOENo
                             };
 
                 if (id.HasValue)
