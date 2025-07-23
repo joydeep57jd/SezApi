@@ -1593,8 +1593,8 @@ namespace SezApi.Controllers
             var result = await _services.GetImportInsuranceChargesCalc(
                 request.ContainerOBLList,
                 request.PartyId,
-				request.InvoiceDate
-			);
+				request.isYardInvoice
+            );
             return Ok(result);
         }
 
