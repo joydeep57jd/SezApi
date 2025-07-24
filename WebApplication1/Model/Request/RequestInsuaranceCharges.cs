@@ -4,6 +4,8 @@
     {
         public string ContainerOBLList { get; set; }
         public int PartyId { get; set; }
-		public DateTime InvoiceDate { get; set; }
-	}
+        public bool isYardInvoice { get; set; }
+
+
+    }
 }

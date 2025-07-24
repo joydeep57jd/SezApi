@@ -4462,7 +4462,7 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<ResponseImportInsuaranceCharges>>> GetImportInsuranceChargesCalc(string containerOBLList, int partyId, DateTime InvoiceDate)
+        public async Task<Response<List<ResponseImportInsuaranceCharges>>> GetImportInsuranceChargesCalc(string containerOBLList, int partyId, bool isYardInvoice)
         {
             var response = new Response<List<ResponseImportInsuaranceCharges>>();
 
@@ -4470,7 +4470,7 @@ namespace SezApi.Services
             {
                 var results = await _db
                     .Set<ResponseImportInsuaranceCharges>()
-                    .FromSqlInterpolated($"EXEC [dbo].[ImportInsuranceChargesCalc] {containerOBLList}, {partyId},{InvoiceDate}")
+                    .FromSqlInterpolated($"EXEC [dbo].[ImportInsuranceChargesCalc] {containerOBLList}, {partyId},{isYardInvoice}")
                     .AsNoTracking()
                     .ToListAsync();
 
