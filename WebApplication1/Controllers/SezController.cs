@@ -1323,10 +1323,10 @@ namespace SezApi.Controllers
 		}
 
 		[HttpGet("GetCCINEntry")]
-		public async Task<IActionResult> GetCCINEntry(int? id, int? page, int? size)
+		public async Task<IActionResult> GetCCINEntry(int? id, int? page, int? size, string? SBNo, DateTime? SBDate)
 		{
 
-			var response = await _services.GetCCINEntry(id, page, size);
+			var response = await _services.GetCCINEntry(id, page, size,SBNo,SBDate);
 
 			if (response.Data == null || !response.Data.Any())
 			{

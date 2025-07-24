@@ -102,7 +102,7 @@ namespace SezApi.Services
         Task<AddEditResponse> CreateExitThroughGate(RequestExitThroughGate request);
         Task<Response<List<ExitThroughGateDetails>>> GetExitThroughDetails(int? id, int? page, int? size, int? GateExitHeaderId);
         Task<AddEditResponse> AddEditCCINEntry(RequestCCINAddEdit request);
-        Task<Response<List<CCINEntry>>> GetCCINEntry(int? id, int? page, int? size);
+        Task<Response<List<CCINEntry>>> GetCCINEntry(int? id, int? page, int? size, string? SBNo, DateTime? SBDate);
         Task<Response<List<LoadContainerRequestHeader>>> GetLoadContainerHeader(int? id, int? page, int? size);
         Task<Response<List<LoadContainerRequestDetails>>> GetLoadContainerDetails(int? id, int? page, int? size, int? LoaderHeaderId);
         Task<AddEditResponse> AddEditDestuffingEntry(RequestDestuffingEntry request);

@@ -3587,7 +3587,7 @@ namespace SezApi.Services
             }
         }
 
-        public async Task<Response<List<CCINEntry>>> GetCCINEntry(int? id, int? page, int? size)
+        public async Task<Response<List<CCINEntry>>> GetCCINEntry(int? id, int? page, int? size, string? SBNo, DateTime? SBDate)
         {
             var response = new Response<List<CCINEntry>>();
 
@@ -3598,6 +3598,14 @@ namespace SezApi.Services
                 if (id.HasValue)
                 {
                     query = query.Where(s => s.CCINId == id.Value);
+                }
+                if (!string.IsNullOrEmpty(SBNo))
+                {
+                    query = query.Where(s => s.SBNo == SBNo);
+                }
+                if (SBDate.HasValue)
+                {
+                    query = query.Where(s => s.SBDate == SBDate.Value);
                 }
 
 
