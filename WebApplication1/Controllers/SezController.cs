@@ -1898,11 +1898,11 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetCreditNote")]
-        public async Task<IActionResult> GetCreditNote(int? CreditNoteId, int? page, int? size)
+        public async Task<IActionResult> GetCreditNote(int? CreditNoteId, int? page, int? size, string? creditNoteNo)
         {
             try
             {
-                var response = await _services.GetCreditNote(CreditNoteId, page, size);
+                var response = await _services.GetCreditNoteList(CreditNoteId, page, size, creditNoteNo);
                 return Ok(response);
             }
 
@@ -1912,11 +1912,11 @@ namespace SezApi.Controllers
             }
         }
         [HttpGet("GetCreditNoteDetail")]
-        public async Task<IActionResult> GetCreditNoteDetail(int? CreditNoteDetailId, int? CreditNoteId, int? page, int? size)
+        public async Task<IActionResult> GetCreditNoteDetail(int? CreditNoteDetailId, int? creditNoteId, int? page, int? size)
         {
             try
             {
-                var response = await _services.GetCreditNote(CreditNoteDetailId,CreditNoteId, page, size);
+                var response = await _services.GetCreditNoteDetailList(CreditNoteDetailId,creditNoteId, page, size);
                 return Ok(response);
             }
 

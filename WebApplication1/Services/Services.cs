@@ -703,44 +703,44 @@ namespace SezApi.Services
             return response;
         }
 
-		public async Task<AddEditResponse> AddEditMstInsurance(RequestMstInsurance request)
-		{
-			try
-			{
-				var parameters = new[]
+        public async Task<AddEditResponse> AddEditMstInsurance(RequestMstInsurance request)
+        {
+            try
+            {
+                var parameters = new[]
                       {
-	                    new SqlParameter("@InsuranceId", (object?)request.InsuranceId ?? DBNull.Value),
-	                        new SqlParameter("@Rate", SqlDbType.Decimal)
-	                            {
-	                 	           Precision = 10,
-		                           Scale = 3,
-		                           Value = (object?)request.Rate ?? DBNull.Value
-                              	},
-	                        new SqlParameter("@EffectiveDate", (object?)request.EffectiveDate ?? DBNull.Value),
-	                        new SqlParameter("@BranchId", (object?)request.BranchId ?? DBNull.Value),
-                           	new SqlParameter("@SacCodeId", (object?)request.SacCodeId ?? DBNull.Value),
-                           	new SqlParameter("@CreatedBy", (object?)request.CreatedBy ?? DBNull.Value),
-	                        new SqlParameter("@UpdatedBy", (object?)request.UpdatedBy ?? DBNull.Value),
+                        new SqlParameter("@InsuranceId", (object?)request.InsuranceId ?? DBNull.Value),
+                            new SqlParameter("@Rate", SqlDbType.Decimal)
+                                {
+                                    Precision = 10,
+                                   Scale = 3,
+                                   Value = (object?)request.Rate ?? DBNull.Value
+                                  },
+                            new SqlParameter("@EffectiveDate", (object?)request.EffectiveDate ?? DBNull.Value),
+                            new SqlParameter("@BranchId", (object?)request.BranchId ?? DBNull.Value),
+                               new SqlParameter("@SacCodeId", (object?)request.SacCodeId ?? DBNull.Value),
+                               new SqlParameter("@CreatedBy", (object?)request.CreatedBy ?? DBNull.Value),
+                            new SqlParameter("@UpdatedBy", (object?)request.UpdatedBy ?? DBNull.Value),
                         };
 
 
-				var result = await _db.AddEditResponse
-					.FromSqlRaw("EXEC dbo.Sp_AddEditInsurance @InsuranceId, @Rate, @EffectiveDate, @BranchId, @SacCodeId, @CreatedBy, @UpdatedBy", parameters)
-					.AsNoTracking()
-					.ToListAsync();
+                var result = await _db.AddEditResponse
+                    .FromSqlRaw("EXEC dbo.Sp_AddEditInsurance @InsuranceId, @Rate, @EffectiveDate, @BranchId, @SacCodeId, @CreatedBy, @UpdatedBy", parameters)
+                    .AsNoTracking()
+                    .ToListAsync();
 
-				var response = result.FirstOrDefault();
-				return response ?? new AddEditResponse { Response = "No response from procedure." };
-			}
-			catch (Exception ex)
-			{
+                var response = result.FirstOrDefault();
+                return response ?? new AddEditResponse { Response = "No response from procedure." };
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 throw new ApplicationException("Failed to execute Sp_AddEditInsurance", ex);
-			}
-		}
+            }
+        }
 
 
-		public async Task<Response<List<MstInsurance>>> GetMstInsurance(int? page, int? size)
+        public async Task<Response<List<MstInsurance>>> GetMstInsurance(int? page, int? size)
         {
             var response = new Response<List<MstInsurance>>();
 
@@ -894,7 +894,7 @@ namespace SezApi.Services
             }
             catch (Exception ex)
             {
-                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<MstRailFreightFees>();
                 response.Status = false;
                 response.TotalCount = 0;
@@ -954,7 +954,7 @@ namespace SezApi.Services
                 response.Data = new List<MstParty>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1036,7 +1036,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseAddEditPort>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1051,9 +1051,9 @@ namespace SezApi.Services
             {
                 var query = from trader in _db.GetMstEximTraderMaster
                             join state in _db.GetState on trader.StateId equals state.Id into stateGroup
-                            from state in stateGroup.DefaultIfEmpty() 
+                            from state in stateGroup.DefaultIfEmpty()
                             join country in _db.GetCountryList on trader.CountryId equals country.Id into countryGroup
-                            from country in countryGroup.DefaultIfEmpty() 
+                            from country in countryGroup.DefaultIfEmpty()
                             orderby trader.TraderId descending
                             select new MstEximTraderMaster
                             {
@@ -1108,7 +1108,7 @@ namespace SezApi.Services
                 response.Data = new List<MstEximTraderMaster>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1170,7 +1170,7 @@ namespace SezApi.Services
                 response.Data = new List<MstCommodity>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1256,7 +1256,7 @@ namespace SezApi.Services
                 response.Data = new List<GoDown>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1372,7 +1372,7 @@ namespace SezApi.Services
                 response.Data = new List<OBLEntry>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1405,7 +1405,7 @@ namespace SezApi.Services
                 response.Data = new List<Country>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1481,7 +1481,7 @@ namespace SezApi.Services
         }
 
 
-        public async Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice,bool? isCancelled,bool? forGetpass)
+        public async Task<Response<List<InvoiceYard>>> GetYardInvoice(int? page, int? size, string? PayeeName, bool? IsLoadContainerInvoice, bool? isCancelled, bool? forGetpass)
         {
             var response = new Response<List<InvoiceYard>>();
 
@@ -1493,7 +1493,7 @@ namespace SezApi.Services
                 {
                     query = query.Where(x => x.PayeeName.Contains(PayeeName));
                 }
-                
+
                 if (IsLoadContainerInvoice.HasValue)
                 {
                     query = query.Where(x => x.IsLoadContainerInvoice == IsLoadContainerInvoice.Value);
@@ -1501,11 +1501,11 @@ namespace SezApi.Services
 
                 if (isCancelled.HasValue)
                 {
-                    
+
                     query = query.Where(x => x.IsCancelled == isCancelled);
                 }
 
-                if(forGetpass == true)
+                if (forGetpass == true)
                 {
                     var usedGetpassInvoives = _db.GatePassHeader
                                                   .Select(x => x.InvoiceId)
@@ -1522,9 +1522,9 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-                
-                
-				var data = await query.ToListAsync();
+
+
+                var data = await query.ToListAsync();
 
                 response.Data = data;
                 response.Status = true;
@@ -1535,7 +1535,7 @@ namespace SezApi.Services
                 response.Data = new List<InvoiceYard>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1547,41 +1547,41 @@ namespace SezApi.Services
 
             try
             {
-				var query = from detail in _db.GetOblEntryAdditionalDetails
-							join obl in _db.GetOBLEntry
-								on detail.OBLEntryId equals obl.Id
-							select new ResponseOblEntryAdditionalDetails
-							{
-								ID = detail.ID,
-								AddID=detail.AddID,
-                                IcesContId= detail.IcesContId,
-                                OBL_HBL_No=detail.OBL_HBL_No,
-                                OBL_HBL_Date=detail.OBL_HBL_Date,
-                                SMTP_No=detail.SMTP_No,
-                                SMTP_Date=detail.SMTP_Date,
-                                Cargo_Desc=detail.Cargo_Desc,
-                                Commodity=detail.Commodity,
-                                Cargo_Type=detail.Cargo_Type,
-                                No_of_PKG=detail.No_of_PKG,
-                                PKG_Type=detail.PKG_Type,
-                                GR_WT_Kg=detail.GR_WT_Kg,
-                                Importer_Name=detail.Importer_Name,
-                                IGM_Importer_Name=detail.IGM_Importer_Name,
-                                IsProcessed=detail.IsProcessed,
-                                OBLEntryId=detail.OBLEntryId,
-                               CreatedBy=detail.CreatedBy,
-                               CreatedOn=detail.CreatedOn,
-                               UpdatedBy=detail.UpdatedBy,
-                               UpdatedOn=detail.UpdatedOn,						
-							 ContainerCBTNo = obl.ContainerCBTNo,
-                             BOENo=detail.BOENo,
-                             BOEDate=detail.BOEDate,
-                             CIFValue=detail.CIFValue,
-                             Duty=detail.Duty
+                var query = from detail in _db.GetOblEntryAdditionalDetails
+                            join obl in _db.GetOBLEntry
+                                on detail.OBLEntryId equals obl.Id
+                            select new ResponseOblEntryAdditionalDetails
+                            {
+                                ID = detail.ID,
+                                AddID = detail.AddID,
+                                IcesContId = detail.IcesContId,
+                                OBL_HBL_No = detail.OBL_HBL_No,
+                                OBL_HBL_Date = detail.OBL_HBL_Date,
+                                SMTP_No = detail.SMTP_No,
+                                SMTP_Date = detail.SMTP_Date,
+                                Cargo_Desc = detail.Cargo_Desc,
+                                Commodity = detail.Commodity,
+                                Cargo_Type = detail.Cargo_Type,
+                                No_of_PKG = detail.No_of_PKG,
+                                PKG_Type = detail.PKG_Type,
+                                GR_WT_Kg = detail.GR_WT_Kg,
+                                Importer_Name = detail.Importer_Name,
+                                IGM_Importer_Name = detail.IGM_Importer_Name,
+                                IsProcessed = detail.IsProcessed,
+                                OBLEntryId = detail.OBLEntryId,
+                                CreatedBy = detail.CreatedBy,
+                                CreatedOn = detail.CreatedOn,
+                                UpdatedBy = detail.UpdatedBy,
+                                UpdatedOn = detail.UpdatedOn,
+                                ContainerCBTNo = obl.ContainerCBTNo,
+                                BOENo = detail.BOENo,
+                                BOEDate = detail.BOEDate,
+                                CIFValue = detail.CIFValue,
+                                Duty = detail.Duty
 
-							};
+                            };
 
-				if (id.HasValue)
+                if (id.HasValue)
                 {
                     query = query.Where(s => s.ID == id.Value);
                 }
@@ -1799,7 +1799,7 @@ namespace SezApi.Services
                 response.Data = new List<OverTimeCharge>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1817,19 +1817,19 @@ namespace SezApi.Services
                                 on obl.Id equals obldetails.OBLEntryId
                             join gateentry in _db.GetEntryList
                                on obl.ContainerCBTNo equals gateentry.ContainerNo
-							join AppContainerDetails in _db.GetAppraisementContainerDetails
+                            join AppContainerDetails in _db.GetAppraisementContainerDetails
                                 on obl.Id equals AppContainerDetails.OBLNoId
-							join AppraisementApplicationHeader in _db.CustomAppraisementApplicationHeaderList
-							   on AppContainerDetails.CustomAppraisementId equals AppraisementApplicationHeader.ID
-							join AppDoDetails in _db.GetAppraisementDoDetails
+                            join AppraisementApplicationHeader in _db.CustomAppraisementApplicationHeaderList
+                               on AppContainerDetails.CustomAppraisementId equals AppraisementApplicationHeader.ID
+                            join AppDoDetails in _db.GetAppraisementDoDetails
                                 on AppContainerDetails.CustomAppraisementId equals AppDoDetails.CustomAppraisementId
                                 into AppDoDetailsGroup
                             from AppDoDetails in AppDoDetailsGroup.DefaultIfEmpty()
                             where
                           (string.IsNullOrEmpty(containerNo) || gateentry.ContainerNo == containerNo) &&
                           (string.IsNullOrEmpty(oblHblNo) || obldetails.OBL_HBL_No == oblHblNo) &&
-						  (string.IsNullOrEmpty(AppNo) || AppraisementApplicationHeader.AppraisementNo == AppNo)
-							select new ResponseOBLContauner
+                          (string.IsNullOrEmpty(AppNo) || AppraisementApplicationHeader.AppraisementNo == AppNo)
+                            select new ResponseOBLContauner
                             {
                                 ICDNo = gateentry.CFSNo,
                                 ContainerCBTNo = obl.ContainerCBTNo,
@@ -1850,12 +1850,12 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-				var data = (await query.ToListAsync())
-	            .DistinctBy(x => new { x.ContainerCBTNo, x.OBL_HBL_No }) // requires .NET 6+
-	            .ToList();
+                var data = (await query.ToListAsync())
+                .DistinctBy(x => new { x.ContainerCBTNo, x.OBL_HBL_No }) // requires .NET 6+
+                .ToList();
 
 
-				response.Data = data;
+                response.Data = data;
                 response.Status = true;
                 response.TotalCount = totalRecords;
             }
@@ -1864,7 +1864,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseOBLContauner>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1936,7 +1936,7 @@ namespace SezApi.Services
                 response.Data = new List<ExaminationCharge>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -1968,12 +1968,12 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-				var data = (await query.ToListAsync())
-	            .Where(x => !string.IsNullOrWhiteSpace(x.ContainerCBTNo)) 
-	            .DistinctBy(x => x.ContainerCBTNo) 
-	            .ToList();
+                var data = (await query.ToListAsync())
+                .Where(x => !string.IsNullOrWhiteSpace(x.ContainerCBTNo))
+                .DistinctBy(x => x.ContainerCBTNo)
+                .ToList();
 
-				response.Data = data;
+                response.Data = data;
                 response.Status = true;
                 response.TotalCount = totalRecords;
             }
@@ -1982,7 +1982,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseCbcContainerList>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2094,7 +2094,7 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<ResponseCustomerHeaderForList>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size,bool? isInvoiceCheck)
+        public async Task<Response<List<ResponseCustomerHeaderForList>>> GetCustomAppraisementApplicationHeader(int? id, int? page, int? size, bool? isInvoiceCheck)
         {
             var response = new Response<List<ResponseCustomerHeaderForList>>();
 
@@ -2107,16 +2107,16 @@ namespace SezApi.Services
                     query = query.Where(s => s.ID == id.Value);
                 }
 
-				if (isInvoiceCheck == true)
-				{
-					var usedAppraisementNos = _db.GetYardInvoiceList    
-												  .Select(x => x.ApplicationId)
-												  .Distinct();
+                if (isInvoiceCheck == true)
+                {
+                    var usedAppraisementNos = _db.GetYardInvoiceList
+                                                  .Select(x => x.ApplicationId)
+                                                  .Distinct();
 
-					query = query.Where(x => !usedAppraisementNos.Contains(x.ID));
-				}
+                    query = query.Where(x => !usedAppraisementNos.Contains(x.ID));
+                }
 
-				var totalRecords = await query.CountAsync();
+                var totalRecords = await query.CountAsync();
 
                 if (page.HasValue && page > 0 && size.HasValue && size > 0)
                 {
@@ -2124,35 +2124,35 @@ namespace SezApi.Services
                     query = query.Skip(skip).Take(size.Value);
                 }
 
-				// var result = await query.ToListAsync();
+                // var result = await query.ToListAsync();
 
-				var result = await query
-			.Select(h => new ResponseCustomerHeaderForList
-			{
-				ID = h.ID,
+                var result = await query
+            .Select(h => new ResponseCustomerHeaderForList
+            {
+                ID = h.ID,
                 AppraisementNo = h.AppraisementNo,
-				AppraisementDate = h.AppraisementDate,
-				ShippingLineId = h.ShippingLineId,
-				CHAId = h.CHAId,
-				Vessel = h.Vessel,
-				Voyage = h.Voyage,
-				Rotation = h.Rotation,
-				DeliveryType = h.DeliveryType,
-				DOStatus = h.DOStatus,
-				AppraisementStatus = h.AppraisementStatus,
-				CreatedDate = h.CreatedDate,
-				CreatedBy = h.CreatedBy,
-				ModifiedDate = h.ModifiedDate,
-				ModifiedBy = h.ModifiedBy,
-				ExaminationPercentage = h.ExaminationPercentage,
-				ContainerCBTNo = _db.GetAppraisementContainerDetails
-									 .Where(c => c.CustomAppraisementId == h.ID)
-									 .Select(c => c.ContainerCBTNo)
-									 .FirstOrDefault()
-			}).OrderByDescending(x => x.ID)
-			.ToListAsync();
+                AppraisementDate = h.AppraisementDate,
+                ShippingLineId = h.ShippingLineId,
+                CHAId = h.CHAId,
+                Vessel = h.Vessel,
+                Voyage = h.Voyage,
+                Rotation = h.Rotation,
+                DeliveryType = h.DeliveryType,
+                DOStatus = h.DOStatus,
+                AppraisementStatus = h.AppraisementStatus,
+                CreatedDate = h.CreatedDate,
+                CreatedBy = h.CreatedBy,
+                ModifiedDate = h.ModifiedDate,
+                ModifiedBy = h.ModifiedBy,
+                ExaminationPercentage = h.ExaminationPercentage,
+                ContainerCBTNo = _db.GetAppraisementContainerDetails
+                                     .Where(c => c.CustomAppraisementId == h.ID)
+                                     .Select(c => c.ContainerCBTNo)
+                                     .FirstOrDefault()
+            }).OrderByDescending(x => x.ID)
+            .ToListAsync();
 
-				response.Data = result;
+                response.Data = result;
                 response.Status = true;
                 response.TotalCount = totalRecords;
             }
@@ -2161,7 +2161,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseCustomerHeaderForList>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2203,7 +2203,7 @@ namespace SezApi.Services
                 response.Data = new List<AppraisementDoDetails>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2245,7 +2245,7 @@ namespace SezApi.Services
                 response.Data = new List<AppraisementContainerDetails>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2261,8 +2261,8 @@ namespace SezApi.Services
                             join details in _db.GetOblEntryAdditionalDetails
                                 on obl.Id equals details.OBLEntryId into joined
                             from detail in joined.DefaultIfEmpty()
-							orderby obl.Id descending
-							select new ResponseOBLEntryWithDetailsDto
+                            orderby obl.Id descending
+                            select new ResponseOBLEntryWithDetailsDto
                             {
                                 Id = obl.Id,
                                 ContainerCBTType = obl.ContainerCBTType,
@@ -2321,7 +2321,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseOBLEntryWithDetailsDto>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2349,7 +2349,7 @@ namespace SezApi.Services
             {
                 response.Data = new List<ResponseImportChargesCalc>();
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.TotalCount = 0;
             }
 
@@ -2537,7 +2537,7 @@ namespace SezApi.Services
                 response.Data = new List<CashReceiptInvDtls>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2580,7 +2580,7 @@ namespace SezApi.Services
                 response.Data = new List<CashReceiptDtl>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2619,7 +2619,7 @@ namespace SezApi.Services
                 response.Data = new List<CashReceiptHdr>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2661,7 +2661,7 @@ namespace SezApi.Services
                 response.Data = new List<YardInvoiceCharges>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -2684,7 +2684,7 @@ namespace SezApi.Services
                                       .Any(c => c.InvoiceId == inv.YardInvId)
                                   && (!string.IsNullOrEmpty(inv.InvoiceNo) && inv.InvoiceNo != "")
                             orderby inv.YardInvId descending
-							select new ResponseYardInvoiceFlat
+                            select new ResponseYardInvoiceFlat
                             {
                                 // From InvoiceYard
                                 YardInvId = inv.YardInvId,
@@ -2751,7 +2751,7 @@ namespace SezApi.Services
             {
                 response.Data = new List<ResponseYardInvoiceFlat>();
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.TotalCount = 0;
             }
 
@@ -2865,7 +2865,7 @@ namespace SezApi.Services
             catch (Exception ex)
             {
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = null;
                 response.TotalCount = 0;
             }
@@ -3002,7 +3002,7 @@ namespace SezApi.Services
                 response.Data = new List<TransportationCharges>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3074,7 +3074,7 @@ namespace SezApi.Services
                 response.Data = new List<StorageChargesGodown>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3139,7 +3139,7 @@ namespace SezApi.Services
                 response.Data = new List<RentOfficeSpaceCharges>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3204,7 +3204,7 @@ namespace SezApi.Services
                 response.Data = new List<RentTableSpaceCharges>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3235,7 +3235,7 @@ namespace SezApi.Services
                             {
                                 GatePassId = GPassHeader.GatePassId,
                                 GatepassDtlId = GPassDetails.GatepassDtlId,
-								GatePassNo = GPassHeader.GatePassNo,
+                                GatePassNo = GPassHeader.GatePassNo,
                                 VehicleNo = GPassDetails != null ? GPassDetails.VehicleNo : null,
                                 Importer = GPassHeader.ImpExpName,
                                 ShipplingLine = GPassHeader.ShippingLineName,
@@ -3248,14 +3248,14 @@ namespace SezApi.Services
                                 BoeNo = AppContDetails != null ? AppContDetails.BOENo : null,
                                 ElwbCargoWeight = GPassDetails.ElwbCargoWeight,
                                 ElwbTareWeight = GPassDetails.ElwbTareWeight,
-                                CargoDescription =GPassDetails.CargoDescription,
+                                CargoDescription = GPassDetails.CargoDescription,
                                 CargeType = GPassDetails.CargeType,
-                                NoOfUnits =GPassDetails.NoOfUnits,
-                                Weight =GPassDetails.Weight,
+                                NoOfUnits = GPassDetails.NoOfUnits,
+                                Weight = GPassDetails.Weight,
                                 Location = GPassDetails.Location,
                                 PortOfDispatch = GPassDetails.PortOfDispatch,
-                                IsReefer =GPassDetails.IsReefer
-							};
+                                IsReefer = GPassDetails.IsReefer
+                            };
 
 
 
@@ -3270,7 +3270,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseGatePassGateOut>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3340,7 +3340,7 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<ResponseGatePass>>> GetPassHeader(int? id, int? page, int? size,bool? ForGateExit)
+        public async Task<Response<List<ResponseGatePass>>> GetPassHeader(int? id, int? page, int? size, bool? ForGateExit)
         {
             var response = new Response<List<ResponseGatePass>>();
 
@@ -3391,7 +3391,7 @@ namespace SezApi.Services
                     var skip = (page.Value - 1) * size.Value;
                     query = query.Skip(skip).Take(size.Value);
                 }
-                if(ForGateExit == true)
+                if (ForGateExit == true)
                 {
                     var usedForGateExit = _db.EThroughGateHeader
                                                  .Select(x => x.GatePassNo)
@@ -3410,7 +3410,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseGatePass>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3453,7 +3453,7 @@ namespace SezApi.Services
                 response.Data = new List<GatePassDtl>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3491,7 +3491,7 @@ namespace SezApi.Services
                 response.Data = new List<ExitThroughGateHeader>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3532,7 +3532,7 @@ namespace SezApi.Services
                 response.Data = new List<ExitThroughGateDetails>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3638,7 +3638,7 @@ namespace SezApi.Services
                 response.Data = new List<CCINEntry>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3742,7 +3742,7 @@ namespace SezApi.Services
                 response.Data = new List<ImpDestuffingEntryHdr>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3784,7 +3784,7 @@ namespace SezApi.Services
                 response.Data = new List<ImpDestuffingEntryDtl>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -3816,61 +3816,61 @@ namespace SezApi.Services
 
         }
 
-		public async Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList(string? OperationName, string? DeliveryType)
-		{
-			var response = new Response<List<ResponseGetinContainer>>();
+        public async Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList(string? OperationName, string? DeliveryType)
+        {
+            var response = new Response<List<ResponseGetinContainer>>();
 
-			try
-			{
-				var query = _db.GetEntryList.AsQueryable();
+            try
+            {
+                var query = _db.GetEntryList.AsQueryable();
 
-				
-				if (!string.IsNullOrEmpty(OperationName))
-				{
-					query = query.Where(x => x.OperationName == OperationName);
-				}
 
-				if (!string.IsNullOrEmpty(DeliveryType))
-				{
-					query = query.Where(x => x.DeliveryType == DeliveryType);
-				}
+                if (!string.IsNullOrEmpty(OperationName))
+                {
+                    query = query.Where(x => x.OperationName == OperationName);
+                }
 
-				var totalCount = await query.CountAsync();
+                if (!string.IsNullOrEmpty(DeliveryType))
+                {
+                    query = query.Where(x => x.DeliveryType == DeliveryType);
+                }
 
-				
-				var destuffedContainerNos = await _db.ResponseImpDestuffingEntryHdr
-					.Select(d => d.ContainerNo)
-					.ToListAsync();
+                var totalCount = await query.CountAsync();
 
-				
-				var data = await query
-					.Where(x => !destuffedContainerNos.Contains(x.ContainerNo))
-					.Select(x => new ResponseGetinContainer
-					{
-						ContainerNo = x.ContainerNo
-					})
-					.Distinct()
-					.ToListAsync();
 
-				response.Data = data;
-				response.Status = true;
-				response.TotalCount = totalCount;
-			}
-			catch (Exception ex)
-			{
+                var destuffedContainerNos = await _db.ResponseImpDestuffingEntryHdr
+                    .Select(d => d.ContainerNo)
+                    .ToListAsync();
+
+
+                var data = await query
+                    .Where(x => !destuffedContainerNos.Contains(x.ContainerNo))
+                    .Select(x => new ResponseGetinContainer
+                    {
+                        ContainerNo = x.ContainerNo
+                    })
+                    .Distinct()
+                    .ToListAsync();
+
+                response.Data = data;
+                response.Status = true;
+                response.TotalCount = totalCount;
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<ResponseGetinContainer>();
-				response.Status = false;
-				response.TotalCount = 0;
-				response.Message = $"Error: {ex.Message}";
-			}
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
 
-			return response;
-		}
+            return response;
+        }
 
 
 
-		public async Task<AddEditResponse> CreateLoadContainerRequest(RequestLoadContainerRequest request)
+        public async Task<AddEditResponse> CreateLoadContainerRequest(RequestLoadContainerRequest request)
         {
             var response = new AddEditResponse();
 
@@ -3966,7 +3966,7 @@ namespace SezApi.Services
                 response.Data = new List<LoadContainerRequestHeader>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -4007,7 +4007,7 @@ namespace SezApi.Services
                 response.Data = new List<LoadContainerRequestDetails>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -4110,7 +4110,7 @@ namespace SezApi.Services
                 response.Data = new List<ImpDeliveryApplicationHdr>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -4124,37 +4124,37 @@ namespace SezApi.Services
             {
                 var query = (
                                from LcD in _db.RequestImpDeliveryApplicationDtl
-                                   join DED in _db.ResponseImpDestuffingEntryDtl
-                                   on LcD.DestuffingEntryDtlId equals DED.DestuffingEntryDtlId
-                                   join DEA in _db.ResponseImpDestuffingEntryHdr
-                                   on DED.DestuffingEntryId equals DEA.DestuffingEntryId
+                               join DED in _db.ResponseImpDestuffingEntryDtl
+                               on LcD.DestuffingEntryDtlId equals DED.DestuffingEntryDtlId
+                               join DEA in _db.ResponseImpDestuffingEntryHdr
+                               on DED.DestuffingEntryId equals DEA.DestuffingEntryId
                                select new ResponseImpDeliveryApplicationDtl
-                                  {
+                               {
                                    DeliveryDtlId = LcD.DeliveryDtlId,
                                    DeliveryId = LcD.DeliveryId,
                                    DestuffingEntryDtlId = LcD.DestuffingEntryDtlId,
-                                    LineNo = LcD.LineNo,
+                                   LineNo = LcD.LineNo,
                                    OBL = LcD.OBL,
-                                  CargoDescription = LcD.CargoDescription,
-                                  CommodityId = LcD.CommodityId,
-                                  NoOfPackages = LcD.NoOfPackages,
-                                  GrossWt = LcD.GrossWt,
-                                  SQM = LcD.SQM,
-                                  CUM = LcD.CUM,
-                                  CIF = LcD.CIF,
-                                  Duty = LcD.Duty,
-                                  DelNoOfPackages = LcD.DelNoOfPackages,
-                                  DelGrossWt = LcD.DelGrossWt,
-                                  DelSQM = LcD.DelSQM,
-                                  DelCUM = LcD.DelCUM,
-                                  DelCIF = LcD.DelCIF,
-                                  DelDuty = LcD.DelDuty,
-                                  BOE_NO = LcD.BOE_NO,
-                                  BOE_DATE = LcD.BOE_DATE,
-                                  ImporterId = LcD.ImporterId,
-                                  InvCancel = LcD.InvCancel,
-                                  ContainerNo = DEA.ContainerNo 
-                              }
+                                   CargoDescription = LcD.CargoDescription,
+                                   CommodityId = LcD.CommodityId,
+                                   NoOfPackages = LcD.NoOfPackages,
+                                   GrossWt = LcD.GrossWt,
+                                   SQM = LcD.SQM,
+                                   CUM = LcD.CUM,
+                                   CIF = LcD.CIF,
+                                   Duty = LcD.Duty,
+                                   DelNoOfPackages = LcD.DelNoOfPackages,
+                                   DelGrossWt = LcD.DelGrossWt,
+                                   DelSQM = LcD.DelSQM,
+                                   DelCUM = LcD.DelCUM,
+                                   DelCIF = LcD.DelCIF,
+                                   DelDuty = LcD.DelDuty,
+                                   BOE_NO = LcD.BOE_NO,
+                                   BOE_DATE = LcD.BOE_DATE,
+                                   ImporterId = LcD.ImporterId,
+                                   InvCancel = LcD.InvCancel,
+                                   ContainerNo = DEA.ContainerNo
+                               }
                           ).AsQueryable();
 
 
@@ -4192,7 +4192,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseImpDeliveryApplicationDtl>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -4345,7 +4345,7 @@ namespace SezApi.Services
 
             try
             {
-                var query = _db.ContainerStuffingDetails.OrderByDescending(x=>x.StuffingDtlId).AsQueryable();
+                var query = _db.ContainerStuffingDetails.OrderByDescending(x => x.StuffingDtlId).AsQueryable();
 
                 if (id.HasValue)
                 {
@@ -4376,7 +4376,7 @@ namespace SezApi.Services
                 response.Data = new List<ContainerStuffingDetails>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -4465,7 +4465,7 @@ namespace SezApi.Services
             {
                 response.Data = new List<ResponseStorageChargesCalc>();
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.TotalCount = 0;
             }
 
@@ -4492,7 +4492,7 @@ namespace SezApi.Services
             {
                 response.Data = new List<ResponseImportInsuaranceCharges>();
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.TotalCount = 0;
             }
 
@@ -4521,7 +4521,7 @@ namespace SezApi.Services
             {
                 response.Data = new ResponsehandlingCharges();
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.TotalCount = 0;
             }
 
@@ -4529,73 +4529,73 @@ namespace SezApi.Services
         }
 
 
-		public async Task<Response<List<RegisterOfOutwardSupplyReportResponse>>> GetRegisterOfOutwardSupplyReport(DateTime? FromDate, DateTime? ToDate, string InvoiceType)
-		{
-			var response = new Response<List<RegisterOfOutwardSupplyReportResponse>>();
+        public async Task<Response<List<RegisterOfOutwardSupplyReportResponse>>> GetRegisterOfOutwardSupplyReport(DateTime? FromDate, DateTime? ToDate, string InvoiceType)
+        {
+            var response = new Response<List<RegisterOfOutwardSupplyReportResponse>>();
 
-			try
-			{
-				var flatRows = await _db
-					.Set<RegisterOfOutwardSupplyReportResponse>()
-					.FromSqlInterpolated($"EXEC dbo.RegisterOfOutwardSupplyReport {FromDate},{ToDate},{InvoiceType ?? (object)DBNull.Value}")
-					.AsNoTracking()
-					.ToListAsync();
+            try
+            {
+                var flatRows = await _db
+                    .Set<RegisterOfOutwardSupplyReportResponse>()
+                    .FromSqlInterpolated($"EXEC dbo.RegisterOfOutwardSupplyReport {FromDate},{ToDate},{InvoiceType ?? (object)DBNull.Value}")
+                    .AsNoTracking()
+                    .ToListAsync();
 
-				var first = flatRows;
-				if (first == null)
-				{
-					response.Data = null;
-					response.Status = false;
-					response.Message = "No data found";
-					return response;
-				}
+                var first = flatRows;
+                if (first == null)
+                {
+                    response.Data = null;
+                    response.Status = false;
+                    response.Message = "No data found";
+                    return response;
+                }
 
-				
 
-				response.Data = first;
-				response.Status = true;
-				response.TotalCount = flatRows.Count;
-			}
-			catch (Exception ex)
-			{
+
+                response.Data = first;
+                response.Status = true;
+                response.TotalCount = flatRows.Count;
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Status = false;
-				response.Message = $"Error: {ex.Message}";
-				response.Data = null;
-				response.TotalCount = 0;
-			}
+                response.Message = $"Error: {ex.Message}";
+                response.Data = null;
+                response.TotalCount = 0;
+            }
 
-			return response;
-		}
+            return response;
+        }
 
-	
-		public async Task<Response<List<ResponseChargeSummaryByInvoice>>> GetChargeSummaryByInvoiceResponse()
-		{
-			var response = new Response<List<ResponseChargeSummaryByInvoice>>();
 
-			try
-			{
-				var results = await _db.ResponseChargeSummaryByInvoice
-					.FromSqlInterpolated($"EXEC dbo.SP_GetChargeSummaryByInvoice")
-					.AsNoTracking()
-                    .OrderByDescending(x=>x.InvoiceId)
-					.ToListAsync();
+        public async Task<Response<List<ResponseChargeSummaryByInvoice>>> GetChargeSummaryByInvoiceResponse()
+        {
+            var response = new Response<List<ResponseChargeSummaryByInvoice>>();
 
-				response.Data = results;
-				response.Status = true;
-				response.TotalCount = results.Count;
-			}
-			catch (Exception ex)
-			{
+            try
+            {
+                var results = await _db.ResponseChargeSummaryByInvoice
+                    .FromSqlInterpolated($"EXEC dbo.SP_GetChargeSummaryByInvoice")
+                    .AsNoTracking()
+                    .OrderByDescending(x => x.InvoiceId)
+                    .ToListAsync();
+
+                response.Data = results;
+                response.Status = true;
+                response.TotalCount = results.Count;
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<ResponseChargeSummaryByInvoice>();
-				response.Status = false;
-				response.Message = $"Error: {ex.Message}";
-				response.TotalCount = 0;
-			}
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.TotalCount = 0;
+            }
 
-			return response;
-		}
+            return response;
+        }
 
         public async Task<Response<List<RegisterOfOutwardSupplyReportResponse>>> GetRegisterOfOutwardSupplyReportInvoice(DateTime? FromDate, DateTime? ToDate, string InvoiceType)
         {
@@ -4628,7 +4628,7 @@ namespace SezApi.Services
             {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = null;
                 response.TotalCount = 0;
             }
@@ -4668,376 +4668,376 @@ namespace SezApi.Services
             {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = null;
                 response.TotalCount = 0;
             }
 
             return response;
         }
-		public async Task<Response<List<ResponseGetContainerlistByGetEntry>>> GetContainerlistByGetEntry()
-		{
-			var response = new Response<List<ResponseGetContainerlistByGetEntry>>();
+        public async Task<Response<List<ResponseGetContainerlistByGetEntry>>> GetContainerlistByGetEntry()
+        {
+            var response = new Response<List<ResponseGetContainerlistByGetEntry>>();
 
-			try
-			{
-				var results = await _db.ResponseGetContainerlistByGetEntry
-					.FromSqlInterpolated($"EXEC dbo.GetContainerlistByGetEntryOnly")
-					.AsNoTracking()
-					.ToListAsync();
+            try
+            {
+                var results = await _db.ResponseGetContainerlistByGetEntry
+                    .FromSqlInterpolated($"EXEC dbo.GetContainerlistByGetEntryOnly")
+                    .AsNoTracking()
+                    .ToListAsync();
 
-				response.Data = results;
-				response.Status = true;
-				response.TotalCount = results.Count;
-			}
-			catch (Exception ex)
-			{
+                response.Data = results;
+                response.Status = true;
+                response.TotalCount = results.Count;
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<ResponseGetContainerlistByGetEntry>();
-				response.Status = false;
-				response.Message = $"Error: {ex.Message}";
-				response.TotalCount = 0;
-			}
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.TotalCount = 0;
+            }
 
-			return response;
-		}
+            return response;
+        }
 
-		public async Task<Response<List<ResponseGetContainerlistForLoadedContainerRequest>>> GetContainerlistForLoadedContainerRequest()
+        public async Task<Response<List<ResponseGetContainerlistForLoadedContainerRequest>>> GetContainerlistForLoadedContainerRequest()
         {
-			var response = new Response<List<ResponseGetContainerlistForLoadedContainerRequest>>();
+            var response = new Response<List<ResponseGetContainerlistForLoadedContainerRequest>>();
 
-			try
-			{
-				var results = await _db.ResponseGetContainerlistForLoadedContainerRequest
-					.FromSqlInterpolated($"EXEC dbo.GetContainerlistForLoadedContainerRequest")
-					.AsNoTracking()
-					.ToListAsync();
+            try
+            {
+                var results = await _db.ResponseGetContainerlistForLoadedContainerRequest
+                    .FromSqlInterpolated($"EXEC dbo.GetContainerlistForLoadedContainerRequest")
+                    .AsNoTracking()
+                    .ToListAsync();
 
-				response.Data = results;
-				response.Status = true;
-				response.TotalCount = results.Count;
-			}
-			catch (Exception ex)
-			{
+                response.Data = results;
+                response.Status = true;
+                response.TotalCount = results.Count;
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<ResponseGetContainerlistForLoadedContainerRequest>();
-				response.Status = false;
-				response.Message = $"Error: {ex.Message}";
-				response.TotalCount = 0;
-			}
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.TotalCount = 0;
+            }
 
-			return response;
-		}
+            return response;
+        }
 
-		public async Task<Response<List<ResponseGetCLandRno>>> GetCLandRNoForLoadContainerInvoice(string? RequestNo)
+        public async Task<Response<List<ResponseGetCLandRno>>> GetCLandRNoForLoadContainerInvoice(string? RequestNo)
         {
-			var response = new Response<List<ResponseGetCLandRno>>();
+            var response = new Response<List<ResponseGetCLandRno>>();
 
-			try
-			{
-				var query = (from Lchdr in _db.LoadContainerRtHeader 
-							join LcD in _db.LoadContainerRDetails
-								on Lchdr.LoadContReqId equals LcD.LoadContReqId
-                            where (string.IsNullOrEmpty(RequestNo) || Lchdr.LoadContReqNo == RequestNo)
-							 && !_db.GetYardInvoiceList.Any(y => y.IsLoadContainerInvoice == true && y.Container == LcD.ContainerNo)
-							select new ResponseGetCLandRno
-							{
-								LoadContReqId = LcD.LoadContReqId,
-								LoadContReqDetlId = LcD.LoadContReqDetlId,
-								LoadContReqNo = Lchdr.LoadContReqNo,
-								ContainerNo = LcD.ContainerNo,
-								LoadContReqDate = Lchdr.LoadContReqDate
-							}).GroupBy(x => x.LoadContReqNo)
-		                 	.Select(g => new ResponseGetCLandRno
-			                   {
-			                  	LoadContReqNo = g.Key,
-				                LoadContReqId = g.First().LoadContReqId,
-				                LoadContReqDetlId = g.First().LoadContReqDetlId,
-			                 	ContainerNo = g.First().ContainerNo,
-                                LoadContReqDate = g.First().LoadContReqDate,
-		                  	}); ;
+            try
+            {
+                var query = (from Lchdr in _db.LoadContainerRtHeader
+                             join LcD in _db.LoadContainerRDetails
+                                 on Lchdr.LoadContReqId equals LcD.LoadContReqId
+                             where (string.IsNullOrEmpty(RequestNo) || Lchdr.LoadContReqNo == RequestNo)
+                              && !_db.GetYardInvoiceList.Any(y => y.IsLoadContainerInvoice == true && y.Container == LcD.ContainerNo)
+                             select new ResponseGetCLandRno
+                             {
+                                 LoadContReqId = LcD.LoadContReqId,
+                                 LoadContReqDetlId = LcD.LoadContReqDetlId,
+                                 LoadContReqNo = Lchdr.LoadContReqNo,
+                                 ContainerNo = LcD.ContainerNo,
+                                 LoadContReqDate = Lchdr.LoadContReqDate
+                             }).GroupBy(x => x.LoadContReqNo)
+                             .Select(g => new ResponseGetCLandRno
+                             {
+                                 LoadContReqNo = g.Key,
+                                 LoadContReqId = g.First().LoadContReqId,
+                                 LoadContReqDetlId = g.First().LoadContReqDetlId,
+                                 ContainerNo = g.First().ContainerNo,
+                                 LoadContReqDate = g.First().LoadContReqDate,
+                             }); ;
 
-				var totalRecords = await query.CountAsync();
-				var data = await query.ToListAsync();
+                var totalRecords = await query.CountAsync();
+                var data = await query.ToListAsync();
 
-				response.Data = data;
-				response.Status = true;
-				response.TotalCount = totalRecords;
-			}
-			catch (Exception ex)
-			{
+                response.Data = data;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<ResponseGetCLandRno>();
-				response.Status = false;
-				response.TotalCount = 0;
-				response.Message = $"Error: {ex.Message}";
-			}
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
 
-			return response;
-		}
+            return response;
+        }
 
 
-		public async Task<Response<List<ResponseGetContainerlistByGetEntry>>> GetContainerlistByOBLEntry()
-		{
-			var response = new Response<List<ResponseGetContainerlistByGetEntry>>();
+        public async Task<Response<List<ResponseGetContainerlistByGetEntry>>> GetContainerlistByOBLEntry()
+        {
+            var response = new Response<List<ResponseGetContainerlistByGetEntry>>();
 
-			try
-			{
-				var results = await _db.ResponseGetContainerlistByGetEntry
-					.FromSqlInterpolated($"EXEC dbo.GetContainerlistByOBLOnly")
-					.AsNoTracking()
-					.ToListAsync();
+            try
+            {
+                var results = await _db.ResponseGetContainerlistByGetEntry
+                    .FromSqlInterpolated($"EXEC dbo.GetContainerlistByOBLOnly")
+                    .AsNoTracking()
+                    .ToListAsync();
 
-				response.Data = results;
-				response.Status = true;
-				response.TotalCount = results.Count;
-			}
-			catch (Exception ex)
-			{
+                response.Data = results;
+                response.Status = true;
+                response.TotalCount = results.Count;
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<ResponseGetContainerlistByGetEntry>();
-				response.Status = false;
-				response.Message = $"Error: {ex.Message}";
-				response.TotalCount = 0;
-			}
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.TotalCount = 0;
+            }
 
-			return response;
-		}
+            return response;
+        }
 
-		public async Task<Response<List<CCINEntry>>> GetCCINEntryBySBNo(int? id, int? page, int? size, string? SBNo)
-		{
-			var response = new Response<List<CCINEntry>>();
+        public async Task<Response<List<CCINEntry>>> GetCCINEntryBySBNo(int? id, int? page, int? size, string? SBNo)
+        {
+            var response = new Response<List<CCINEntry>>();
 
-			try
-			{
-				var query = _db.CCINEntryDetails.AsQueryable();
+            try
+            {
+                var query = _db.CCINEntryDetails.AsQueryable();
 
-				if (!string.IsNullOrEmpty(SBNo))
-				{
-					query = query.Where(s => s.SBNo == SBNo);
-				}
+                if (!string.IsNullOrEmpty(SBNo))
+                {
+                    query = query.Where(s => s.SBNo == SBNo);
+                }
 
-				var totalRecords = await query.CountAsync();
+                var totalRecords = await query.CountAsync();
 
-				if (page.HasValue && page > 0 && size.HasValue && size > 0)
-				{
-					var skip = (page.Value - 1) * size.Value;
-					query = query.OrderByDescending(x => x.CreatedOn).Skip(skip).Take(size.Value);
-				}
-				else
-				{
-					query = query.OrderByDescending(x => x.CreatedOn);
-				}
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.OrderByDescending(x => x.CreatedOn).Skip(skip).Take(size.Value);
+                }
+                else
+                {
+                    query = query.OrderByDescending(x => x.CreatedOn);
+                }
 
-				var result = await query.ToListAsync();
+                var result = await query.ToListAsync();
 
-				response.Data = result;
-				response.Status = true;
-				response.TotalCount = totalRecords;
-			}
-			catch (Exception ex)
-			{
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<CCINEntry>();
-				response.Status = false;
-				response.TotalCount = 0;
-				response.Message = $"Error: {ex.Message}";
-			}
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
 
-			return response;
-		}
+            return response;
+        }
 
 
-		public async Task<Response<List<mstpackuqc>>> GetPackUQC(int? id, int? page, int? size)
-		{
-			var response = new Response<List<mstpackuqc>>();
+        public async Task<Response<List<mstpackuqc>>> GetPackUQC(int? id, int? page, int? size)
+        {
+            var response = new Response<List<mstpackuqc>>();
 
-			try
-			{
-				var query = _db.mstpackuqc.AsQueryable();
+            try
+            {
+                var query = _db.mstpackuqc.AsQueryable();
 
-				if (id.HasValue)
-				{
-					query = query.Where(s => s.Id == id.Value);
-				}
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.Id == id.Value);
+                }
 
-				var totalRecords = await query.CountAsync();
+                var totalRecords = await query.CountAsync();
 
-				if (page.HasValue && page > 0 && size.HasValue && size > 0)
-				{
-					var skip = (page.Value - 1) * size.Value;
-					query = query.Skip(skip).Take(size.Value);
-				}
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
 
-				var result = await query.OrderByDescending(x => x.Id).ToListAsync();
+                var result = await query.OrderByDescending(x => x.Id).ToListAsync();
 
-				response.Data = result;
-				response.Status = true;
-				response.TotalCount = totalRecords;
-			}
-			catch (Exception ex)
-			{
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<mstpackuqc>();
-				response.Status = false;
-				response.TotalCount = 0;
-				response.Message = $"Error: {ex.Message}";
-			}
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
 
-			return response;
-		}
+            return response;
+        }
 
         public async Task<Response<List<ResponseExportEntryFeeChargesResponse>>> GetExportEntryFeeChargesResponse(string ContainerList, int PartyId)
         {
-			var response = new Response<List<ResponseExportEntryFeeChargesResponse>>();
+            var response = new Response<List<ResponseExportEntryFeeChargesResponse>>();
 
-			try
-			{
-				var results = await _db.ResponseExportEntryFeeChargesResponse
-				   .FromSqlInterpolated($"EXEC dbo.ExportEntryFeeCharges @ContainerList = {ContainerList}, @PartyId = {PartyId}")
-					.AsNoTracking()
-	                 .ToListAsync();
+            try
+            {
+                var results = await _db.ResponseExportEntryFeeChargesResponse
+                   .FromSqlInterpolated($"EXEC dbo.ExportEntryFeeCharges @ContainerList = {ContainerList}, @PartyId = {PartyId}")
+                    .AsNoTracking()
+                     .ToListAsync();
 
-				response.Data = results;
-				response.Status = true;
-				response.TotalCount = results.Count;
-			}
-			catch (Exception ex)
-			{
+                response.Data = results;
+                response.Status = true;
+                response.TotalCount = results.Count;
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<ResponseExportEntryFeeChargesResponse>();
-				response.Status = false;
-				response.Message = $"Error: {ex.Message}";
-				response.TotalCount = 0;
-			}
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.TotalCount = 0;
+            }
 
-			return response;
-		}
+            return response;
+        }
 
         public async Task<Response<List<ResponseExportInsuranceChargesResponse>>> GetExportInsuranceChargesCalc(string ContainerList, int PartyId, DateTime InvoiceDate)
         {
-			var response = new Response<List<ResponseExportInsuranceChargesResponse>>();
+            var response = new Response<List<ResponseExportInsuranceChargesResponse>>();
 
-			try
-			{
-				var results = await _db.ResponseExportInsuranceChargesResponse
-				   .FromSqlInterpolated($"EXEC dbo.ExportInsuranceChargesCalc @ContainerList = {ContainerList}, @PartyId = {PartyId},@InvoiceDate = {InvoiceDate}")
-					.AsNoTracking()
-					 .ToListAsync();
+            try
+            {
+                var results = await _db.ResponseExportInsuranceChargesResponse
+                   .FromSqlInterpolated($"EXEC dbo.ExportInsuranceChargesCalc @ContainerList = {ContainerList}, @PartyId = {PartyId},@InvoiceDate = {InvoiceDate}")
+                    .AsNoTracking()
+                     .ToListAsync();
 
-				response.Data = results;
-				response.Status = true;
-				response.TotalCount = results.Count;
-			}
-			catch (Exception ex)
-			{
+                response.Data = results;
+                response.Status = true;
+                response.TotalCount = results.Count;
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<ResponseExportInsuranceChargesResponse>();
-				response.Status = false;
-				response.Message = $"Error: {ex.Message}";
-				response.TotalCount = 0;
-			}
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.TotalCount = 0;
+            }
 
-			return response;
-		}
+            return response;
+        }
 
         public async Task<Response<List<mstcompany>>> GetComanyDetails(int? id)
         {
-			var response = new Response<List<mstcompany>>();
+            var response = new Response<List<mstcompany>>();
 
-			try
-			{
-				var query = _db.mstcompany.AsQueryable();
+            try
+            {
+                var query = _db.mstcompany.AsQueryable();
 
-				if (id.HasValue)
-				{
-					query = query.Where(s => s.CompanyId == id.Value);
-				}
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.CompanyId == id.Value);
+                }
 
-				
 
-				var result = await query.ToListAsync();
 
-				response.Data = result;
-				response.Status = true;
-			}
-			catch (Exception ex)
-			{
+                var result = await query.ToListAsync();
+
+                response.Data = result;
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<mstcompany>();
-				response.Status = false;
-				response.TotalCount = 0;
-				response.Message = $"Error: {ex.Message}";
-			}
+                response.Status = false;
+                response.TotalCount = 0;
+                response.Message = $"Error: {ex.Message}";
+            }
 
-			return response;
-		}
+            return response;
+        }
 
         public async Task<Response<GatePassDetailsStructured>> GetGatePassDetailsStructured(string invoiceNo)
         {
-			var response = new Response<GatePassDetailsStructured>();
+            var response = new Response<GatePassDetailsStructured>();
 
-			try
-			{
-				// Run SP and get flat result
-				var spResults = await _db.GatePassDetailsResponse
-					.FromSqlInterpolated($"EXEC dbo.GatePassDetailsByInvoiceNo @InvoiceNo={invoiceNo}")
-					.ToListAsync();
+            try
+            {
+                // Run SP and get flat result
+                var spResults = await _db.GatePassDetailsResponse
+                    .FromSqlInterpolated($"EXEC dbo.GatePassDetailsByInvoiceNo @InvoiceNo={invoiceNo}")
+                    .ToListAsync();
 
-				if (spResults == null || spResults.Count == 0)
-				{
-					response.Data = null;
-					response.Status = false;
-					response.Message = "No data found for the given Invoice No.";
-					return response;
-				}
+                if (spResults == null || spResults.Count == 0)
+                {
+                    response.Data = null;
+                    response.Status = false;
+                    response.Message = "No data found for the given Invoice No.";
+                    return response;
+                }
 
-				// Map header from first row
-				var first = spResults.First();
+                // Map header from first row
+                var first = spResults.First();
 
-				var dto = new GatePassDetailsStructured
-				{
-					InvoiceNo = first.InvoiceNo,
-					DeliveryDate = first.DeliveryDate,
-					ChaId = first.ChaId,
-					ImporterExporterId = first.ImporterExporterId,
-					ImporterExporterName = first.ImporterExporterName,
-					ShippingLineId = first.ShippingLineId,
-					ShippingLine = first.ShippingLine,
-					Remarks = first.Remarks,
-					ContainersDetails = spResults.GroupBy(x => x.ContainerNo).Select(g => g.First()).Select(x => new GatePassContainerDto
-					{
-						ContainerNo = x.ContainerNo,
-						Size = x.Size,
-						CargoDescription = x.CargoDescription,
-						CargoType = x.CargoType,
-						VehichleNo = x.VehichleNo,
-						NoofPackages = x.NoofPackages,
-						GrossWeight = x.GrossWeight,
-						DLocation = x.DLocation,
-						PortId = x.PortId,
+                var dto = new GatePassDetailsStructured
+                {
+                    InvoiceNo = first.InvoiceNo,
+                    DeliveryDate = first.DeliveryDate,
+                    ChaId = first.ChaId,
+                    ImporterExporterId = first.ImporterExporterId,
+                    ImporterExporterName = first.ImporterExporterName,
+                    ShippingLineId = first.ShippingLineId,
+                    ShippingLine = first.ShippingLine,
+                    Remarks = first.Remarks,
+                    ContainersDetails = spResults.GroupBy(x => x.ContainerNo).Select(g => g.First()).Select(x => new GatePassContainerDto
+                    {
+                        ContainerNo = x.ContainerNo,
+                        Size = x.Size,
+                        CargoDescription = x.CargoDescription,
+                        CargoType = x.CargoType,
+                        VehichleNo = x.VehichleNo,
+                        NoofPackages = x.NoofPackages,
+                        GrossWeight = x.GrossWeight,
+                        DLocation = x.DLocation,
+                        PortId = x.PortId,
                         ExitIdDtls = x.ExitIdDtls,
                         ExitidHeader = x.ExitidHeader,
                         DepositorName = x.DepositorName,
                         Reefer = x.Reefer,
                         CfsCode = x.CfsCode
-					}).ToList()
-				};
+                    }).ToList()
+                };
 
-				response.Data = dto;
-				response.Status = true;
-				response.Message = "Success";
-			}
-			catch (Exception ex)
-			{
+                response.Data = dto;
+                response.Status = true;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = null;
-				response.Status = false;
-				response.Message = $"Error: {ex.Message}";
-			}
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+            }
 
-			return response;
-		}
+            return response;
+        }
 
         public async Task<Response<List<DailyCashBookReportResponse>>> GetDailyCashBookReport(DateTime? fromDate, DateTime? toDate)
         {
@@ -5059,7 +5059,7 @@ namespace SezApi.Services
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = new List<DailyCashBookReportResponse>();
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.TotalCount = 0;
             }
 
@@ -5173,7 +5173,7 @@ namespace SezApi.Services
                 response.Data = new List<ResponseCanceLinvoice>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -5219,7 +5219,7 @@ namespace SezApi.Services
                 response.Data = new List<GodownInvoice>();
                 response.Status = false;
                 response.TotalCount = 0;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
             }
 
             return response;
@@ -5334,7 +5334,7 @@ namespace SezApi.Services
             {
                 _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Status = false;
-                response.Message = $"Error: {ex.Message}";   _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Message = $"Error: {ex.Message}"; _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
                 response.Data = null;
                 response.TotalCount = 0;
             }
@@ -5379,45 +5379,45 @@ namespace SezApi.Services
 
             try
             {
-                                            // Get Yard Invoice with one charge
-                                            var yardInvoice = await (
-                                from inv in _db.GetYardInvoiceList
-                                join ch in _db.GetYardInvoiceCharges
-                                    on inv.YardInvId equals ch.InoviceId into chargeGroup
-                                from ch in chargeGroup.DefaultIfEmpty() // LEFT JOIN
-                                where (string.IsNullOrEmpty(PayeeName) || inv.PayeeName == PayeeName)
-                                      && (!payeeId.HasValue || inv.PayeeId == payeeId.Value)
-                                      && !_db.GetCashReceiptInvDtls.Any(c => c.InvoiceId == inv.YardInvId)
-                                      && !string.IsNullOrEmpty(inv.InvoiceNo)
-                                orderby inv.InvoiceDate descending
+                // Get Yard Invoice with one charge
+                var yardInvoice = await (
+    from inv in _db.GetYardInvoiceList
+    join ch in _db.GetYardInvoiceCharges
+        on inv.YardInvId equals ch.InoviceId into chargeGroup
+    from ch in chargeGroup.DefaultIfEmpty() // LEFT JOIN
+    where (string.IsNullOrEmpty(PayeeName) || inv.PayeeName == PayeeName)
+          && (!payeeId.HasValue || inv.PayeeId == payeeId.Value)
+          && !_db.GetCashReceiptInvDtls.Any(c => c.InvoiceId == inv.YardInvId)
+          && !string.IsNullOrEmpty(inv.InvoiceNo)
+    orderby inv.InvoiceDate descending
     select new YardInvoiceSummary
-                                         {
-                                             YardInvId = inv.YardInvId,
-                                             InvoiceNo = inv.InvoiceNo,
-                                             InvoiceDate = inv.InvoiceDate,
-                                             TotalAmount = ch.Total ?? 0
-                                         }).ToListAsync();
+    {
+        YardInvId = inv.YardInvId,
+        InvoiceNo = inv.InvoiceNo,
+        InvoiceDate = inv.InvoiceDate,
+        TotalAmount = ch.Total ?? 0
+    }).ToListAsync();
 
                 if (yardInvoice != null)
                     result.YardInvoice = yardInvoice;
 
                 // Get Godown Invoice with one charge
-                                        var godownInvoice = await (
-                            from inv in _db.GodownInvoice
-                            join ch in _db.GetGodownInvoiceCharges
-                                on inv.GodownInvId equals ch.InvoiceId into chargeGroup
-                            from ch in chargeGroup.DefaultIfEmpty() // LEFT JOIN
-                            where (string.IsNullOrEmpty(PayeeName) || inv.PayeeName == PayeeName)
-                                  && (!payeeId.HasValue || inv.PayeeId == payeeId.Value)
-                                    && !_db.GetCashReceiptInvDtls.Any(c => c.InvoiceNo == inv.InvoiceNo)
-                            orderby inv.InvoiceDate descending
-                            select new GodownInvoiceSummary
-                                           {
-                                               GodownInvId = inv.GodownInvId,
-                                               InvoiceNo = inv.InvoiceNo,
-                                               InvoiceDate = inv.InvoiceDate,
-                                               TotalAmount = ch.Total ?? 0
-                                           }).ToListAsync();
+                var godownInvoice = await (
+    from inv in _db.GodownInvoice
+    join ch in _db.GetGodownInvoiceCharges
+        on inv.GodownInvId equals ch.InvoiceId into chargeGroup
+    from ch in chargeGroup.DefaultIfEmpty() // LEFT JOIN
+    where (string.IsNullOrEmpty(PayeeName) || inv.PayeeName == PayeeName)
+          && (!payeeId.HasValue || inv.PayeeId == payeeId.Value)
+            && !_db.GetCashReceiptInvDtls.Any(c => c.InvoiceNo == inv.InvoiceNo)
+    orderby inv.InvoiceDate descending
+    select new GodownInvoiceSummary
+    {
+        GodownInvId = inv.GodownInvId,
+        InvoiceNo = inv.InvoiceNo,
+        InvoiceDate = inv.InvoiceDate,
+        TotalAmount = ch.Total ?? 0
+    }).ToListAsync();
 
                 if (godownInvoice != null)
                     result.GodownInvoice = godownInvoice;
@@ -5578,7 +5578,7 @@ namespace SezApi.Services
             var response = new Response<List<CreditNote>>();
             try
             {
-                var query = _db.CreditNote.AsQueryable();
+                var query = _db.CreditNote.OrderByDescending(x => x.CreditNoteId).AsQueryable();
                 if (id.HasValue)
                 {
                     query = query.Where(s => s.CreditNoteId == id.Value);
@@ -5593,7 +5593,7 @@ namespace SezApi.Services
                     var skip = (page.Value - 1) * size.Value;
                     query = query.Skip(skip).Take(size.Value);
                 }
-                var result = await query.OrderByDescending(x => x.CreditNoteId).ToListAsync();
+                var result = await query.ToListAsync();
                 response.Data = result;
                 response.Status = true;
                 response.TotalCount = totalRecords;
@@ -5608,12 +5608,16 @@ namespace SezApi.Services
             }
             return response;
         }
-        public async Task<Response<List<CreditNoteDetail>>> GetCreditNoteDetailList(long? creditNoteId, int? page, int? size)
+        public async Task<Response<List<CreditNoteDetail>>> GetCreditNoteDetailList(int? CreditNoteDetailId, int? creditNoteId, int? page, int? size)
         {
             var response = new Response<List<CreditNoteDetail>>();
             try
             {
-                var query = _db.creditNoteDetails.AsQueryable();
+                var query = _db.creditNoteDetails.OrderByDescending(x => x.CreditNoteDetailId).AsQueryable();
+                if (CreditNoteDetailId.HasValue)
+                {
+                    query = query.Where(s => s.CreditNoteDetailId == CreditNoteDetailId.Value);
+                }
                 if (creditNoteId.HasValue)
                 {
                     query = query.Where(s => s.CreditNoteId == creditNoteId.Value);
@@ -5624,7 +5628,7 @@ namespace SezApi.Services
                     var skip = (page.Value - 1) * size.Value;
                     query = query.Skip(skip).Take(size.Value);
                 }
-                var result = await query.OrderByDescending(x => x.CreditNoteDetailId).ToListAsync();
+                var result = await query.ToListAsync();
                 response.Data = result;
                 response.Status = true;
                 response.TotalCount = totalRecords;
@@ -5640,3 +5644,4 @@ namespace SezApi.Services
             return response;
         }
     }
+}

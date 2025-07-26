@@ -6,7 +6,7 @@ namespace SezApi.Model.DBModels
     public class CreditNote
     {
         [Key]
-        public long CreditNoteId { get; set; }
+        public int CreditNoteId { get; set; }
         public string? CreditNoteNo { get; set; }
         public DateTime? CreditNoteDate { get; set; }
         public string? InvoiceNo { get; set; }
@@ -24,8 +24,8 @@ namespace SezApi.Model.DBModels
     public class CreditNoteDetail
     {
         [Key]
-        public long CreditNoteDetailId { get; set; }
-        public long? CreditNoteId { get; set; }
+        public int CreditNoteDetailId { get; set; }
+        public int? CreditNoteId { get; set; }
         public int SlNo { get; set; }
         public string Particulars { get; set; }
         public string SAC { get; set; }
