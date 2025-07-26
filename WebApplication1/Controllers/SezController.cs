@@ -1771,12 +1771,13 @@ namespace SezApi.Controllers
 		}
 
 		[HttpGet("GetExportInsuranceChargesCalc")]
-		public async Task<IActionResult> GetExportInsuranceChargesCalc(string ContainerList, int PartyId,DateTime InvoiceDate)
+		public async Task<IActionResult> GetExportInsuranceChargesCalc(string ContainerList, int PartyId,DateTime InvoiceDate,bool isLoadContainerInvoice)
 		{
 			var result = await _services.GetExportInsuranceChargesCalc(
 				ContainerList,
 				PartyId,
-				InvoiceDate
+				InvoiceDate,
+                isLoadContainerInvoice
 			);
 			return Ok(result);
 		}

@@ -4915,14 +4915,14 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<ResponseExportInsuranceChargesResponse>>> GetExportInsuranceChargesCalc(string ContainerList, int PartyId, DateTime InvoiceDate)
+        public async Task<Response<List<ResponseExportInsuranceChargesResponse>>> GetExportInsuranceChargesCalc(string ContainerList, int PartyId, DateTime InvoiceDate,bool isLoadContainerInvoice)
         {
             var response = new Response<List<ResponseExportInsuranceChargesResponse>>();
 
             try
             {
                 var results = await _db.ResponseExportInsuranceChargesResponse
-                   .FromSqlInterpolated($"EXEC dbo.ExportInsuranceChargesCalc @ContainerList = {ContainerList}, @PartyId = {PartyId},@InvoiceDate = {InvoiceDate}")
+                   .FromSqlInterpolated($"EXEC dbo.ExportInsuranceChargesCalc @ContainerList = {ContainerList}, @PartyId = {PartyId},@InvoiceDate = {InvoiceDate},@isLoadContainerInvoice={isLoadContainerInvoice}")
                     .AsNoTracking()
                      .ToListAsync();
 
