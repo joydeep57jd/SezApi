@@ -5656,10 +5656,10 @@ namespace SezApi.Services
             {
                 var resultList = await _db.ResponseImportTransportChargesCalc
                     .FromSqlInterpolated($@"
-            EXEC dbo.ImportTransportChargesCalc 
+            EXEC dbo.ExportTransportChargesCalc 
                 @ContainerList = {ContainerList}, 
                 @PartyId = {PartyId},
-                @@isLoadContainerInvoice = {isLoadContainerInvoice}
+                @isLoadContainerInvoice = {isLoadContainerInvoice}
             ")
                     .AsNoTracking()
                     .ToListAsync();
