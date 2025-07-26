@@ -4125,9 +4125,11 @@ namespace SezApi.Services
                 var query = (
                                from LcD in _db.RequestImpDeliveryApplicationDtl
                                join DED in _db.ResponseImpDestuffingEntryDtl
-                               on LcD.DestuffingEntryDtlId equals DED.DestuffingEntryDtlId
+                                   on LcD.DestuffingEntryDtlId equals DED.DestuffingEntryDtlId into DED_joined
+                               from DED in DED_joined.DefaultIfEmpty()
                                join DEA in _db.ResponseImpDestuffingEntryHdr
-                               on DED.DestuffingEntryId equals DEA.DestuffingEntryId
+                                   on DED.DestuffingEntryId equals DEA.DestuffingEntryId into DEA_joined
+                               from DEA in DEA_joined.DefaultIfEmpty()
                                select new ResponseImpDeliveryApplicationDtl
                                {
                                    DeliveryDtlId = LcD.DeliveryDtlId,
@@ -4153,7 +4155,7 @@ namespace SezApi.Services
                                    BOE_DATE = LcD.BOE_DATE,
                                    ImporterId = LcD.ImporterId,
                                    InvCancel = LcD.InvCancel,
-                                   ContainerNo = DEA.ContainerNo
+                                   ContainerNo = DEA != null ? DEA.ContainerNo : null
                                }
                           ).AsQueryable();
 
