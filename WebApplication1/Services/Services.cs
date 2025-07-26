@@ -1320,8 +1320,12 @@ namespace SezApi.Services
                             @IsProcessed = {detail.IsProcessed},
                             @OBLEntryId = {spResult.Id},
                             @CreatedBy = {detail.CreatedBy},
-                            @UpdatedBy = {detail.UpdatedBy}
-                    ")
+                            @UpdatedBy = {detail.UpdatedBy},
+                            @BOENo= {detail.BOENo},
+                            @BOEDate= {detail.BOEDate},
+                            @CIFValue= {detail.CIFValue},
+                            @Duty= {detail.Duty}
+                             ")
                             .AsNoTracking()
                             .ToListAsync();
                     }
@@ -1569,7 +1573,12 @@ namespace SezApi.Services
                                CreatedOn=detail.CreatedOn,
                                UpdatedBy=detail.UpdatedBy,
                                UpdatedOn=detail.UpdatedOn,						
-							 ContainerCBTNo = obl.ContainerCBTNo
+							 ContainerCBTNo = obl.ContainerCBTNo,
+                             BOENo=detail.BOENo,
+                             BOEDate=detail.BOEDate,
+                             CIFValue=detail.CIFValue,
+                             Duty=detail.Duty
+
 							};
 
 				if (id.HasValue)
@@ -2279,7 +2288,8 @@ namespace SezApi.Services
                                 PKG_Type = detail.PKG_Type,
                                 GR_WT_Kg = detail.GR_WT_Kg,
                                 Importer_Name = detail.Importer_Name,
-                                IGM_Importer_Name = detail.IGM_Importer_Name
+                                IGM_Importer_Name = detail.IGM_Importer_Name,
+
                             };
 
                 if (id.HasValue)
