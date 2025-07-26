@@ -1387,11 +1387,11 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetImportTransportChargesCalc")]
-        public async Task<IActionResult> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId)
+        public async Task<IActionResult> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId, bool IsYardInvoice)
         {
             try
             {
-                var response = await _services.GetImportTransportChargesCalc(ContainerOBLList, PartyId);
+                var response = await _services.GetImportTransportChargesCalc(ContainerOBLList, PartyId, IsYardInvoice);
                 return Ok(response);
             }         
 
@@ -1760,22 +1760,24 @@ namespace SezApi.Controllers
 		}
 
 		[HttpGet("GetExportEntryFeeChargesResponse")]
-		public async Task<IActionResult> GetExportEntryFeeChargesResponse(string ContainerList,int PartyId)
+		public async Task<IActionResult> GetExportEntryFeeChargesResponse(string ContainerList,int PartyId, bool isLoadContainerInvoice)
         {
 			var result = await _services.GetExportEntryFeeChargesResponse(
 				ContainerList,
-				PartyId
+				PartyId,
+                isLoadContainerInvoice
 			);
 			return Ok(result);
 		}
 
 		[HttpGet("GetExportInsuranceChargesCalc")]
-		public async Task<IActionResult> GetExportInsuranceChargesCalc(string ContainerList, int PartyId,DateTime InvoiceDate)
+		public async Task<IActionResult> GetExportInsuranceChargesCalc(string ContainerList, int PartyId,DateTime InvoiceDate,bool isLoadContainerInvoice)
 		{
 			var result = await _services.GetExportInsuranceChargesCalc(
 				ContainerList,
 				PartyId,
-				InvoiceDate
+				InvoiceDate,
+                isLoadContainerInvoice
 			);
 			return Ok(result);
 		}
@@ -1926,6 +1928,19 @@ namespace SezApi.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        [HttpGet("GetExportTransportChargesCalc")]
+        public async Task<IActionResult> GetExportTransportChargesCalc(string ContainerList, int PartyId, bool @isLoadContainerInvoice)
+        {
+            try
+            {
+                var response = await _services.GetExportTransportChargesCalc( ContainerList, PartyId,  isLoadContainerInvoice);
+                return Ok(response);
+            }
 
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

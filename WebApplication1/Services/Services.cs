@@ -3793,7 +3793,7 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<ResponseImportTransportChargesCalc> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId)
+        public async Task<ResponseImportTransportChargesCalc> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId,bool IsYardInvoice)
         {
             try
             {
@@ -3801,7 +3801,8 @@ namespace SezApi.Services
                     .FromSqlInterpolated($@"
             EXEC dbo.ImportTransportChargesCalc 
                 @ContainerOBLList = {ContainerOBLList}, 
-                @PartyId = {PartyId}
+                @PartyId = {PartyId},
+                @IsYardInvoice = {IsYardInvoice}
             ")
                     .AsNoTracking()
                     .ToListAsync();
@@ -4892,14 +4893,14 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<ResponseExportEntryFeeChargesResponse>>> GetExportEntryFeeChargesResponse(string ContainerList, int PartyId)
+        public async Task<Response<List<ResponseExportEntryFeeChargesResponse>>> GetExportEntryFeeChargesResponse(string ContainerList, int PartyId, bool isLoadContainerInvoice)
         {
             var response = new Response<List<ResponseExportEntryFeeChargesResponse>>();
 
             try
             {
                 var results = await _db.ResponseExportEntryFeeChargesResponse
-                   .FromSqlInterpolated($"EXEC dbo.ExportEntryFeeCharges @ContainerList = {ContainerList}, @PartyId = {PartyId}")
+                   .FromSqlInterpolated($"EXEC dbo.ExportEntryFeeCharges @ContainerList = {ContainerList}, @PartyId = {PartyId},@isLoadContainerInvoice = {isLoadContainerInvoice}")
                     .AsNoTracking()
                      .ToListAsync();
 
@@ -4919,14 +4920,14 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<Response<List<ResponseExportInsuranceChargesResponse>>> GetExportInsuranceChargesCalc(string ContainerList, int PartyId, DateTime InvoiceDate)
+        public async Task<Response<List<ResponseExportInsuranceChargesResponse>>> GetExportInsuranceChargesCalc(string ContainerList, int PartyId, DateTime InvoiceDate,bool isLoadContainerInvoice)
         {
             var response = new Response<List<ResponseExportInsuranceChargesResponse>>();
 
             try
             {
                 var results = await _db.ResponseExportInsuranceChargesResponse
-                   .FromSqlInterpolated($"EXEC dbo.ExportInsuranceChargesCalc @ContainerList = {ContainerList}, @PartyId = {PartyId},@InvoiceDate = {InvoiceDate}")
+                   .FromSqlInterpolated($"EXEC dbo.ExportInsuranceChargesCalc @ContainerList = {ContainerList}, @PartyId = {PartyId},@InvoiceDate = {InvoiceDate},@isLoadContainerInvoice={isLoadContainerInvoice}")
                     .AsNoTracking()
                      .ToListAsync();
 
@@ -5647,6 +5648,33 @@ namespace SezApi.Services
                 response.TotalCount = 0;
             }
             return response;
+        }
+
+        public async Task<ResponseImportTransportChargesCalc> GetExportTransportChargesCalc(string ContainerList, int PartyId, bool @isLoadContainerInvoice)
+        {
+            try
+            {
+                var resultList = await _db.ResponseImportTransportChargesCalc
+                    .FromSqlInterpolated($@"
+            EXEC dbo.ImportTransportChargesCalc 
+                @ContainerList = {ContainerList}, 
+                @PartyId = {PartyId},
+                @@isLoadContainerInvoice = {@isLoadContainerInvoice}
+            ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var result = resultList.FirstOrDefault();
+
+                return result ?? new ResponseImportTransportChargesCalc();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                throw new ApplicationException("Failed to execute ImportTransportChargesCalc procedure", ex);
+            }
+
+
         }
     }
 }

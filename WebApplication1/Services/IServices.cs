@@ -108,7 +108,7 @@ namespace SezApi.Services
         Task<AddEditResponse> AddEditDestuffingEntry(RequestDestuffingEntry request);
         Task<Response<List<ImpDestuffingEntryHdr>>> GetDestuffingEntryHdr(int? id, int? page, int? size);
         Task<Response<List<ImpDestuffingEntryDtl>>> GetDestuffingEntryDtl(int? id, int? DestuffingEntryId, int? page, int? size);
-        Task<ResponseImportTransportChargesCalc> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId);
+        Task<ResponseImportTransportChargesCalc> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId, bool IsYardInvoice);
         Task<AddEditResponse> CreateLoadContainerRequest(RequestLoadContainerRequest request);
         Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList(string? OperationName, string? DeliveryType);
         Task<AddEditResponse> AddEditDeliveryApplication(RequestImpDeliveryApplication request);
@@ -129,8 +129,8 @@ namespace SezApi.Services
         Task<Response<List<ResponseGetContainerlistByGetEntry>>> GetContainerlistByOBLEntry();
         Task<Response<List<CCINEntry>>> GetCCINEntryBySBNo(int? id, int? page, int? size, string? SBNo);
         Task<Response<List<mstpackuqc>>> GetPackUQC(int? id, int? page, int? size);
-		Task<Response<List<ResponseExportEntryFeeChargesResponse>>> GetExportEntryFeeChargesResponse(string ContainerList, int PartyId);
-		Task<Response<List<ResponseExportInsuranceChargesResponse>>> GetExportInsuranceChargesCalc(string ContainerList, int PartyId, DateTime InvoiceDate);
+		Task<Response<List<ResponseExportEntryFeeChargesResponse>>> GetExportEntryFeeChargesResponse(string ContainerList, int PartyId,bool isLoadContainerInvoice);
+		Task<Response<List<ResponseExportInsuranceChargesResponse>>> GetExportInsuranceChargesCalc(string ContainerList, int PartyId, DateTime InvoiceDate, bool isLoadContainerInvoice);
 
 		Task<Response<List<mstcompany>>> GetComanyDetails(int? id);
 
@@ -151,5 +151,6 @@ namespace SezApi.Services
 
         Task<Response<List<CreditNote>>> GetCreditNoteList(int? id, int? page, int? size, string? creditNoteNo);
         Task<Response<List<CreditNoteDetail>>> GetCreditNoteDetailList(int? CreditNoteDetailId, int? creditNoteId, int? page, int? size);
+        Task<ResponseImportTransportChargesCalc> GetExportTransportChargesCalc(string ContainerList, int PartyId, bool @isLoadContainerInvoice);
     }
 }
