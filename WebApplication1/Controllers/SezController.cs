@@ -1760,11 +1760,12 @@ namespace SezApi.Controllers
 		}
 
 		[HttpGet("GetExportEntryFeeChargesResponse")]
-		public async Task<IActionResult> GetExportEntryFeeChargesResponse(string ContainerList,int PartyId)
+		public async Task<IActionResult> GetExportEntryFeeChargesResponse(string ContainerList,int PartyId, bool isLoadContainerInvoice)
         {
 			var result = await _services.GetExportEntryFeeChargesResponse(
 				ContainerList,
-				PartyId
+				PartyId,
+                isLoadContainerInvoice
 			);
 			return Ok(result);
 		}
