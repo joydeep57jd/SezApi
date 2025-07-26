@@ -1879,6 +1879,52 @@ namespace SezApi.Controllers
             }
         }
 
+        [HttpPost("AddCreditNote")]
+        public async Task<IActionResult> AddCreditNote(RequestCreditNote request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.CreateCreditNoteAsync(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetCreditNote")]
+        public async Task<IActionResult> GetCreditNote(int? CreditNoteId, int? page, int? size)
+        {
+            try
+            {
+                var response = await _services.GetCreditNote(CreditNoteId, page, size);
+                return Ok(response);
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        [HttpGet("GetCreditNoteDetail")]
+        public async Task<IActionResult> GetCreditNoteDetail(int? CreditNoteDetailId, int? CreditNoteId, int? page, int? size)
+        {
+            try
+            {
+                var response = await _services.GetCreditNote(CreditNoteDetailId,CreditNoteId, page, size);
+                return Ok(response);
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
     }
 }

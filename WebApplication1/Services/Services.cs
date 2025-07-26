@@ -5498,5 +5498,135 @@ namespace SezApi.Services
             return response;
         }
 
+        public async Task<AddEditResponse> CreateCreditNoteAsync(RequestCreditNote request)
+        {
+            using var transaction = await _db.Database.BeginTransactionAsync();
+            var response = new AddEditResponse();
+
+            try
+            {
+                var outputId = new SqlParameter
+                {
+                    ParameterName = "@NewCreditNoteId",
+                    SqlDbType = SqlDbType.BigInt,
+                    Direction = ParameterDirection.Output
+                };
+
+                // Convert CreatedBy/UpdatedBy to int if possible, else pass DBNull
+                object createdBy = int.TryParse(request.CreatedBy, out var cb) ? cb : DBNull.Value;
+                object updatedBy = int.TryParse(request.UpdatedBy, out var ub) ? ub : DBNull.Value;
+
+                await Task.Run(() =>
+                {
+                    _db.Database.ExecuteSqlRaw(@"
+                        EXEC sp_Insert_CreditNote
+                            @CreditNoteId = @CreditNoteId,
+                            @CreditNoteNo = @CreditNoteNo,
+                            @CreditNoteDate = @CreditNoteDate,
+                            @InvoiceNo = @InvoiceNo,
+                            @PartyId = @PartyId,
+                            @Remarks = @Remarks,
+                            @CreatedBy = @CreatedBy,
+                            @UpdatedBy = @UpdatedBy,
+                            @NewCreditNoteId = @NewCreditNoteId OUTPUT",
+                        new SqlParameter("@CreditNoteId", (object?)request.CreditNoteId ?? DBNull.Value),
+                        new SqlParameter("@CreditNoteNo", (object?)request.CreditNoteNo ?? DBNull.Value),
+                        new SqlParameter("@CreditNoteDate", (object?)request.CreditNoteDate ?? DBNull.Value),
+                        new SqlParameter("@InvoiceNo", (object?)request.InvoiceNo ?? DBNull.Value),
+                        new SqlParameter("@PartyId", (object?)request.PartyId ?? DBNull.Value),
+                        new SqlParameter("@Remarks", (object?)request.Remarks ?? DBNull.Value),
+                        new SqlParameter("@CreatedBy", createdBy),
+                        new SqlParameter("@UpdatedBy", updatedBy),
+                        outputId
+                    );
+                });
+
+                long newCreditNoteId = (long)outputId.Value;
+
+                var xmlData = XmlConvertercs.ConvertToXmlCreditNoteDetail(request.CreditNoteDetailList);
+
+                await _db.Database.ExecuteSqlInterpolatedAsync($@"
+                    EXEC sp_Insert_CreditNoteDetail_XML 
+                        @CreditNoteId = {newCreditNoteId},
+                        @XmlData = {xmlData}
+                ");
+
+                await transaction.CommitAsync();
+                response.Response = $"CreditNote saved successfully. CreditNoteId: {newCreditNoteId}";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error in CreateCreditNoteAsync: {Message}", ex.Message);
+                await transaction.RollbackAsync();
+                throw new Exception("An error occurred while saving CreditNote.", ex);
+            }
+        }
+
+        public async Task<Response<List<CreditNote>>> GetCreditNoteList(int? id, int? page, int? size, string? creditNoteNo)
+        {
+            var response = new Response<List<CreditNote>>();
+            try
+            {
+                var query = _db.CreditNote.AsQueryable();
+                if (id.HasValue)
+                {
+                    query = query.Where(s => s.CreditNoteId == id.Value);
+                }
+                if (!string.IsNullOrEmpty(creditNoteNo))
+                {
+                    query = query.Where(s => s.CreditNoteNo.Contains(creditNoteNo));
+                }
+                var totalRecords = await query.CountAsync();
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+                var result = await query.OrderByDescending(x => x.CreditNoteId).ToListAsync();
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Data = new List<CreditNote>();
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.TotalCount = 0;
+            }
+            return response;
+        }
+        public async Task<Response<List<CreditNoteDetail>>> GetCreditNoteDetailList(long? creditNoteId, int? page, int? size)
+        {
+            var response = new Response<List<CreditNoteDetail>>();
+            try
+            {
+                var query = _db.creditNoteDetails.AsQueryable();
+                if (creditNoteId.HasValue)
+                {
+                    query = query.Where(s => s.CreditNoteId == creditNoteId.Value);
+                }
+                var totalRecords = await query.CountAsync();
+                if (page.HasValue && page > 0 && size.HasValue && size > 0)
+                {
+                    var skip = (page.Value - 1) * size.Value;
+                    query = query.Skip(skip).Take(size.Value);
+                }
+                var result = await query.OrderByDescending(x => x.CreditNoteDetailId).ToListAsync();
+                response.Data = result;
+                response.Status = true;
+                response.TotalCount = totalRecords;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                response.Data = new List<CreditNoteDetail>();
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+                response.TotalCount = 0;
+            }
+            return response;
+        }
     }
-}
