@@ -147,5 +147,9 @@ namespace SezApi.Services
         Task<Response<ResponseInvoiceByPayee>> GetPaymentInvoiceDetailsByPayee(string? PayeeName, int? payeeId);
 
         Task<Response<ResponseChargesRateSac>> GetChargesRateBySacCode(string? chargeType, string? SacCode, string isImport = "import", bool ishigh = false);
+        Task<AddEditResponse> CreateCreditNoteAsync(RequestCreditNote request);
+
+        Task<Response<List<CreditNote>>> GetCreditNoteAsync(int? id, int? page, int? size, string? creditNoteNo, DateTime? creditNoteDate, long? partyId, bool? isActive);
+        Task<Response<List<CreditNoteDetail>>> GetCreditNoteDetail(int? CreditNoteDetailId, int? CreditNoteId, int? page, int? size);
     }
 }
