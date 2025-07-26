@@ -2289,7 +2289,10 @@ namespace SezApi.Services
                                 GR_WT_Kg = detail.GR_WT_Kg,
                                 Importer_Name = detail.Importer_Name,
                                 IGM_Importer_Name = detail.IGM_Importer_Name,
-
+                                BOENo = detail.BOENo,
+                                BOEDate = detail.BOEDate,
+                                CIFValue = detail.CIFValue,
+                                Duty = detail.Duty
                             };
 
                 if (id.HasValue)
