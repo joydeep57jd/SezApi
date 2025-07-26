@@ -28,5 +28,10 @@
         public decimal? GR_WT_Kg { get; set; }
         public string Importer_Name { get; set; }
         public string IGM_Importer_Name { get; set; }
+
+        public string? BOENo { get; set; }
+        public DateTime? BOEDate { get; set; }
+        public decimal? CIFValue { get; set; }
+        public decimal? Duty { get; set; }
     }
 }

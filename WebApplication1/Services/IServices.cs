@@ -72,7 +72,7 @@ namespace SezApi.Services
         Task<Response<List<AppraisementDoDetails>>> GetAppraisementDoDetails(int? id, int? page, int? size, int? CustAppId);
         Task<Response<List<AppraisementContainerDetails>>> GetAppraisementContainerDetails(int? id, int? page, int? size, int? CustAppId);
         Task<Response<List<ResponseOBLEntryWithDetailsDto>>> GetOBLEntriesWithDetails(int? id = null, string containerNo = null, int? page = null, int? size = null);
-        Task<Response<List<ResponseImportChargesCalc>>> GetImportChargesCalcAsync(string containerOBLList, int partyId, int typeOfCharge);
+        Task<Response<List<ResponseImportChargesCalc>>> GetImportChargesCalcAsync(string containerOBLList, int partyId, int typeOfCharge,bool isYardInvoice);
         Task<Response<List<ChargesTypes>>> GetAllChargesTypes();
         Task<AddEditResponse> AddCashReceiptAsync(RequestCashReceiptCreate request);
         Task<Response<List<CashReceiptInvDtls>>> GetInvoiceDetails(int? id, int? page, int? size, int? CashReceiptId, bool? ForGatePass);
@@ -102,13 +102,13 @@ namespace SezApi.Services
         Task<AddEditResponse> CreateExitThroughGate(RequestExitThroughGate request);
         Task<Response<List<ExitThroughGateDetails>>> GetExitThroughDetails(int? id, int? page, int? size, int? GateExitHeaderId);
         Task<AddEditResponse> AddEditCCINEntry(RequestCCINAddEdit request);
-        Task<Response<List<CCINEntry>>> GetCCINEntry(int? id, int? page, int? size);
+        Task<Response<List<CCINEntry>>> GetCCINEntry(int? id, int? page, int? size, string? SBNo, DateTime? SBDate);
         Task<Response<List<LoadContainerRequestHeader>>> GetLoadContainerHeader(int? id, int? page, int? size);
         Task<Response<List<LoadContainerRequestDetails>>> GetLoadContainerDetails(int? id, int? page, int? size, int? LoaderHeaderId);
         Task<AddEditResponse> AddEditDestuffingEntry(RequestDestuffingEntry request);
         Task<Response<List<ImpDestuffingEntryHdr>>> GetDestuffingEntryHdr(int? id, int? page, int? size);
         Task<Response<List<ImpDestuffingEntryDtl>>> GetDestuffingEntryDtl(int? id, int? DestuffingEntryId, int? page, int? size);
-        Task<ResponseImportTransportChargesCalc> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId);
+        Task<ResponseImportTransportChargesCalc> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId, bool IsYardInvoice);
         Task<AddEditResponse> CreateLoadContainerRequest(RequestLoadContainerRequest request);
         Task<Response<List<ResponseGetinContainer>>> GetGetInContainerList(string? OperationName, string? DeliveryType);
         Task<AddEditResponse> AddEditDeliveryApplication(RequestImpDeliveryApplication request);
@@ -118,7 +118,7 @@ namespace SezApi.Services
         Task<Response<List<ContainerStuffingHeader>>> GetContainerStuffingHdr(int? id, int? page, int? size, bool? isInvoice);
         Task<Response<List<ContainerStuffingDetails>>> GetContainerStuffingDtl(int? id, int? StuffingId, int? page, int? size);
         Task<Response<List<ResponseStorageChargesCalc>>> GetImportStorageChargesCalc(string containerOBLList, int partyId, DateTime InvoiceDate);
-        Task<Response<List<ResponseImportInsuaranceCharges>>> GetImportInsuranceChargesCalc(string containerOBLList, int partyId, DateTime InvoiceDate);
+        Task<Response<List<ResponseImportInsuaranceCharges>>> GetImportInsuranceChargesCalc(string containerOBLList, int partyId, bool isYardInvoice);
         Task<AddEditResponse> AddEditGodownInvoice(RequestGodownInvoice request);
         Task<Response<List<RegisterOfOutwardSupplyReportResponse>>> GetRegisterOfOutwardSupplyReportInvoice(DateTime? FromDate, DateTime? ToDate, string InvoiceType);
         Task<Response<List<RegisterOfOutwardSupplyReportResponse>>> GetRegisterOfOutwardSupplyReportCancel(DateTime? FromDate, DateTime? ToDate, string InvoiceType);
@@ -129,8 +129,8 @@ namespace SezApi.Services
         Task<Response<List<ResponseGetContainerlistByGetEntry>>> GetContainerlistByOBLEntry();
         Task<Response<List<CCINEntry>>> GetCCINEntryBySBNo(int? id, int? page, int? size, string? SBNo);
         Task<Response<List<mstpackuqc>>> GetPackUQC(int? id, int? page, int? size);
-		Task<Response<List<ResponseExportEntryFeeChargesResponse>>> GetExportEntryFeeChargesResponse(string ContainerList, int PartyId);
-		Task<Response<List<ResponseExportInsuranceChargesResponse>>> GetExportInsuranceChargesCalc(string ContainerList, int PartyId, DateTime InvoiceDate);
+		Task<Response<List<ResponseExportEntryFeeChargesResponse>>> GetExportEntryFeeChargesResponse(string ContainerList, int PartyId,bool isLoadContainerInvoice);
+		Task<Response<List<ResponseExportInsuranceChargesResponse>>> GetExportInsuranceChargesCalc(string ContainerList, int PartyId, DateTime InvoiceDate, bool isLoadContainerInvoice);
 
 		Task<Response<List<mstcompany>>> GetComanyDetails(int? id);
 
@@ -144,5 +144,13 @@ namespace SezApi.Services
         Task<Response<List<GodownInvoice>>> GetGodownInvoice(int? id, int? page, int? size, bool? isImport);
         Task<Response<ResponseImportChargesInvoice>> GetGodownChargesReport(string? InvoiceNo);
         Task<Response<ResponsehandlingCharges>> GetExGodownHandlingChargesCalc(string ContainerShLineList, int partyId);
+        Task<Response<ResponseInvoiceByPayee>> GetPaymentInvoiceDetailsByPayee(string? PayeeName, int? payeeId);
+
+        Task<Response<ResponseChargesRateSac>> GetChargesRateBySacCode(string? chargeType, string? SacCode, string isImport = "import", bool ishigh = false);
+        Task<AddEditResponse> CreateCreditNoteAsync(RequestCreditNote request);
+
+        Task<Response<List<CreditNote>>> GetCreditNoteList(int? id, int? page, int? size, string? creditNoteNo);
+        Task<Response<List<CreditNoteDetail>>> GetCreditNoteDetailList(int? CreditNoteDetailId, int? creditNoteId, int? page, int? size);
+        Task<ResponseImportTransportChargesCalc> GetExportTransportChargesCalc(string ContainerList, int PartyId, bool isLoadContainerInvoice);
     }
 }

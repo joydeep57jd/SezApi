@@ -1011,7 +1011,8 @@ namespace SezApi.Controllers
             var result = await _services.GetImportChargesCalcAsync(
                 request.ContainerOBLList,
                 request.PartyId,
-                request.TypeOfCharge
+                request.TypeOfCharge,
+                request.isYardInvoice
             );
             return Ok(result);
         }
@@ -1323,10 +1324,10 @@ namespace SezApi.Controllers
 		}
 
 		[HttpGet("GetCCINEntry")]
-		public async Task<IActionResult> GetCCINEntry(int? id, int? page, int? size)
+		public async Task<IActionResult> GetCCINEntry(int? id, int? page, int? size, string? SBNo, DateTime? SBDate)
 		{
 
-			var response = await _services.GetCCINEntry(id, page, size);
+			var response = await _services.GetCCINEntry(id, page, size,SBNo,SBDate);
 
 			if (response.Data == null || !response.Data.Any())
 			{
@@ -1386,11 +1387,11 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetImportTransportChargesCalc")]
-        public async Task<IActionResult> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId)
+        public async Task<IActionResult> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId, bool IsYardInvoice)
         {
             try
             {
-                var response = await _services.GetImportTransportChargesCalc(ContainerOBLList, PartyId);
+                var response = await _services.GetImportTransportChargesCalc(ContainerOBLList, PartyId, IsYardInvoice);
                 return Ok(response);
             }         
 
@@ -1593,8 +1594,8 @@ namespace SezApi.Controllers
             var result = await _services.GetImportInsuranceChargesCalc(
                 request.ContainerOBLList,
                 request.PartyId,
-				request.InvoiceDate
-			);
+				request.isYardInvoice
+            );
             return Ok(result);
         }
 
@@ -1759,22 +1760,24 @@ namespace SezApi.Controllers
 		}
 
 		[HttpGet("GetExportEntryFeeChargesResponse")]
-		public async Task<IActionResult> GetExportEntryFeeChargesResponse(string ContainerList,int PartyId)
+		public async Task<IActionResult> GetExportEntryFeeChargesResponse(string ContainerList,int PartyId, bool isLoadContainerInvoice)
         {
 			var result = await _services.GetExportEntryFeeChargesResponse(
 				ContainerList,
-				PartyId
+				PartyId,
+                isLoadContainerInvoice
 			);
 			return Ok(result);
 		}
 
 		[HttpGet("GetExportInsuranceChargesCalc")]
-		public async Task<IActionResult> GetExportInsuranceChargesCalc(string ContainerList, int PartyId,DateTime InvoiceDate)
+		public async Task<IActionResult> GetExportInsuranceChargesCalc(string ContainerList, int PartyId,DateTime InvoiceDate,bool isLoadContainerInvoice)
 		{
 			var result = await _services.GetExportInsuranceChargesCalc(
 				ContainerList,
 				PartyId,
-				InvoiceDate
+				InvoiceDate,
+                isLoadContainerInvoice
 			);
 			return Ok(result);
 		}
@@ -1849,5 +1852,95 @@ namespace SezApi.Controllers
             }
         }
 
+          [HttpGet("GetPaymentInvoiceDetailsByPayee")]
+        public async Task<IActionResult> GetPaymentInvoiceDetailsByPayee(string? PayeeName, int? payeeId)
+        {
+            try
+            {
+                var response = await _services.GetPaymentInvoiceDetailsByPayee(PayeeName,payeeId);
+                return Ok(response);
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetChargesRateBySacCode")]
+        public async Task<IActionResult> GetChargesRateBySacCode(string? chargeType, string? SacCode, string isImport = "import", bool ishigh = false)
+        {
+            try
+            {
+                var response = await _services.GetChargesRateBySacCode(chargeType, SacCode, isImport, ishigh);
+                return Ok(response);
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost("AddCreditNote")]
+        public async Task<IActionResult> AddCreditNote(RequestCreditNote request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request data is required.");
+            }
+            try
+            {
+                var result = await _services.CreateCreditNoteAsync(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetCreditNote")]
+        public async Task<IActionResult> GetCreditNote(int? CreditNoteId, int? page, int? size, string? creditNoteNo)
+        {
+            try
+            {
+                var response = await _services.GetCreditNoteList(CreditNoteId, page, size, creditNoteNo);
+                return Ok(response);
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        [HttpGet("GetCreditNoteDetail")]
+        public async Task<IActionResult> GetCreditNoteDetail(int? CreditNoteDetailId, int? creditNoteId, int? page, int? size)
+        {
+            try
+            {
+                var response = await _services.GetCreditNoteDetailList(CreditNoteDetailId,creditNoteId, page, size);
+                return Ok(response);
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        [HttpGet("GetExportTransportChargesCalc")]
+        public async Task<IActionResult> GetExportTransportChargesCalc(string ContainerList, int PartyId, bool isLoadContainerInvoice)
+        {
+            try
+            {
+                var response = await _services.GetExportTransportChargesCalc( ContainerList, PartyId,  isLoadContainerInvoice);
+                return Ok(response);
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

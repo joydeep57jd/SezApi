@@ -217,7 +217,35 @@ namespace SezApi.Model.Request
 
 			return xml.ToString();
 		}
-	}
+
+        public static string ConvertToXmlCreditNoteDetail(List<CreditNoteDetail> details)
+        {
+            var xml = new XElement("CreditNoteDetails",
+                details.Select(d =>
+                    new XElement("Detail",
+                        new XElement("SlNo", d.SlNo),
+                        new XElement("Particulars", d.Particulars),
+                        new XElement("SAC", d.SAC),
+                        new XElement("Value", d.Value),
+                        new XElement("ReturnValue", d.ReturnValue),
+                        new XElement("CGSTPercent", d.CGSTPercent),
+                        new XElement("CGSTAmount", d.CGSTAmount),
+                        new XElement("SGSTPercent", d.SGSTPercent),
+                        new XElement("SGSTAmount", d.SGSTAmount),
+                        new XElement("IGSTPercent", d.IGSTPercent),
+                        new XElement("IGSTAmount", d.IGSTAmount),
+                        new XElement("TotalAmount", d.TotalAmount),
+                        new XElement("RoundOff", d.RoundOff),
+                        new XElement("GrandTotal", d.GrandTotal),
+                        new XElement("CreatedBy", d.CreatedBy),
+                        new XElement("UpdatedBy", d.UpdatedBy)
+                    )
+                )
+            );
+
+            return xml.ToString();
+        }
+    }
 
 }
 

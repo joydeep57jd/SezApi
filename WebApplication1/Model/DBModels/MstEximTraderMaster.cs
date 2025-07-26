@@ -10,7 +10,7 @@ namespace SezApi.Model.DBModels
         public int TraderId { get; set; }
 
         [MaxLength(50)]
-        public string OperationType { get; set; }
+        public string? OperationType { get; set; }
 
         [MaxLength(255)]
         public string? EximTraderName { get; set; }
@@ -72,6 +72,8 @@ namespace SezApi.Model.DBModels
         public bool? IsForWarder { get; set; }
         public bool? IsRent { get; set; }
         public bool? IsBidder { get; set; }
+        public int CountryId { get; set; }
+        public int StateId { get; set; }
 
     }
 }

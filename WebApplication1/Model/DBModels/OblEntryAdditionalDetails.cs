@@ -50,5 +50,9 @@ namespace SezApi.Model.DBModels
         public DateTime? CreatedOn { get; set; }
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
+        public string? BOENo { get; set; }
+        public DateTime? BOEDate { get; set; }
+        public decimal? CIFValue { get; set; }
+        public decimal? Duty { get; set; }
     }
 }
