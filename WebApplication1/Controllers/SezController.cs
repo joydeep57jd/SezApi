@@ -1011,7 +1011,8 @@ namespace SezApi.Controllers
             var result = await _services.GetImportChargesCalcAsync(
                 request.ContainerOBLList,
                 request.PartyId,
-                request.TypeOfCharge
+                request.TypeOfCharge,
+                request.isYardInvoice
             );
             return Ok(result);
         }
