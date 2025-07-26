@@ -5650,7 +5650,7 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<ResponseImportTransportChargesCalc> GetExportTransportChargesCalc(string ContainerList, int PartyId, bool @isLoadContainerInvoice)
+        public async Task<ResponseImportTransportChargesCalc> GetExportTransportChargesCalc(string ContainerList, int PartyId, bool isLoadContainerInvoice)
         {
             try
             {
@@ -5659,7 +5659,7 @@ namespace SezApi.Services
             EXEC dbo.ImportTransportChargesCalc 
                 @ContainerList = {ContainerList}, 
                 @PartyId = {PartyId},
-                @@isLoadContainerInvoice = {@isLoadContainerInvoice}
+                @@isLoadContainerInvoice = {isLoadContainerInvoice}
             ")
                     .AsNoTracking()
                     .ToListAsync();

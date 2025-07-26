@@ -1929,7 +1929,7 @@ namespace SezApi.Controllers
             }
         }
         [HttpGet("GetExportTransportChargesCalc")]
-        public async Task<IActionResult> GetExportTransportChargesCalc(string ContainerList, int PartyId, bool @isLoadContainerInvoice)
+        public async Task<IActionResult> GetExportTransportChargesCalc(string ContainerList, int PartyId, bool isLoadContainerInvoice)
         {
             try
             {
