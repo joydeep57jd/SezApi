@@ -4900,7 +4900,7 @@ namespace SezApi.Services
             try
             {
                 var results = await _db.ResponseExportEntryFeeChargesResponse
-                   .FromSqlInterpolated($"EXEC dbo.ExportEntryFeeCharges @ContainerList = {ContainerList}, @PartyId = {PartyId},@isLoadContainerInvoice = {isLoadContainerInvoice},@TypeOfCharge = {TypeOfCharge},")
+                   .FromSqlInterpolated($"EXEC dbo.ExportEntryFeeCharges @ContainerList = {ContainerList}, @PartyId = {PartyId},@isLoadContainerInvoice = {isLoadContainerInvoice},@TypeOfCharge = {TypeOfCharge}")
                     .AsNoTracking()
                      .ToListAsync();
 
