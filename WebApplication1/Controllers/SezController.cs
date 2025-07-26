@@ -1927,6 +1927,19 @@ namespace SezApi.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        [HttpGet("GetExportTransportChargesCalc")]
+        public async Task<IActionResult> GetExportTransportChargesCalc(string ContainerList, int PartyId, bool @isLoadContainerInvoice)
+        {
+            try
+            {
+                var response = await _services.GetExportTransportChargesCalc( ContainerList, PartyId,  isLoadContainerInvoice);
+                return Ok(response);
+            }
 
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

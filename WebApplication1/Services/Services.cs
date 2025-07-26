@@ -5644,5 +5644,32 @@ namespace SezApi.Services
             }
             return response;
         }
+
+        public async Task<ResponseImportTransportChargesCalc> GetExportTransportChargesCalc(string ContainerList, int PartyId, bool @isLoadContainerInvoice)
+        {
+            try
+            {
+                var resultList = await _db.ResponseImportTransportChargesCalc
+                    .FromSqlInterpolated($@"
+            EXEC dbo.ImportTransportChargesCalc 
+                @ContainerList = {ContainerList}, 
+                @PartyId = {PartyId},
+                @@isLoadContainerInvoice = {@isLoadContainerInvoice}
+            ")
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var result = resultList.FirstOrDefault();
+
+                return result ?? new ResponseImportTransportChargesCalc();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+                throw new ApplicationException("Failed to execute ImportTransportChargesCalc procedure", ex);
+            }
+
+
+        }
     }
 }
