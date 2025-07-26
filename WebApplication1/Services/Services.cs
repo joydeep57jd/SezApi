@@ -3790,7 +3790,7 @@ namespace SezApi.Services
             return response;
         }
 
-        public async Task<ResponseImportTransportChargesCalc> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId)
+        public async Task<ResponseImportTransportChargesCalc> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId,bool IsYardInvoice)
         {
             try
             {
@@ -3798,7 +3798,8 @@ namespace SezApi.Services
                     .FromSqlInterpolated($@"
             EXEC dbo.ImportTransportChargesCalc 
                 @ContainerOBLList = {ContainerOBLList}, 
-                @PartyId = {PartyId}
+                @PartyId = {PartyId},
+                @IsYardInvoice = {IsYardInvoice}
             ")
                     .AsNoTracking()
                     .ToListAsync();

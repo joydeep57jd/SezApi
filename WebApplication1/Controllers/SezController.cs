@@ -1387,11 +1387,11 @@ namespace SezApi.Controllers
         }
 
         [HttpGet("GetImportTransportChargesCalc")]
-        public async Task<IActionResult> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId)
+        public async Task<IActionResult> GetImportTransportChargesCalc(string ContainerOBLList, int PartyId, bool IsYardInvoice)
         {
             try
             {
-                var response = await _services.GetImportTransportChargesCalc(ContainerOBLList, PartyId);
+                var response = await _services.GetImportTransportChargesCalc(ContainerOBLList, PartyId, IsYardInvoice);
                 return Ok(response);
             }         
 
