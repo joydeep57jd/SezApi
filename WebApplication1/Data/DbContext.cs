@@ -140,6 +140,8 @@ namespace SezApi.Data
 
         public DbSet<CreditNoteDetail> creditNoteDetails { get; set; }
 
+        public DbSet<SapResponse> SapResponse { get; set; }
+
     }
 }
 

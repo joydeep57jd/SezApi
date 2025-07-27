@@ -35,5 +35,7 @@ namespace SezApi.Model.DBModels
 		public bool? IsLoadContainerInvoice { get; set; }
         public bool? IsCancelled { get; set; } = false;
         public DateTime? CancelledDate { get; set; }
+        public string? SAP_DOC_NUMBER { get; set; }
+        public int? IsSAP { get; set; }
     }
 }

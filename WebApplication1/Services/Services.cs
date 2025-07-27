@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SezApi.Data;
 using SezApi.Model.DBModels;
 using SezApi.Model.Request;
@@ -12,10 +13,12 @@ namespace SezApi.Services
     {
         private readonly SezApiDbContext _db;
         private readonly ILogger<Services> _logger;
-        public Services(SezApiDbContext db, ILogger<Services> logger)
+        private readonly CWCservice _cwcService;
+        public Services(SezApiDbContext db, ILogger<Services> logger, CWCservice cwcService)
         {
             _db = db;
             _logger = logger;
+            _cwcService = cwcService;
         }
 
 
@@ -1464,11 +1467,31 @@ namespace SezApi.Services
                     EXEC dbo.SP_AddYardInvoiceChargesJson
                         @YardInvId = {response.YardInvId},
                         @jsonData = {request.jsonData}
-                ")
+                        ")
                         .AsNoTracking()
                         .ToListAsync();
 
                     resultres = result1.FirstOrDefault();
+                    if (resultres == null)
+                    {
+                        resultres = new AddEditResponse { Response = "No response from SP_AddYardInvoiceChargesJson." };
+                    }
+                    else
+                    {
+                        var invoiveNo = _db.GetYardInvoiceList
+                        .Where(x => x.YardInvId == response.YardInvId)
+                        .Select(x => x.InvoiceNo)
+                        .FirstOrDefault();
+                        var GetInvoiceDtlforSAPRequest = new GetInvoiceDtlforSAPRequest
+                        {
+                            InvoiceNo = invoiveNo,
+                            IsIRN = 1,
+                            YardInvoice = true
+                        };
+                           var SapResonse =  await _cwcService.GetInvoiceDataFromSPAsync(GetInvoiceDtlforSAPRequest, response.YardInvId);
+                        
+
+                    }
                 }
 
                 return resultres;

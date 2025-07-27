@@ -65,4 +65,11 @@ namespace SezApi.Model.Request
         public string SALES_ORDER { get; set; }
         public string SALES_ORDER_ITEM { get; set; }
     }
+
+    public class GetInvoiceDtlforSAPRequest
+    {
+        public string InvoiceNo { get; set; }     
+        public int IsIRN { get; set; }             
+        public bool YardInvoice { get; set; }      
+    }
 }
