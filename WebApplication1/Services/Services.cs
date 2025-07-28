@@ -1,12 +1,10 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using SezApi.Data;
 using SezApi.Model.DBModels;
 using SezApi.Model.Request;
 using SezApi.Model.Response;
 using System.Data;
-using System.Linq;
 namespace SezApi.Services
 {
     public class Services : IServices
@@ -1488,7 +1486,7 @@ namespace SezApi.Services
                             IsIRN = 1,
                             YardInvoice = true
                         };
-                           var SapResonse =  await _cwcService.GetInvoiceDataFromSPAsync(GetInvoiceDtlforSAPRequest, response.YardInvId);
+                         //  var SapResonse =  await _cwcService.GetInvoiceDataFromSPAsync(GetInvoiceDtlforSAPRequest, response.YardInvId);
                         
 
                     }
@@ -5698,6 +5696,14 @@ namespace SezApi.Services
             }
 
 
+        }
+
+        public async Task<ResponseCustom> TestCWCapi(GetInvoiceDtlforSAPRequest request, int invId)
+        {
+            ResponseCustom res = new ResponseCustom();
+            var SapResonse = await _cwcService.GetInvoiceDataFromSPAsync(request, invId);
+            res.ErrorMessage = SapResonse.ToString();
+            return res;
         }
     }
 }

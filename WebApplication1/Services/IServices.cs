@@ -152,5 +152,7 @@ namespace SezApi.Services
         Task<Response<List<CreditNote>>> GetCreditNoteList(int? id, int? page, int? size, string? creditNoteNo);
         Task<Response<List<CreditNoteDetail>>> GetCreditNoteDetailList(int? CreditNoteDetailId, int? creditNoteId, int? page, int? size);
         Task<ResponseImportTransportChargesCalc> GetExportTransportChargesCalc(string ContainerList, int PartyId, bool isLoadContainerInvoice);
+
+        Task<ResponseCustom> TestCWCapi(GetInvoiceDtlforSAPRequest request, int invId);
     }
 }

@@ -1943,5 +1943,20 @@ namespace SezApi.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpPost("TestCWCapi")]
+        public async Task<IActionResult> TestCWCapi(GetInvoiceDtlforSAPRequest request, int invId)
+        {
+            try
+            {
+                var response = await _services.TestCWCapi(request, invId);
+                return Ok(response);
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }
