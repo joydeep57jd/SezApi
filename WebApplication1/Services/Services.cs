@@ -1486,7 +1486,7 @@ namespace SezApi.Services
                             IsIRN = 1,
                             YardInvoice = true
                         };
-                         //  var SapResonse =  await _cwcService.GetInvoiceDataFromSPAsync(GetInvoiceDtlforSAPRequest, response.YardInvId);
+                         // var SapResonse =  await _cwcService.GetInvoiceDataFromSPAsync(GetInvoiceDtlforSAPRequest, response.YardInvId);
                         
 
                     }
@@ -5698,11 +5698,11 @@ namespace SezApi.Services
 
         }
 
-        public async Task<ResponseCustom> TestCWCapi(GetInvoiceDtlforSAPRequest request, int invId)
+        public async Task<AddEditResponse> TestCWCapi(GetInvoiceDtlforSAPRequest request, int invId)
         {
-            ResponseCustom res = new ResponseCustom();
+            AddEditResponse res = new AddEditResponse();
             var SapResonse = await _cwcService.GetInvoiceDataFromSPAsync(request, invId);
-            res.ErrorMessage = SapResonse.ToString();
+            res.Response = SapResonse.Response;
             return res;
         }
     }

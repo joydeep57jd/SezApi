@@ -1944,12 +1944,16 @@ namespace SezApi.Controllers
             }
         }
 
-        [HttpPost("TestCWCapi")]
-        public async Task<IActionResult> TestCWCapi(GetInvoiceDtlforSAPRequest request, int invId)
+        [HttpGet("TestCWCapi")]
+        public async Task<IActionResult> TestCWCapi(string InvoiceNo, int IsIRN, bool YardInvoice,int invId)
         {
             try
             {
-                var response = await _services.TestCWCapi(request, invId);
+                GetInvoiceDtlforSAPRequest req = new GetInvoiceDtlforSAPRequest();
+                req.InvoiceNo = InvoiceNo;
+                req.IsIRN = IsIRN;
+                req.YardInvoice = YardInvoice;
+                var response = await _services.TestCWCapi(req, invId);
                 return Ok(response);
             }
 

@@ -62,8 +62,9 @@ namespace SezApi.Services
             }
         }
 
-        public async Task<SapResponse?> GetInvoiceDataFromSPAsync(GetInvoiceDtlforSAPRequest request, int invId)
+        public async Task<AddEditResponse> GetInvoiceDataFromSPAsync(GetInvoiceDtlforSAPRequest request, int invId)
         {
+            AddEditResponse response = new AddEditResponse();
             try
             {
                 var model = new RequestCWCapi
@@ -85,6 +86,9 @@ namespace SezApi.Services
                 await using var reader = await cmd.ExecuteReaderAsync();
 
                 Header? header = null;
+                var itemList = new List<Item>();
+
+                // Read header
                 if (await reader.ReadAsync())
                 {
                     header = new Header
@@ -104,7 +108,7 @@ namespace SezApi.Services
                     };
                 }
 
-                var itemList = new List<Item>();
+                // Read item list
                 if (await reader.NextResultAsync())
                 {
                     while (await reader.ReadAsync())
@@ -145,6 +149,10 @@ namespace SezApi.Services
                     }
                 }
 
+                // Dispose reader and close connection
+                await reader.DisposeAsync();
+                await conn.CloseAsync();
+
                 model.REQUEST1.Add(new Request1
                 {
                     HEADER = header!,
@@ -158,7 +166,8 @@ namespace SezApi.Services
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"Failed to post invoice to CWC API: {ex.Message}", ex);
+                    response.Response = $"Error posting to CWC API: {ex.Message}";
+                    return response;
                 }
 
                 if (sapResponse?.Response1 != null)
@@ -180,40 +189,43 @@ namespace SezApi.Services
                         };
 
                         _dbContext.SapResponse.Add(dbResponse);
-                        var status = await _dbContext.SaveChangesAsync();
+                        await _dbContext.SaveChangesAsync();
 
-                        if (!string.IsNullOrEmpty(dbResponse.STATUS))
+                        // Update related invoice table if needed
+                        if (!string.IsNullOrEmpty(dbResponse.STATUS) && request.YardInvoice)
                         {
-                            if (request.YardInvoice)
+                            var invoice = await _dbContext.GetYardInvoiceList
+                                .FirstOrDefaultAsync(x => x.YardInvId == dbResponse.InvoiceId);
+
+                            if (invoice != null)
                             {
-                                var invoice = await _dbContext.GetYardInvoiceList
-                                    .FirstOrDefaultAsync(x => x.YardInvId == dbResponse.InvoiceId);
+                                invoice.SAP_DOC_NUMBER = dbResponse.SAP_DOC_NUMBER;
+                                invoice.IsSAP = 1;
+                                invoice.UpdatedAt = DateTime.Now;
 
-                                if (invoice != null)
-                                {
-                                    invoice.SAP_DOC_NUMBER = dbResponse.SAP_DOC_NUMBER;
-                                    invoice.IsSAP = 1;
-                                    invoice.UpdatedAt = DateTime.Now;
-
-                                    await _dbContext.SaveChangesAsync();
-                                }
+                                await _dbContext.SaveChangesAsync();
                             }
                         }
 
-                        return dbResponse;
+                        response.Response = "success";
+                        return response;
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception($"Failed to save SAP response to database: {ex.Message}", ex);
+                        response.Response = $"Error saving SAP response: {ex.Message}";
+                        return response;
                     }
                 }
 
-                return null;
+                response.Response = "No response from CWC API";
+                return response;
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error in GetInvoiceDataFromSPAsync: {ex.Message}", ex);
+                response.Response = $"General error: {ex.Message}";
+                return response;
             }
         }
+
     }
 }
