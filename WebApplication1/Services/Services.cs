@@ -4477,7 +4477,8 @@ namespace SezApi.Services
                             IsIRN = 1,
                             YardInvoice = false
                         };
-                        var SapResonse = await _cwcService.GetInvoiceDataFromSPAsync(GetInvoiceDtlforSAPRequest, response.Id);
+                        var godownInvId = response.Id.Value;
+                        var SapResonse = await _cwcService.GetInvoiceDataFromSPAsync(GetInvoiceDtlforSAPRequest, godownInvId);
 
 
                     }
