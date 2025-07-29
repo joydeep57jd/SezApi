@@ -1486,7 +1486,7 @@ namespace SezApi.Services
                             IsIRN = 1,
                             YardInvoice = true
                         };
-                         // var SapResonse =  await _cwcService.GetInvoiceDataFromSPAsync(GetInvoiceDtlforSAPRequest, response.YardInvId);
+                        var SapResonse =  await _cwcService.GetInvoiceDataFromSPAsync(GetInvoiceDtlforSAPRequest, response.YardInvId);
                         
 
                     }
@@ -4461,6 +4461,26 @@ namespace SezApi.Services
                         .ToListAsync();
 
                     resultres = result1.FirstOrDefault();
+                    if (resultres == null)
+                    {
+                        resultres = new AddEditResponse { Response = "No response from SP_AddGodownInvoiceChargesJson." };
+                    }
+                    else
+                    {
+                        var invoiveNo = _db.GodownInvoice
+                        .Where(x => x.GodownInvId == response.Id)
+                        .Select(x => x.InvoiceNo)
+                        .FirstOrDefault();
+                        var GetInvoiceDtlforSAPRequest = new GetInvoiceDtlforSAPRequest
+                        {
+                            InvoiceNo = invoiveNo,
+                            IsIRN = 1,
+                            YardInvoice = false
+                        };
+                        var SapResonse = await _cwcService.GetInvoiceDataFromSPAsync(GetInvoiceDtlforSAPRequest, response.Id);
+
+
+                    }
                 }
 
                 return resultres;
