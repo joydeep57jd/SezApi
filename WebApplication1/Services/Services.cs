@@ -2499,6 +2499,38 @@ namespace SezApi.Services
                           .ToListAsync();
                     }
                 }
+                if (spResult == null)
+                {
+                    response = new AddEditResponse
+                    {
+                        Response = "No response from SP_AddYardInvoiceChargesJson."
+                    };
+                }
+                else if (spResult.Id.HasValue)
+                {
+                    var CashRcptNo = _db.GetCashReceiptHdr
+                        .Where(x => x.CashReceiptId == spResult.Id)
+                        .Select(x => x.ReceiptNo)
+                        .FirstOrDefault();
+
+                    var CashRcptId = spResult.Id.Value; 
+
+                    var GetCashReceiptDtlforSAPRequest = new GetCashReceiptDtlforSAPRequest
+                    {
+                        inReceiptNo = CashRcptNo,
+                        IsIRN = 1,
+                        //YardInvoice = true
+                    };
+
+                    var SapResonse = await _cwcService.GetReceiptDataFromSPAsync(GetCashReceiptDtlforSAPRequest, CashRcptId);
+                }
+                else
+                {
+                    response = new AddEditResponse
+                    {
+                        Response = "spResult.Id is null."
+                    };
+                }
 
                 response.Response = "OK";
             }

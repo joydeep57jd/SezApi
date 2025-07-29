@@ -227,5 +227,219 @@ namespace SezApi.Services
             }
         }
 
+
+        public async Task<AddEditResponse> GetReceiptDataFromSPAsync(GetCashReceiptDtlforSAPRequest request, int CashReceiptId)
+        {
+            AddEditResponse response = new AddEditResponse();
+            try
+            {
+                var model = new RequestCWCapiReceipt
+                {
+                    REQUEST2 = new List<Request2>()
+                };
+
+                await using var conn = _dbContext.Database.GetDbConnection();
+                await using var cmd = conn.CreateCommand();
+
+                cmd.CommandText = "GetReceiptDtlforSAP";
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add(new SqlParameter("@in_ReceiptNo", request.inReceiptNo ?? (object)DBNull.Value));
+                cmd.Parameters.Add(new SqlParameter("@in_IsIRN", request.IsIRN));
+                //cmd.Parameters.Add(new SqlParameter("@YardInvoice", request.YardInvoice));
+
+                await conn.OpenAsync();
+                await using var reader = await cmd.ExecuteReaderAsync();
+
+                HeaderReceipt? header = null;
+                var itemList = new List<ItemReceipt>();
+
+                // Read header
+                if (await reader.ReadAsync())
+                {
+                    header = new HeaderReceipt
+                    {
+                        DOC_NO = reader["DOC_NO"]?.ToString() ?? string.Empty,
+                        USERNAME = reader["USERNAME"]?.ToString() ?? string.Empty,
+                        HEADER_TXT = reader["HEADER_TXT"]?.ToString() ?? string.Empty,
+                        COMP_CODE = reader["COMP_CODE"]?.ToString() ?? string.Empty,
+                        DOC_DATE = reader["DOC_DATE"]?.ToString() ?? string.Empty,
+                        PSTNG_DATE = reader["PSTNG_DATE"]?.ToString() ?? string.Empty,
+                        FISC_YEAR = reader["FISC_YEAR"]?.ToString() ?? string.Empty,
+                        FIS_PERIOD = reader["FIS_PERIOD"]?.ToString() ?? string.Empty,
+                        DOC_TYPE = reader["DOC_TYPE"]?.ToString() ?? string.Empty,
+                        REF_DOC_NO = reader["REF_DOC_NO"]?.ToString() ?? string.Empty,
+                        CURRENCY = reader["CURRENCY"]?.ToString() ?? string.Empty,
+                        NAME = reader["NAME"]?.ToString() ?? string.Empty,
+                        NAME_2 = reader["NAME_2"]?.ToString() ?? string.Empty,
+                        NAME_3 = reader["NAME_3"]?.ToString() ?? string.Empty,
+                        NAME_4 = reader["NAME_4"]?.ToString() ?? string.Empty,
+                        POSTL_CODE = reader["POSTL_CODE"]?.ToString() ?? string.Empty,
+                        CITY = reader["CITY"]?.ToString() ?? string.Empty,
+                        COUNTRY = reader["COUNTRY"]?.ToString() ?? string.Empty,
+                        STREET = reader["STREET"]?.ToString() ?? string.Empty,
+                        TAX_NO_1 = reader["TAX_NO_1"]?.ToString() ?? string.Empty,
+                        TAX_NO_2 = reader["TAX_NO_2"]?.ToString() ?? string.Empty,
+                        TAX_NO_3 = reader["TAX_NO_3"]?.ToString() ?? string.Empty,
+                        TAX_NO_4 = reader["TAX_NO_4"]?.ToString() ?? string.Empty
+                    };
+                }
+
+                // Read item list
+                if (await reader.NextResultAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        itemList.Add(new ItemReceipt
+                        {
+                            DOC_NO = reader["DOC_NO"]?.ToString() ?? string.Empty,
+
+                            // GL-related fields
+                            GL_ITEMNO_ACC = reader["ITEMNO_ACC"]?.ToString() ?? string.Empty,
+                            GL_ACCOUNT = reader["GL_ACCOUNT"]?.ToString() ?? string.Empty,
+                            GL_ITEM_TEXT = reader["ITEM_TEXT"]?.ToString() ?? string.Empty,
+                            GL_TAX_CODE = reader["TAX_CODE"]?.ToString() ?? string.Empty,
+                            GL_REF_KEY_1 = reader["WBS_ELEMENT"]?.ToString() ?? string.Empty,
+                            GL_REF_KEY_2 = reader["ORDERID"]?.ToString() ?? string.Empty,
+                            GL_REF_KEY_3 = reader["C_CTR_AREA"]?.ToString() ?? string.Empty,
+                            GL_PROFIT_CTR = reader["PROFITCENTER"]?.ToString() ?? string.Empty,
+                            GL_COSTCENTER = reader["COSTCENTER"]?.ToString() ?? string.Empty,
+                            GL_DT_CT_INDICATOR = reader["DT_CT_INDICATOR"]?.ToString() ?? string.Empty,
+                            GL_AMT_DOCCUR = reader["AMT_DOCCUR"]?.ToString() ?? string.Empty,
+
+                            // Customer-related fields
+                            CUST_ITEMNO_ACC = reader["ITEMNO_ACC"]?.ToString() ?? string.Empty, // Same as GL_ITEMNO_ACC if shared
+                            CUSTOMER = reader["CUSTOMER"]?.ToString() ?? string.Empty,
+                            RECON_GL_ACCOUNT = reader["CUST_RECON_ACCOUNT"]?.ToString() ?? string.Empty,
+                            CUST_REF_KEY_1 = reader["WBS_ELEMENT"]?.ToString() ?? string.Empty,
+                            CUST_REF_KEY_2 = reader["ORDERID"]?.ToString() ?? string.Empty,
+                            CUST_REF_KEY_3 = reader["C_CTR_AREA"]?.ToString() ?? string.Empty,
+                            CUST_SP_GL_IND = reader["SP_GL_IND"]?.ToString() ?? string.Empty,
+                            CUST_ALLOC_NMBR = reader["ALLOC_NUMBER"]?.ToString() ?? string.Empty,
+                            CUST_BUSINESSPLACE = reader["BUSINESSPLACE"]?.ToString() ?? string.Empty,
+                            CUST_SECTIONCODER = reader["SECTION_CODE"]?.ToString() ?? string.Empty,
+                            CUST_AMT_DOCCUR = reader["AMT_DOCCUR"]?.ToString() ?? string.Empty, // Could differ from GL_AMT_DOCCUR if needed
+                            CUST_PROFIT_CTR = reader["PROFITCENTER"]?.ToString() ?? string.Empty,
+
+                            // Payment-related field
+                            PAYMT_REF = reader["SALES_ORDER"]?.ToString() ?? string.Empty // Or "SALES_ORDER_ITEM" if more accurate
+                        });
+                    }
+                }
+
+                // Dispose reader and close connection
+                await reader.DisposeAsync();
+                await conn.CloseAsync();
+
+                model.REQUEST2.Add(new Request2
+                {
+                    HEADER = header!,
+                    ITEM = itemList
+                });
+
+                ResponseCWCapi? sapResponse;
+                try
+                {
+                    sapResponse = await PostReceiptToCWCAsync(model);
+                }
+                catch (Exception ex)
+                {
+                    response.Response = $"Error posting to CWC API: {ex.Message}";
+                    return response;
+                }
+
+                if (sapResponse?.Response1 != null)
+                {
+                    try
+                    {
+                        var dbResponse = new SapResponse
+                        {
+                            InvoiceId = CashReceiptId,
+                            InvoiceNo = request.inReceiptNo ?? string.Empty,
+                            SAP_DOC_NUMBER = sapResponse.Response1.SAPDocNumber,
+                            REF_DOC_NO = sapResponse.Response1.RefDocNo,
+                            STATUS = sapResponse.Response1.Status,
+                            REMARK = sapResponse.Response1.Remark,
+                            CreatedBy = 0,
+                            CreatedOn = DateTime.UtcNow,
+                            Module = "CWC",
+                            InvoiceType = "PRCP"
+                        };
+
+                        _dbContext.SapResponse.Add(dbResponse);
+                        await _dbContext.SaveChangesAsync();
+
+                        // Update related invoice table if needed
+                        if (!string.IsNullOrEmpty(dbResponse.STATUS))
+                        {
+                            var PReceipt = await _dbContext.GetCashReceiptHdr
+                                .FirstOrDefaultAsync(x => x.CashReceiptId == dbResponse.InvoiceId);
+
+                            if (PReceipt != null)
+                            {
+                                PReceipt.SAP_DOC_NUMBER = dbResponse.SAP_DOC_NUMBER;
+                                PReceipt.IsSAP = 1;
+                                PReceipt.UpdatedOn = DateTime.Now;
+
+                                await _dbContext.SaveChangesAsync();
+                            }
+                        }
+
+                        response.Response = "success";
+                        return response;
+                    }
+                    catch (Exception ex)
+                    {
+                        response.Response = $"Error saving SAP response: {ex.Message}";
+                        return response;
+                    }
+                }
+
+                response.Response = "No response from CWC API";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Response = $"General error: {ex.Message}";
+                return response;
+            }
+        }
+
+
+        public async Task<ResponseCWCapi> PostReceiptToCWCAsync(RequestCWCapiReceipt request)
+        {
+            try
+            {
+                string url = _configuration["CWCApi:CustomerReceiptUrl"];
+                string user = _configuration["CWCApi:UserId"];
+                string pwd = _configuration["CWCApi:Password"];
+
+                string json = JsonSerializer.Serialize(request);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                string credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user}:{pwd}"));
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
+
+                var httpResponse = await _httpClient.PostAsync(url, content);
+                var responseJson = await httpResponse.Content.ReadAsStringAsync();
+
+                if (!httpResponse.IsSuccessStatusCode)
+                {
+                    throw new Exception($"CWC API returned error: {httpResponse.StatusCode} - {responseJson}");
+                }
+
+                var result = JsonSerializer.Deserialize<ResponseCWCapi>(responseJson, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error while calling CWC API: {ex.Message}", ex);
+            }
+        }
+
     }
 }
