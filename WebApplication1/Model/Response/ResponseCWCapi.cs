@@ -2,13 +2,19 @@
 
 namespace SezApi.Model.Response
 {
-        public class ResponseCWCapi
-        {
-            [JsonPropertyName("RESPONSE1")]
-            public Response1 Response1 { get; set; }
-        }
+    public class ResponseCWCapi
+    {
+        [JsonPropertyName("RESPONSE1")]
+        public Response1 Response1 { get; set; }
+    }
 
-        public class Response1
+    public class ResponseCWCapiReceipt
+    {
+        [JsonPropertyName("RESPONSE")]
+        public Response1 Response { get; set; }
+    }
+
+    public class Response1
         {
             [JsonPropertyName("SAP_DOC_NUMBER")]
             public string SAPDocNumber { get; set; }

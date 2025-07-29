@@ -82,8 +82,8 @@ namespace SezApi.Model.Request
 
     public class RequestCWCapiReceipt
     {
-        [JsonPropertyName("REQUEST2")]
-        public List<Request2> REQUEST2 { get; set; }
+        [JsonPropertyName("REQUEST")]
+        public List<Request2> REQUEST { get; set; }
     }
     public class Request2
     {
@@ -143,10 +143,10 @@ namespace SezApi.Model.Request
        public string CUST_SP_GL_IND { get; set; }
         public string CUST_ALLOC_NMBR { get; set; }
         public string CUST_BUSINESSPLACE { get; set; }
-        public string CUST_SECTIONCODER { get; set; }
+        public string CUST_SECTIONCODE { get; set; }
         public string CUST_AMT_DOCCUR { get; set; }
         public string CUST_PROFIT_CTR { get; set; }
-        public string PAYMT_REF { get; set; }
+        public string CUST_PAYMT_REF { get; set; }
         
     }
 }

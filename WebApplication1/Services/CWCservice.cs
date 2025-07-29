@@ -236,7 +236,7 @@ namespace SezApi.Services
             {
                 var model = new RequestCWCapiReceipt
                 {
-                    REQUEST2 = new List<Request2>()
+                    REQUEST = new List<Request2>()
                 };
 
                 await using var conn = _dbContext.Database.GetDbConnection();
@@ -296,34 +296,34 @@ namespace SezApi.Services
                             DOC_NO = reader["DOC_NO"]?.ToString() ?? string.Empty,
 
                             // GL-related fields
-                            GL_ITEMNO_ACC = reader["ITEMNO_ACC"]?.ToString() ?? string.Empty,
+                            GL_ITEMNO_ACC = reader["GL_ITEMNO_ACC"]?.ToString() ?? string.Empty,
                             GL_ACCOUNT = reader["GL_ACCOUNT"]?.ToString() ?? string.Empty,
-                            GL_ITEM_TEXT = reader["ITEM_TEXT"]?.ToString() ?? string.Empty,
-                            GL_TAX_CODE = reader["TAX_CODE"]?.ToString() ?? string.Empty,
-                            GL_REF_KEY_1 = reader["WBS_ELEMENT"]?.ToString() ?? string.Empty,
-                            GL_REF_KEY_2 = reader["ORDERID"]?.ToString() ?? string.Empty,
-                            GL_REF_KEY_3 = reader["C_CTR_AREA"]?.ToString() ?? string.Empty,
-                            GL_PROFIT_CTR = reader["PROFITCENTER"]?.ToString() ?? string.Empty,
-                            GL_COSTCENTER = reader["COSTCENTER"]?.ToString() ?? string.Empty,
-                            GL_DT_CT_INDICATOR = reader["DT_CT_INDICATOR"]?.ToString() ?? string.Empty,
-                            GL_AMT_DOCCUR = reader["AMT_DOCCUR"]?.ToString() ?? string.Empty,
+                            GL_ITEM_TEXT = reader["GL_ITEM_TEXT"]?.ToString() ?? string.Empty,
+                            GL_TAX_CODE = reader["GL_TAX_CODE"]?.ToString() ?? string.Empty,
+                            GL_REF_KEY_1 = reader["GL_REF_KEY_1"]?.ToString() ?? string.Empty,
+                            GL_REF_KEY_2 = reader["GL_REF_KEY_2"]?.ToString() ?? string.Empty,
+                            GL_REF_KEY_3 = reader["GL_REF_KEY_3"]?.ToString() ?? string.Empty,
+                            GL_PROFIT_CTR = reader["GL_PROFIT_CTR"]?.ToString() ?? string.Empty,
+                            GL_COSTCENTER = reader["GL_COSTCENTER"]?.ToString() ?? string.Empty,
+                            GL_DT_CT_INDICATOR = reader["GL_DT_CT_INDICATOR"]?.ToString() ?? string.Empty,
+                            GL_AMT_DOCCUR = reader["GL_AMT_DOCCUR"]?.ToString() ?? string.Empty,
 
                             // Customer-related fields
-                            CUST_ITEMNO_ACC = reader["ITEMNO_ACC"]?.ToString() ?? string.Empty, // Same as GL_ITEMNO_ACC if shared
+                            CUST_ITEMNO_ACC = reader["CUST_ITEMNO_ACC"]?.ToString() ?? string.Empty, // Same as GL_ITEMNO_ACC if shared
                             CUSTOMER = reader["CUSTOMER"]?.ToString() ?? string.Empty,
-                            RECON_GL_ACCOUNT = reader["CUST_RECON_ACCOUNT"]?.ToString() ?? string.Empty,
-                            CUST_REF_KEY_1 = reader["WBS_ELEMENT"]?.ToString() ?? string.Empty,
-                            CUST_REF_KEY_2 = reader["ORDERID"]?.ToString() ?? string.Empty,
-                            CUST_REF_KEY_3 = reader["C_CTR_AREA"]?.ToString() ?? string.Empty,
-                            CUST_SP_GL_IND = reader["SP_GL_IND"]?.ToString() ?? string.Empty,
-                            CUST_ALLOC_NMBR = reader["ALLOC_NUMBER"]?.ToString() ?? string.Empty,
-                            CUST_BUSINESSPLACE = reader["BUSINESSPLACE"]?.ToString() ?? string.Empty,
-                            CUST_SECTIONCODER = reader["SECTION_CODE"]?.ToString() ?? string.Empty,
-                            CUST_AMT_DOCCUR = reader["AMT_DOCCUR"]?.ToString() ?? string.Empty, // Could differ from GL_AMT_DOCCUR if needed
-                            CUST_PROFIT_CTR = reader["PROFITCENTER"]?.ToString() ?? string.Empty,
+                            RECON_GL_ACCOUNT = reader["RECON_GL_ACCOUNT"]?.ToString() ?? string.Empty,
+                            CUST_REF_KEY_1 = reader["CUST_REF_KEY_1"]?.ToString() ?? string.Empty,
+                            CUST_REF_KEY_2 = reader["CUST_REF_KEY_2"]?.ToString() ?? string.Empty,
+                            CUST_REF_KEY_3 = reader["CUST_REF_KEY_3"]?.ToString() ?? string.Empty,
+                            CUST_SP_GL_IND = reader["CUST_SP_GL_IND"]?.ToString() ?? string.Empty,
+                            CUST_ALLOC_NMBR = reader["CUST_ALLOC_NMBR"]?.ToString() ?? string.Empty,
+                            CUST_BUSINESSPLACE = reader["CUST_BUSINESSPLACE"]?.ToString() ?? string.Empty,
+                            CUST_SECTIONCODE = reader["CUST_SECTIONCODE"]?.ToString() ?? string.Empty,
+                            CUST_AMT_DOCCUR = reader["CUST_AMT_DOCCUR"]?.ToString() ?? string.Empty, // Could differ from GL_AMT_DOCCUR if needed
+                            CUST_PROFIT_CTR = reader["CUST_PROFIT_CTR"]?.ToString() ?? string.Empty,
 
                             // Payment-related field
-                            PAYMT_REF = reader["SALES_ORDER"]?.ToString() ?? string.Empty // Or "SALES_ORDER_ITEM" if more accurate
+                            CUST_PAYMT_REF = reader["CUST_PAYMT_REF"]?.ToString() ?? string.Empty // Or "SALES_ORDER_ITEM" if more accurate
                         });
                     }
                 }
@@ -332,13 +332,13 @@ namespace SezApi.Services
                 await reader.DisposeAsync();
                 await conn.CloseAsync();
 
-                model.REQUEST2.Add(new Request2
+                model.REQUEST.Add(new Request2
                 {
                     HEADER = header!,
                     ITEM = itemList
                 });
 
-                ResponseCWCapi? sapResponse;
+                ResponseCWCapiReceipt? sapResponse;
                 try
                 {
                     sapResponse = await PostReceiptToCWCAsync(model);
@@ -349,7 +349,7 @@ namespace SezApi.Services
                     return response;
                 }
 
-                if (sapResponse?.Response1 != null)
+                if (sapResponse?.Response != null)
                 {
                     try
                     {
@@ -357,10 +357,10 @@ namespace SezApi.Services
                         {
                             InvoiceId = CashReceiptId,
                             InvoiceNo = request.inReceiptNo ?? string.Empty,
-                            SAP_DOC_NUMBER = sapResponse.Response1.SAPDocNumber,
-                            REF_DOC_NO = sapResponse.Response1.RefDocNo,
-                            STATUS = sapResponse.Response1.Status,
-                            REMARK = sapResponse.Response1.Remark,
+                            SAP_DOC_NUMBER = sapResponse.Response.SAPDocNumber,
+                            REF_DOC_NO = sapResponse.Response.RefDocNo,
+                            STATUS = sapResponse.Response.Status,
+                            REMARK = sapResponse.Response.Remark,
                             CreatedBy = 0,
                             CreatedOn = DateTime.UtcNow,
                             Module = "CWC",
@@ -407,7 +407,7 @@ namespace SezApi.Services
         }
 
 
-        public async Task<ResponseCWCapi> PostReceiptToCWCAsync(RequestCWCapiReceipt request)
+        public async Task<ResponseCWCapiReceipt> PostReceiptToCWCAsync(RequestCWCapiReceipt request)
         {
             try
             {
@@ -429,7 +429,7 @@ namespace SezApi.Services
                     throw new Exception($"CWC API returned error: {httpResponse.StatusCode} - {responseJson}");
                 }
 
-                var result = JsonSerializer.Deserialize<ResponseCWCapi>(responseJson, new JsonSerializerOptions
+                var result = JsonSerializer.Deserialize<ResponseCWCapiReceipt>(responseJson, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });

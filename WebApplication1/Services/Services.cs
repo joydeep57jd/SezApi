@@ -2503,7 +2503,7 @@ namespace SezApi.Services
                 {
                     response = new AddEditResponse
                     {
-                        Response = "No response from SP_AddYardInvoiceChargesJson."
+                        Response = "No response from SP_AddOrUpdateCashReceiptInvDtls."
                     };
                 }
                 else if (spResult.Id.HasValue)
@@ -5751,10 +5751,11 @@ namespace SezApi.Services
 
         }
 
-        public async Task<AddEditResponse> TestCWCapi(GetInvoiceDtlforSAPRequest request, int invId)
+        public async Task<AddEditResponse> TestCWCapi(GetCashReceiptDtlforSAPRequest request, int invId)
         {
             AddEditResponse res = new AddEditResponse();
-            var SapResonse = await _cwcService.GetInvoiceDataFromSPAsync(request, invId);
+            //var SapResonse = await _cwcService.GetInvoiceDataFromSPAsync(request, invId);
+            var SapResonse = await _cwcService.GetReceiptDataFromSPAsync(request, invId);
             res.Response = SapResonse.Response;
             return res;
         }
