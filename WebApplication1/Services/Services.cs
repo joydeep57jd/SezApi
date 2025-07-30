@@ -5603,31 +5603,45 @@ namespace SezApi.Services
                 };
 
                 // Convert CreatedBy/UpdatedBy to int if possible, else pass DBNull
-                object createdBy = int.TryParse(request.CreatedBy, out var cb) ? cb : DBNull.Value;
-                object updatedBy = int.TryParse(request.UpdatedBy, out var ub) ? ub : DBNull.Value;
+                var createdByParam = new SqlParameter("@CreatedBy", request.CreatedBy ?? (object)DBNull.Value);
+                var updatedByParam = new SqlParameter("@UpdatedBy", request.UpdatedBy ?? (object)DBNull.Value);
 
                 await Task.Run(() =>
                 {
                     _db.Database.ExecuteSqlRaw(@"
                         EXEC sp_Insert_CreditNote
-                            @CreditNoteId = @CreditNoteId,
-                            @CreditNoteNo = @CreditNoteNo,
-                            @CreditNoteDate = @CreditNoteDate,
-                            @InvoiceNo = @InvoiceNo,
-                            @PartyId = @PartyId,
-                            @Remarks = @Remarks,
-                            @CreatedBy = @CreatedBy,
-                            @UpdatedBy = @UpdatedBy,
-                            @NewCreditNoteId = @NewCreditNoteId OUTPUT",
-                        new SqlParameter("@CreditNoteId", (object?)request.CreditNoteId ?? DBNull.Value),
-                        new SqlParameter("@CreditNoteNo", (object?)request.CreditNoteNo ?? DBNull.Value),
-                        new SqlParameter("@CreditNoteDate", (object?)request.CreditNoteDate ?? DBNull.Value),
-                        new SqlParameter("@InvoiceNo", (object?)request.InvoiceNo ?? DBNull.Value),
-                        new SqlParameter("@PartyId", (object?)request.PartyId ?? DBNull.Value),
-                        new SqlParameter("@Remarks", (object?)request.Remarks ?? DBNull.Value),
-                        new SqlParameter("@CreatedBy", createdBy),
-                        new SqlParameter("@UpdatedBy", updatedBy),
-                        outputId
+                             @CreditNoteId = @CreditNoteId,
+                                @TaxInvoice = @TaxInvoice,
+                                @BillOfSupply = @BillOfSupply,
+                                @InvoiceNo = @InvoiceNo,
+                                @CreditNoteDate = @CreditNoteDate,
+                                @CreditNoteNo = @CreditNoteNo,
+                                @PartyId = @PartyId,
+                                @PayeeId = @PayeeId,
+                                @GSTNo = @GSTNo,
+                                @PlaceOfSupply = @PlaceOfSupply,
+                                @CreatedBy = @CreatedBy,
+                                @UpdatedBy = @UpdatedBy,
+                                @Remarks = @Remarks,
+                                @IsYard = @IsYard,
+                                @IsImport = @IsImport,
+                                @NewCreditNoteId = @NewCreditNoteId OUTPUT",
+                            new SqlParameter("@CreditNoteId", request.CreditNoteId),
+                            new SqlParameter("@TaxInvoice", (object?)request.TaxInvoice ?? DBNull.Value),
+                            new SqlParameter("@BillOfSupply", (object?)request.BillOfSupply ?? DBNull.Value),
+                            new SqlParameter("@InvoiceNo", (object?)request.InvoiceNo ?? DBNull.Value),
+                            new SqlParameter("@CreditNoteDate", (object?)request.CreditNoteDate ?? DBNull.Value),
+                            new SqlParameter("@CreditNoteNo", (object?)request.CreditNoteNo ?? DBNull.Value),
+                            new SqlParameter("@PartyId", (object?)request.PartyId ?? DBNull.Value),
+                            new SqlParameter("@PayeeId", (object?)request.PayeeId ?? DBNull.Value),
+                            new SqlParameter("@GSTNo", (object?)request.GSTNo ?? DBNull.Value),
+                            new SqlParameter("@PlaceOfSupply", (object?)request.PlaceOfSupply ?? DBNull.Value),
+                            new SqlParameter("@CreatedBy", (object?)request.CreatedBy ?? DBNull.Value),
+                            new SqlParameter("@UpdatedBy", (object?)request.UpdatedBy ?? DBNull.Value),
+                            new SqlParameter("@Remarks", (object?)request.Remarks ?? DBNull.Value),
+                            new SqlParameter("@IsYard", (object?)request.IsYard ?? DBNull.Value),
+                            new SqlParameter("@IsImport", (object?)request.IsImport ?? DBNull.Value),
+                            outputId
                     );
                 });
 

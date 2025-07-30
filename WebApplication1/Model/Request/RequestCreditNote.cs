@@ -3,18 +3,26 @@ namespace SezApi.Model.Request
 {
     public class RequestCreditNote
     {
-        public long CreditNoteId { get; set; }
-        public string? CreditNoteNo { get; set; }
-        public DateTime? CreditNoteDate { get; set; }
+        public int CreditNoteId { get; set; }
+        public bool? TaxInvoice { get; set; }
+        public bool? BillOfSupply { get; set; }
         public string? InvoiceNo { get; set; }
-        public long? PartyId { get; set; }
+        public DateTime? CreditNoteDate { get; set; }
+        public string? CreditNoteNo { get; set; }
+        public int? PartyId { get; set; }
+        public int? PayeeId { get; set; }
+        public string? GSTNo { get; set; }
+        public string? PlaceOfSupply { get; set; }
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
         public string? Remarks { get; set; }
-
-        public DateTime? CreatedDate { get; set; }
-        public string? CreatedBy { get; set; }
-        public DateTime? UpdatedDate { get; set; }
-        public string? UpdatedBy { get; set; }
-        public bool? IsActive { get; set; }
+        public bool? IsYard { get; set; }
+        public bool? IsImport { get; set; }
+        public string? SAP_DOC_NUMBER { get; set; }
+        public int IsSAP { get; set; }
+        
 
         public List<CreditNoteDetail> CreditNoteDetailList { get; set; } = new List<CreditNoteDetail>();
     }

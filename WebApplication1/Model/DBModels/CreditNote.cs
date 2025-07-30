@@ -27,28 +27,31 @@ namespace SezApi.Model.DBModels
     {
         [Key]
         public int CreditNoteDetailId { get; set; }
-        public int? CreditNoteId { get; set; }
-        public int SlNo { get; set; }
-        public string Particulars { get; set; }
-        public string SAC { get; set; }
-        public decimal Value { get; set; }
-        public decimal ReturnValue { get; set; }
 
-        public decimal CGSTPercent { get; set; }
-        public decimal CGSTAmount { get; set; }
-        public decimal SGSTPercent { get; set; }
-        public decimal SGSTAmount { get; set; }
-        public decimal IGSTPercent { get; set; }
-        public decimal IGSTAmount { get; set; }
+        public int ChargesTypeId { get; set; }      // NOT NULL in DB
+        public int CreditNoteId { get; set; }       // NOT NULL in DB
 
-        public decimal TotalAmount { get; set; }
-        public decimal RoundOff { get; set; }
-        public decimal GrandTotal { get; set; }
+        public string? ChargeType { get; set; }
+        public string? ChargeName { get; set; }
+        public string? SACCode { get; set; }
 
-        public DateTime CreatedDate { get; set; }
-        public string CreatedBy { get; set; }
-        public DateTime? UpdatedDate { get; set; }
-        public string UpdatedBy { get; set; }
-        public bool IsActive { get; set; }
+        public int? Quantity { get; set; }
+
+        public decimal? Rate { get; set; }
+        public decimal? Inv_Amount { get; set; }
+        public decimal? Taxable { get; set; }
+
+        public decimal? IGSTPer { get; set; }
+        public decimal? IGSTAmt { get; set; }
+
+        public decimal? CGSTPer { get; set; }
+        public decimal? CGSTAmt { get; set; }
+
+        public decimal? SGSTPer { get; set; }
+        public decimal? SGSTAmt { get; set; }
+
+        public decimal? Total { get; set; }
+
+        public bool IsActive { get; set; } // NOT NULL in DB
     }
 }

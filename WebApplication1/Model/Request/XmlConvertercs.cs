@@ -223,22 +223,24 @@ namespace SezApi.Model.Request
             var xml = new XElement("CreditNoteDetails",
                 details.Select(d =>
                     new XElement("Detail",
-                        new XElement("SlNo", d.SlNo),
-                        new XElement("Particulars", d.Particulars),
-                        new XElement("SAC", d.SAC),
-                        new XElement("Value", d.Value),
-                        new XElement("ReturnValue", d.ReturnValue),
-                        new XElement("CGSTPercent", d.CGSTPercent),
-                        new XElement("CGSTAmount", d.CGSTAmount),
-                        new XElement("SGSTPercent", d.SGSTPercent),
-                        new XElement("SGSTAmount", d.SGSTAmount),
-                        new XElement("IGSTPercent", d.IGSTPercent),
-                        new XElement("IGSTAmount", d.IGSTAmount),
-                        new XElement("TotalAmount", d.TotalAmount),
-                        new XElement("RoundOff", d.RoundOff),
-                        new XElement("GrandTotal", d.GrandTotal),
-                        new XElement("CreatedBy", d.CreatedBy),
-                        new XElement("UpdatedBy", d.UpdatedBy)
+                        new XElement("CreditNoteDetailId", d.CreditNoteDetailId),
+                        new XElement("ChargesTypeId", d.ChargesTypeId),
+                        new XElement("CreditNoteId", d.CreditNoteId),
+                        new XElement("ChargeType", d.ChargeType ?? string.Empty),
+                        new XElement("ChargeName", d.ChargeName ?? string.Empty),
+                        new XElement("SACCode", d.SACCode ?? string.Empty),
+                        new XElement("Quantity", d.Quantity ?? 0),
+                        new XElement("Rate", d.Rate ?? 0),
+                        new XElement("Inv_Amount", d.Inv_Amount ?? 0),
+                        new XElement("Taxable", d.Taxable ?? 0),
+                        new XElement("IGSTPer", d.IGSTPer ?? 0),
+                        new XElement("IGSTAmt", d.IGSTAmt ?? 0),
+                        new XElement("CGSTPer", d.CGSTPer ?? 0),
+                        new XElement("CGSTAmt", d.CGSTAmt ?? 0),
+                        new XElement("SGSTPer", d.SGSTPer ?? 0),
+                        new XElement("SGSTAmt", d.SGSTAmt ?? 0),
+                        new XElement("Total", d.Total ?? 0)
+                        //new XElement("IsActive", d.IsActive ? 1 : 0)
                     )
                 )
             );
