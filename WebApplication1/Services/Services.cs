@@ -5780,11 +5780,11 @@ namespace SezApi.Services
 
         }
 
-        public async Task<AddEditResponse> TestCWCapi(GetCashReceiptDtlforSAPRequest request, int invId)
+        public async Task<AddEditResponse> TestCWCapi(GetCreditNoteforSAPRequest request, int invId)
         {
             AddEditResponse res = new AddEditResponse();
             //var SapResonse = await _cwcService.GetInvoiceDataFromSPAsync(request, invId);
-            var SapResonse = await _cwcService.GetReceiptDataFromSPAsync(request, invId);
+            var SapResonse = await _cwcService.GetCreditNoteDataFromSPAsync(request, invId);
             res.Response = SapResonse.Response;
             return res;
         }

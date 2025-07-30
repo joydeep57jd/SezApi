@@ -1949,8 +1949,8 @@ namespace SezApi.Controllers
         {
             try
             {
-                GetCashReceiptDtlforSAPRequest req = new GetCashReceiptDtlforSAPRequest();
-                req.inReceiptNo = InvoiceNo;
+                GetCreditNoteforSAPRequest req = new GetCreditNoteforSAPRequest();
+                req.inInvoiceNo = InvoiceNo;
                 req.IsIRN = IsIRN;
                 //req.YardInvoice = YardInvoice;
                 var response = await _services.TestCWCapi(req, invId);
