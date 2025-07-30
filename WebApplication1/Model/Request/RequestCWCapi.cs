@@ -218,6 +218,7 @@ namespace SezApi.Model.Request
         public string VALUE_DATE { get; set; }
         public string SALES_ORDER { get; set; }
         public string SALES_ORDER_ITEM { get; set; }
+        public string PLACE_OF_SUPPLY { get; set; }
 
     }
 

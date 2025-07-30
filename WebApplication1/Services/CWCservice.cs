@@ -525,8 +525,9 @@ namespace SezApi.Services
                             FUND = reader["FUND"]?.ToString() ?? string.Empty,
                             VALUE_DATE = reader["VALUE_DATE"]?.ToString() ?? string.Empty,
                             SALES_ORDER = reader["SALES_ORDER"]?.ToString() ?? string.Empty,
-                            SALES_ORDER_ITEM = reader["SALES_ORDER_ITEM"]?.ToString() ?? string.Empty
-                          
+                            SALES_ORDER_ITEM = reader["SALES_ORDER_ITEM"]?.ToString() ?? string.Empty,
+                            PLACE_OF_SUPPLY = reader["PLACE_OF_SUPPLY"]?.ToString() ?? string.Empty
+
                         });
                     }
                 }
