@@ -5670,7 +5670,7 @@ namespace SezApi.Services
                         IsIRN = 1,
                         //YardInvoice = true
                     };
-                    var SapResonse = await _cwcService.GetCreditNoteDataFromSPAsync(GetCreditNoteforSAPRequest, creditNoteId);
+                    //var SapResonse = await _cwcService.GetCreditNoteDataFromSPAsync(GetCreditNoteforSAPRequest, creditNoteId);
 
                 return response;
             }
