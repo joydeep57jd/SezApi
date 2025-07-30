@@ -5643,6 +5643,21 @@ namespace SezApi.Services
 
                 await transaction.CommitAsync();
                 response.Response = $"CreditNote saved successfully. CreditNoteId: {newCreditNoteId}";
+
+                
+                    var creditNoteNo = _db.CreditNote
+                    .Where(x => x.CreditNoteId == newCreditNoteId)
+                    .Select(x => x.CreditNoteNo)
+                    .FirstOrDefault();
+                var creditNoteId = (int)newCreditNoteId;
+                var GetCreditNoteforSAPRequest = new GetCreditNoteforSAPRequest
+                    {
+                        inInvoiceNo = creditNoteNo,
+                        IsIRN = 1,
+                        //YardInvoice = true
+                    };
+                    var SapResonse = await _cwcService.GetCreditNoteDataFromSPAsync(GetCreditNoteforSAPRequest, creditNoteId);
+
                 return response;
             }
             catch (Exception ex)

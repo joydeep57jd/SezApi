@@ -442,5 +442,212 @@ namespace SezApi.Services
             }
         }
 
+
+        public async Task<AddEditResponse> GetCreditNoteDataFromSPAsync(GetCreditNoteforSAPRequest request, int creditNoteId)
+        {
+            AddEditResponse response = new AddEditResponse();
+            try
+            {
+                var model = new RequestCWCapiCreditNote
+                {
+                    REQUEST1 = new List<Request3>()
+                };
+
+                await using var conn = _dbContext.Database.GetDbConnection();
+                await using var cmd = conn.CreateCommand();
+
+                cmd.CommandText = "GetCrDrDtlforSAP";
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add(new SqlParameter("@in_InvoiceNo", request.inInvoiceNo ?? (object)DBNull.Value));
+                cmd.Parameters.Add(new SqlParameter("@in_IsIRN", request.IsIRN));
+                //cmd.Parameters.Add(new SqlParameter("@YardInvoice", request.YardInvoice));
+
+                await conn.OpenAsync();
+                await using var reader = await cmd.ExecuteReaderAsync();
+
+                HeaderCreditNote? header = null;
+                var itemList = new List<ItemCreditNote>();
+
+                // Read header
+                if (await reader.ReadAsync())
+                {
+                    header = new HeaderCreditNote
+                    {
+                        LINE_NO = reader["LINE_NO"]?.ToString() ?? string.Empty,
+                        HEADER_TXT = reader["HEADER_TXT"]?.ToString() ?? string.Empty,
+                        REF_DOC_NO = reader["REF_DOC_NO"]?.ToString() ?? string.Empty,
+                        COMP_CODE = reader["COMP_CODE"]?.ToString() ?? string.Empty,
+                        DOC_DATE = reader["DOC_DATE"]?.ToString() ?? string.Empty,
+                        PSTNG_DATE = reader["PSTNG_DATE"]?.ToString() ?? string.Empty,
+                        FISC_YEAR = reader["FISC_YEAR"]?.ToString() ?? string.Empty,
+                        DOC_TYPE = reader["DOC_TYPE"]?.ToString() ?? string.Empty,
+                        IRN_NO = reader["IRN_NO"]?.ToString() ?? string.Empty,
+                        QR_CODE = reader["QR_CODE"]?.ToString() ?? string.Empty,
+                        IRN_ACKN_NO = reader["IRN_ACKN_NO"]?.ToString() ?? string.Empty,
+                        IRN_ACKN_DATE = reader["IRN_ACKN_DATE"]?.ToString() ?? string.Empty
+                    };
+                }
+
+                // Read item list
+                if (await reader.NextResultAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        itemList.Add(new ItemCreditNote
+                        {
+                            LINE_NO = reader["LINE_NO"]?.ToString() ?? string.Empty,
+                            ITEMNO_ACC = reader["ITEMNO_ACC"]?.ToString() ?? string.Empty,
+                            GL_ACCOUNT = reader["GL_ACCOUNT"]?.ToString() ?? string.Empty,
+                            PROFITSEG = reader["PROFITSEG"]?.ToString() ?? string.Empty,
+                            C_CTR_AREA = reader["C_CTR_AREA"]?.ToString() ?? string.Empty,
+                            VENDOR_NO = reader["VENDOR_NO"]?.ToString() ?? string.Empty,
+                            CUSTOMER = reader["CUSTOMER"]?.ToString() ?? string.Empty,
+                            CUST_RECON_ACCOUNT = reader["CUST_RECON_ACCOUNT"]?.ToString() ?? string.Empty,
+                            SP_GL_IND = reader["SP_GL_IND"]?.ToString() ?? string.Empty,
+                            WBS_ELEMENT = reader["WBS_ELEMENT"]?.ToString() ?? string.Empty,
+                            COSTCENTER = reader["COSTCENTER"]?.ToString() ?? string.Empty,
+                            ORDERID = reader["ORDERID"]?.ToString() ?? string.Empty,
+                            PROFITCENTER = reader["PROFITCENTER"]?.ToString() ?? string.Empty,
+                            ALLOC_NUMBER = reader["ALLOC_NUMBER"]?.ToString() ?? string.Empty,
+                            ITEM_TEXT = reader["ITEM_TEXT"]?.ToString() ?? string.Empty,
+                            BUSINESSPLACE = reader["BUSINESSPLACE"]?.ToString() ?? string.Empty,
+                            SECTION_CODE = reader["SECTION_CODE"]?.ToString() ?? string.Empty,
+                            DT_CT_INDICATOR = reader["DT_CT_INDICATOR"]?.ToString() ?? string.Empty,
+                            AMT_DOCCUR = reader["AMT_DOCCUR"]?.ToString() ?? string.Empty,
+                            DOC_CURRRENCY = reader["DOC_CURRENCY"]?.ToString() ?? string.Empty,
+                            AMT_LOCCUR = reader["AMT_LOCCUR"]?.ToString() ?? string.Empty,
+                            TAX_CODE = reader["TAX_CODE"]?.ToString() ?? string.Empty,
+                            HSN_SAC = reader["HSN_SAC"]?.ToString() ?? string.Empty,
+                            WITHHOLD_TAX_TYPE = reader["WITHHOLD_TAX_TYPE"]?.ToString() ?? string.Empty,
+                            WITHHOLD_TAX_CODE = reader["WITHHOLD_TAX_CODE"]?.ToString() ?? string.Empty,
+                            TDS_BASE_AMOUNT = reader["TDS_BASE_AMOUNT"]?.ToString() ?? string.Empty,
+                            FUND = reader["FUND"]?.ToString() ?? string.Empty,
+                            VALUE_DATE = reader["VALUE_DATE"]?.ToString() ?? string.Empty,
+                            SALES_ORDER = reader["SALES_ORDER"]?.ToString() ?? string.Empty,
+                            SALES_ORDER_ITEM = reader["SALES_ORDER_ITEM"]?.ToString() ?? string.Empty
+                          
+                        });
+                    }
+                }
+
+                // Dispose reader and close connection
+                await reader.DisposeAsync();
+                await conn.CloseAsync();
+
+                model.REQUEST1.Add(new Request3
+                {
+                    HEADER = header!,
+                    ITEM = itemList
+                });
+
+                ResponseCWCapi? sapResponse;
+                try
+                {
+                    sapResponse = await PostCreditNoteToCWCAsync(model);
+                }
+                catch (Exception ex)
+                {
+                    response.Response = $"Error posting to CWC API: {ex.Message}";
+                    return response;
+                }
+
+                if (sapResponse?.Response1 != null)
+                {
+                    try
+                    {
+                        var dbResponse = new SapResponse
+                        {
+                            InvoiceId = creditNoteId,
+                            InvoiceNo = request.inInvoiceNo ?? string.Empty,
+                            SAP_DOC_NUMBER = sapResponse.Response1.SAPDocNumber,
+                            REF_DOC_NO = sapResponse.Response1.RefDocNo,
+                            STATUS = sapResponse.Response1.Status,
+                            REMARK = sapResponse.Response1.Remark,
+                            CreatedBy = 0,
+                            CreatedOn = DateTime.UtcNow,
+                            Module = "CWC",
+                            InvoiceType = "CRNT"
+                            //InvoiceType = request.YardInvoice == true ? "YINV" : "GDINV"
+                        };
+
+                        _dbContext.SapResponse.Add(dbResponse);
+                        await _dbContext.SaveChangesAsync();
+
+                        // Update related invoice table if needed
+                        if (!string.IsNullOrEmpty(dbResponse.STATUS) )
+                        {
+                            var creditNote = await _dbContext.CreditNote
+                                .FirstOrDefaultAsync(x => x.CreditNoteId == dbResponse.InvoiceId);
+
+                            if (creditNote != null)
+                            {
+                                creditNote.SAP_DOC_NUMBER = dbResponse.SAP_DOC_NUMBER;
+                                creditNote.IsSAP = 1;
+                                creditNote.UpdatedDate = DateTime.Now;
+
+                                await _dbContext.SaveChangesAsync();
+                            }
+                        }
+
+                        response.Response = "success";
+                        return response;
+                    }
+                    catch (Exception ex)
+                    {
+                        response.Response = $"Error saving SAP response: {ex.Message}";
+                        return response;
+                    }
+                }
+
+                response.Response = "No response from CWC API";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Response = $"General error: {ex.Message}";
+                return response;
+            }
+        }
+
+
+        public async Task<ResponseCWCapi> PostCreditNoteToCWCAsync(RequestCWCapiCreditNote request)
+        {
+            try
+            {
+                string url = _configuration["CWCApi:CreditNoteUrl"];
+                string user = _configuration["CWCApi:UserId"];
+                string pwd = _configuration["CWCApi:Password"];
+
+                string json = JsonSerializer.Serialize(request);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                string credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user}:{pwd}"));
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
+
+                var httpResponse = await _httpClient.PostAsync(url, content);
+                var responseJson = await httpResponse.Content.ReadAsStringAsync();
+
+                if (!httpResponse.IsSuccessStatusCode)
+                {
+                    throw new Exception($"CWC API returned error: {httpResponse.StatusCode} - {responseJson}");
+                }
+
+                var result = JsonSerializer.Deserialize<ResponseCWCapi>(responseJson, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error while calling CWC API: {ex.Message}", ex);
+            }
+        }
+
+
+
+
     }
 }

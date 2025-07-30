@@ -18,6 +18,8 @@ namespace SezApi.Model.DBModels
         public DateTime? UpdatedDate { get; set; }
         public string? UpdatedBy { get; set; }
         public bool? IsActive { get; set; }
+        public string? SAP_DOC_NUMBER { get; set; }
+        public int? IsSAP { get; set; }
     }
 
     [Table("CreditNoteDetail")]
