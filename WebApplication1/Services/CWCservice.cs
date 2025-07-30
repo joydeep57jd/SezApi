@@ -584,7 +584,7 @@ namespace SezApi.Services
                             {
                                 creditNote.SAP_DOC_NUMBER = dbResponse.SAP_DOC_NUMBER;
                                 creditNote.IsSAP = 1;
-                                creditNote.UpdatedDate = DateTime.Now;
+                                creditNote.UpdatedAt = DateTime.Now;
 
                                 await _dbContext.SaveChangesAsync();
                             }

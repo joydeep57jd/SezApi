@@ -7,19 +7,45 @@ namespace SezApi.Model.DBModels
     {
         [Key]
         public int CreditNoteId { get; set; }
-        public string? CreditNoteNo { get; set; }
-        public DateTime? CreditNoteDate { get; set; }
-        public string? InvoiceNo { get; set; }
-        public long? PartyId { get; set; }
-        public string? Remarks { get; set; }
 
-        public DateTime? CreatedDate { get; set; }
-        public string? CreatedBy { get; set; }
-        public DateTime? UpdatedDate { get; set; }
-        public string? UpdatedBy { get; set; }
-        public bool? IsActive { get; set; }
-        public string? SAP_DOC_NUMBER { get; set; }
+        public bool? TaxInvoice { get; set; }
+        public bool? BillOfSupply { get; set; }
+
+        public string? InvoiceNo { get; set; }  // nvarchar(50)
+
+        public DateTime? CreditNoteDate { get; set; }
+
+        public string? CreditNoteNo { get; set; }  // varchar(50)
+
+        public int? PartyId { get; set; }
+        public int? PayeeId { get; set; }
+
+        public string? GSTNo { get; set; }  // nvarchar(50)
+
+        public string? PlaceOfSupply { get; set; }  // nvarchar(50)
+
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
+
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+
+        public string? Remarks { get; set; }  // nvarchar(max)
+
+        public bool? IsYard { get; set; }
+        public bool? IsImport { get; set; }
+
+        public string? SAP_DOC_NUMBER { get; set; }  // varchar(45)
+
         public int? IsSAP { get; set; }
+
+        public decimal? Taxable_Amt { get; set; }
+        public decimal? IGST_Amt { get; set; }
+        public decimal? CGST_Amt { get; set; }
+        public decimal? SGST_Amt { get; set; }
+        public decimal? Total_Amt { get; set; }
+        public decimal? Roundoff_Amt { get; set; }
+        public decimal? Net_Amt { get; set; }
     }
 
     [Table("CreditNoteDetail")]
