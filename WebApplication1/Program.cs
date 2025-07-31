@@ -25,8 +25,9 @@ try
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    builder.Services.AddHttpClient();
+    builder.Services.AddHttpClient();       
     builder.Services.AddScoped<CWCservice>();
+    builder.Host.UseSerilog();
     builder.Services.AddCors(options =>
     {
         options.AddPolicy("AllowAll", policy =>

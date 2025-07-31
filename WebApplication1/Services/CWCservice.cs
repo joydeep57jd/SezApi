@@ -19,12 +19,13 @@ namespace SezApi.Services
         private readonly SezApiDbContext _dbContext;
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
-
-        public CWCservice(HttpClient httpClient, IConfiguration configuration, SezApiDbContext db)
+        private readonly ILogger<Services> _logger;
+        public CWCservice(HttpClient httpClient, IConfiguration configuration, SezApiDbContext db, ILogger<Services> logger)
         {
             _httpClient = httpClient;
             _configuration = configuration;
             _dbContext = db;
+            _logger = logger;
         }
 
         public async Task<ResponseCWCapi> PostInvoiceToCWCAsync(RequestCWCapi request)
@@ -36,6 +37,7 @@ namespace SezApi.Services
                 string pwd = _configuration["CWCApi:Password"];
 
                 string json = JsonSerializer.Serialize(request);
+                _logger.LogError($"Posting to CWC API: {url} with data: {json}");
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 string credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user}:{pwd}"));
