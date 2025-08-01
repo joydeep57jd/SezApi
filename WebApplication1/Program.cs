@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using SezApi.Data;
@@ -21,7 +22,7 @@ try
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
     builder.Services.AddScoped<IServices, Services>();
-
+    builder.Services.AddAuthentication(IISDefaults.AuthenticationScheme);
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
