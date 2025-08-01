@@ -2564,9 +2564,9 @@ namespace SezApi.Services
                     var usedForGatePass = _db.GatePassHeader
                                                  .Select(x => x.InvoiceNo)
                                                  .Distinct();
-
+                    var CancelInvoiceContent = _db.CancelInvoice.Select(x => x.InvoiceNo).Distinct();
                     query = query.Where(x => !usedForGatePass.Contains(x.InvoiceNo));
-
+                    query = query.Where(x => !CancelInvoiceContent.Contains(x.InvoiceNo));
                     //var yardInvoice = _db.GetYardInvoiceList
                     //                             .Select(x => x.InvoiceNo)                                                 
                     //                             .Distinct();
@@ -3432,7 +3432,10 @@ namespace SezApi.Services
                                 InvoiceNo = yardInvoice.InvoiceNo,
                                 ExpDate = gp.ExpDate,
                                 CompanyName = companyname,
-                                BOENo = destuffDtl.BOENo
+                                BOENo = destuffDtl.BOENo ,
+                                GatePssDate = gp.GatePssDate,
+                                ShippingLineName = gp.ShippingLineName,
+                                ChaName = gp.ChaName
                             };
 
                 if (id.HasValue)
